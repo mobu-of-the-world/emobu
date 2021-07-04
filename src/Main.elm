@@ -8,6 +8,7 @@ import Json.Decode
 import Json.Encode
 import Random
 import Random.List
+import Task exposing (onError)
 
 
 main : Program Json.Encode.Value Model Msg
@@ -110,7 +111,11 @@ view model =
 
 viewUsername : String -> Html Msg
 viewUsername username =
-    li [] [ text username, button [ onClick (Delete username) ] [ text "Delete" ] ]
+    li []
+        [ img [ src ("https://github.com/" ++ username ++ ".png"), style "width" "32px", style "border-radius" "50%" ] []
+        , text username
+        , button [ onClick (Delete username) ] [ text "Delete" ]
+        ]
 
 
 getNewUsernames : Model -> Cmd Msg
