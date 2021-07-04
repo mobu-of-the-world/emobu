@@ -6,11 +6,14 @@ This project currently is Just an Elm clone of [TypeScript & React](https://gith
 
 Latest version is deployed at [here](https://kachick.github.io/mobu-elm/)
 
-## How to build `index.html`
+## How to check the behaviors with local
 
 ```console
-$ elm make src/Main.elm
+$ elm make src/Main.elm --output=docs/main.js
 Success!
 
-    Main ───> index.html
+    Main ───> docs/main.js
+
+$ open ./docs/index.html
+Opened in your browser
 ```
