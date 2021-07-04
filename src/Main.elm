@@ -254,7 +254,7 @@ view model =
         , Html.form [ onSubmit UpdateInterval ]
             [ input [ value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1" ] []
             , button
-                []
+                [ disabled model.mobbing ]
                 [ text "Change" ]
             ]
         ]
