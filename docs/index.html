@@ -1,0 +1,22 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Main</title>
+  <script src="main.js"></script>
+</head>
+
+<body>
+  <div id="mobu"></div>
+  <script>
+  var storedData = localStorage.getItem('mobu-model');
+  var flags = storedData ? JSON.parse(storedData) : null;
+  var app = Elm.Main.init({
+    node: document.getElementById('mobu'),
+    flags: flags
+  });
+  app.ports.setStorage.subscribe(function(state) {
+    localStorage.setItem('mobu-model', JSON.stringify(state));
+  });
+  </script>
+</body>
+</html>
