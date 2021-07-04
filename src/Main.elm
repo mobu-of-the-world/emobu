@@ -22,9 +22,15 @@ main =
         }
 
 
+type alias User =
+    { username : String
+    , avatarUrl : String
+    }
+
+
 type alias Model =
     { inputtedUsername : String
-    , usernames : List String
+    , users : List User
     , elapsedSeconds : Int
     , intervalSeconds : Int
     , inputtedIntervalMinutes : String
@@ -33,7 +39,7 @@ type alias Model =
 
 
 type alias DecodedModel =
-    { usernames : List String }
+    { users : List User }
 
 
 defaultIntervalMinutes : Int
@@ -43,14 +49,14 @@ defaultIntervalMinutes =
 
 defaultValues : Model
 defaultValues =
-    { usernames = [], inputtedUsername = "", elapsedSeconds = 0, intervalSeconds = defaultIntervalMinutes * 60, inputtedIntervalMinutes = String.fromInt defaultIntervalMinutes, mobbing = False }
+    { users = [], inputtedUsername = "", elapsedSeconds = 0, intervalSeconds = defaultIntervalMinutes * 60, inputtedIntervalMinutes = String.fromInt defaultIntervalMinutes, mobbing = False }
 
 
 init : Json.Encode.Value -> ( Model, Cmd Msg )
 init flags =
     ( case Json.Decode.decodeValue decoder flags of
         Ok decodedModel ->
-            { defaultValues | usernames = decodedModel.usernames }
+            { defaultValues | users = decodedModel.users }
 
         Err _ ->
             defaultValues
@@ -62,7 +68,7 @@ type Msg
     = InputUsername String
     | AddUser
     | ShuffleUsers
-    | GotNewUsernames (List String)
+    | GotNewUsers (List User)
     | DeleteUser String
     | Tick Time.Posix
     | InputIntervalMinutes String
@@ -81,7 +87,12 @@ update msg model =
             ( { model | inputtedIntervalMinutes = input }, Cmd.none )
 
         AddUser ->
-            ( { model | inputtedUsername = "", usernames = String.trim model.inputtedUsername :: model.usernames }, Cmd.none )
+            let
+                username : String
+                username =
+                    String.trim model.inputtedUsername
+            in
+            ( { model | inputtedUsername = "", users = { username = username, avatarUrl = getGithubAvatarUrl username } :: model.users }, Cmd.none )
 
         UpdateInterval ->
             let
@@ -101,13 +112,13 @@ update msg model =
             ( { model | intervalSeconds = newIntervalSeconds }, Cmd.none )
 
         ShuffleUsers ->
-            ( model, getNewUsernames model )
+            ( model, getShuffledUsers model )
 
-        GotNewUsernames newUsernames ->
-            ( { model | usernames = newUsernames }, Cmd.none )
+        GotNewUsers newUsers ->
+            ( { model | users = newUsers }, Cmd.none )
 
         DeleteUser username ->
-            ( { model | usernames = List.filter (\element -> not (element == username)) model.usernames }, Cmd.none )
+            ( { model | users = List.filter (\element -> not (element.username == username)) model.users }, Cmd.none )
 
         ToggleMobbingState ->
             ( { model | mobbing = not model.mobbing }, Cmd.none )
@@ -125,13 +136,13 @@ update msg model =
                 timeOver =
                     newElapsedSeconds >= model.intervalSeconds
 
-                newUsernames : List String
-                newUsernames =
+                newUsers : List User
+                newUsers =
                     if timeOver then
-                        List.Extra.swapAt 0 (List.length model.usernames - 1) model.usernames
+                        List.Extra.swapAt 0 (List.length model.users - 1) model.users
 
                     else
-                        model.usernames
+                        model.users
             in
             ( { model
                 | mobbing =
@@ -140,7 +151,7 @@ update msg model =
 
                     else
                         model.mobbing
-                , usernames = newUsernames
+                , users = newUsers
                 , elapsedSeconds =
                     if timeOver then
                         0
@@ -166,16 +177,28 @@ updateWithStorage msg oldModel =
     )
 
 
+userEncoder : User -> Json.Encode.Value
+userEncoder user =
+    Json.Encode.object [ ( "username", Json.Encode.string user.username ), ( "avatarUrl", Json.Encode.string user.avatarUrl ) ]
+
+
 encode : Model -> Json.Encode.Value
 encode model =
     Json.Encode.object
-        [ ( "usernames", Json.Encode.list Json.Encode.string model.usernames ) ]
+        [ ( "users", Json.Encode.list userEncoder model.users ) ]
+
+
+userDecoder : Json.Decode.Decoder User
+userDecoder =
+    Json.Decode.map2 User
+        (Json.Decode.field "username" Json.Decode.string)
+        (Json.Decode.field "avatarUrl" Json.Decode.string)
 
 
 decoder : Json.Decode.Decoder DecodedModel
 decoder =
     Json.Decode.map DecodedModel
-        (Json.Decode.field "usernames" (Json.Decode.list Json.Decode.string))
+        (Json.Decode.field "users" (Json.Decode.list userDecoder))
 
 
 view : Model -> Html Msg
@@ -184,20 +207,20 @@ view model =
         [ Html.form [ onSubmit AddUser ]
             [ input [ value model.inputtedUsername, onInput InputUsername, placeholder "Username" ] []
             , button
-                [ disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) model.usernames) ]
+                [ disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
                 [ text "Add" ]
             ]
         , button
-            [ disabled (List.length model.usernames < 2), onClick ShuffleUsers ]
+            [ disabled (List.length model.users < 2), onClick ShuffleUsers ]
             [ text "Shuffle" ]
-        , ul [] (List.map viewUsername model.usernames)
+        , ul [] (List.map viewUser model.users)
         , br [] []
         , text ("Elapsed seconds: " ++ String.fromInt model.elapsedSeconds)
         , br [] []
         , text ("Elapsed minutes: " ++ String.fromInt (model.elapsedSeconds // 60))
         , br [] []
         , button
-            [ disabled (List.length model.usernames < 2), onClick ToggleMobbingState ]
+            [ disabled (List.length model.users < 2), onClick ToggleMobbingState ]
             [ text "Start/Pause" ]
         , br [] []
         , button
@@ -217,18 +240,23 @@ view model =
         ]
 
 
-viewUsername : String -> Html Msg
-viewUsername username =
+viewUser : User -> Html Msg
+viewUser user =
     li []
-        [ img [ src ("https://github.com/" ++ username ++ ".png"), style "width" "32px", style "border-radius" "50%" ] []
-        , text username
-        , button [ onClick (DeleteUser username) ] [ text "Delete" ]
+        [ img [ src user.avatarUrl, style "width" "32px", style "border-radius" "50%" ] []
+        , text user.username
+        , button [ onClick (DeleteUser user.username) ] [ text "Delete" ]
         ]
 
 
-getNewUsernames : Model -> Cmd Msg
-getNewUsernames model =
-    Random.generate GotNewUsernames <| Random.List.shuffle model.usernames
+getGithubAvatarUrl : String -> String
+getGithubAvatarUrl username =
+    "https://github.com/" ++ username ++ ".png"
+
+
+getShuffledUsers : Model -> Cmd Msg
+getShuffledUsers model =
+    Random.generate GotNewUsers <| Random.List.shuffle model.users
 
 
 subscriptions : Model -> Sub Msg
