@@ -9,7 +9,6 @@ import Json.Encode
 import List.Extra
 import Random
 import Random.List
-import Task exposing (onError)
 import Time
 
 
@@ -37,9 +36,14 @@ type alias DecodedModel =
     { usernames : List String }
 
 
+defaultIntervalMinutes : Int
+defaultIntervalMinutes =
+    30
+
+
 defaultValues : Model
 defaultValues =
-    { usernames = [], inputtedUsername = "", elapsedSeconds = 0, intervalSeconds = 30 * 60, inputtedIntervalMinutes = "30", mobbing = False }
+    { usernames = [], inputtedUsername = "", elapsedSeconds = 0, intervalSeconds = defaultIntervalMinutes * 60, inputtedIntervalMinutes = String.fromInt defaultIntervalMinutes, mobbing = False }
 
 
 init : Json.Encode.Value -> ( Model, Cmd Msg )
@@ -62,7 +66,7 @@ type Msg
     | DeleteUser String
     | Tick Time.Posix
     | InputIntervalMinutes String
-    | UpdateIntervalMinutes
+    | UpdateInterval
     | ToggleMobbingState
     | ResetTimer
 
@@ -79,22 +83,22 @@ update msg model =
         AddUser ->
             ( { model | inputtedUsername = "", usernames = String.trim model.inputtedUsername :: model.usernames }, Cmd.none )
 
-        UpdateIntervalMinutes ->
+        UpdateInterval ->
             let
                 newIntervalMinutesMaybe : Maybe Int
                 newIntervalMinutesMaybe =
                     String.toInt model.inputtedIntervalMinutes
 
-                newIntervalMinutes : Int
-                newIntervalMinutes =
+                newIntervalSeconds : Int
+                newIntervalSeconds =
                     case newIntervalMinutesMaybe of
                         Nothing ->
-                            30
+                            defaultIntervalMinutes * 60
 
                         Just minutes ->
-                            minutes
+                            minutes * 60
             in
-            ( { model | intervalSeconds = newIntervalMinutes * 60 }, Cmd.none )
+            ( { model | intervalSeconds = newIntervalSeconds }, Cmd.none )
 
         ShuffleUsers ->
             ( model, getNewUsernames model )
@@ -200,9 +204,11 @@ view model =
             [ onClick ResetTimer ]
             [ text "Reset" ]
         , br [] []
+        , text ("Current interval(seconds): " ++ String.fromInt model.intervalSeconds)
+        , br [] []
         , text ("Current interval(minutes): " ++ String.fromInt (model.intervalSeconds // 60))
         , br [] []
-        , Html.form [ onSubmit UpdateIntervalMinutes ]
+        , Html.form [ onSubmit UpdateInterval ]
             [ input [ value model.inputtedIntervalMinutes, onInput InputIntervalMinutes ] []
             , button
                 []
