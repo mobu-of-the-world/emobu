@@ -106,10 +106,14 @@ update msg model =
                 newIntervalSeconds =
                     case newIntervalMinutesMaybe of
                         Nothing ->
-                            defaultIntervalMinutes * 60
+                            model.intervalSeconds
 
                         Just minutes ->
-                            minutes * 60
+                            if minutes > 0 then
+                                minutes * 60
+
+                            else
+                                model.intervalSeconds
             in
             ( { model | intervalSeconds = newIntervalSeconds }, Cmd.none )
 
@@ -221,7 +225,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ Html.form [ onSubmit AddUser ]
-            [ input [ value model.inputtedUsername, onInput InputUsername, placeholder "Username" ] []
+            [ input [ value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
             , button
                 [ disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
                 [ text "Add" ]
@@ -248,7 +252,7 @@ view model =
         , text ("Current interval(minutes): " ++ String.fromInt (model.intervalSeconds // 60))
         , br [] []
         , Html.form [ onSubmit UpdateInterval ]
-            [ input [ value model.inputtedIntervalMinutes, onInput InputIntervalMinutes ] []
+            [ input [ value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1" ] []
             , button
                 []
                 [ text "Change" ]
