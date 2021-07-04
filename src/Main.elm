@@ -9,6 +9,7 @@ import Json.Encode
 import List.Extra
 import Random
 import Random.List
+import Task exposing (onError)
 import Time
 
 
@@ -75,6 +76,7 @@ type Msg
     | UpdateInterval
     | ToggleMobbingState
     | ResetTimer
+    | FetchGithubAvatarError String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -162,6 +164,20 @@ update msg model =
             , Cmd.none
             )
 
+        FetchGithubAvatarError username ->
+            let
+                setFallbackAvatar user =
+                    if user.username == username then
+                        { user | avatarUrl = "https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png" }
+
+                    else
+                        user
+
+                newUsers =
+                    List.map setFallbackAvatar model.users
+            in
+            ( { model | users = newUsers }, Cmd.none )
+
 
 port setStorage : Json.Encode.Value -> Cmd msg
 
@@ -243,7 +259,7 @@ view model =
 viewUser : User -> Html Msg
 viewUser user =
     li []
-        [ img [ src user.avatarUrl, style "width" "32px", style "border-radius" "50%" ] []
+        [ img [ src user.avatarUrl, style "width" "32px", style "border-radius" "50%", on "error" (Json.Decode.succeed (FetchGithubAvatarError user.username)) ] []
         , text user.username
         , button [ onClick (DeleteUser user.username) ] [ text "Delete" ]
         ]
