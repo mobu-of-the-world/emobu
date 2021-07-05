@@ -1,11 +1,14 @@
-name: Deploy
+name: Test & Deploy
 on:
   push:
     branches: [ main ]
     paths:
       - 'src/**'
+      - 'tests/**'
       - 'elm.json'
-      - '.github/workflows/deploy.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/test_and_deploy.yml'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,6 +17,10 @@ jobs:
       - uses: jorelali/setup-elm@v3
         with:
           elm-version: 0.19.1
+      - name: install npm dependencies
+        run: npm install
+      - name: Test
+        run: ./node_modules/elm-test/bin/elm-test
       - run: elm make src/Main.elm --output=docs/main.js
       - name: git setting
         run: |
@@ -26,6 +33,6 @@ jobs:
           DATE=`date +"%Y%m%d-%H%M-UTC"`
           BRANCH_NAME="deploy-$DATE"
           git checkout -b "$BRANCH_NAME"
-          git add docs
+          git add docs package-lock.json
           git commit -m 'Update with latest code'
           git push origin "$BRANCH_NAME":gh-pages --force
