@@ -10,7 +10,6 @@ import List.Extra
 import Model exposing (..)
 import Random
 import Random.List
-import Task exposing (onError)
 import Time
 
 
@@ -48,6 +47,7 @@ type Msg
     | ToggleMobbingState
     | ResetTimer
     | FetchGithubAvatarError String
+    | ToggleDubugMode Bool
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -87,6 +87,9 @@ update msg model =
                                 model.intervalSeconds
             in
             ( { model | intervalSeconds = newIntervalSeconds }, Cmd.none )
+
+        ToggleDubugMode enabled ->
+            ( { model | debugMode = enabled, intervalSeconds = 2 }, Cmd.none )
 
         ShuffleUsers ->
             ( model, getShuffledUsers model )
@@ -136,7 +139,11 @@ update msg model =
                     else
                         newElapsedSeconds
               }
-            , Cmd.none
+            , if timeOver then
+                playSound "assets/audio/meow.mp3"
+
+              else
+                Cmd.none
             )
 
         FetchGithubAvatarError username ->
@@ -155,6 +162,9 @@ update msg model =
 
 
 port setStorage : Json.Encode.Value -> Cmd msg
+
+
+port playSound : String -> Cmd msg
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
@@ -203,6 +213,11 @@ view model =
             , button
                 [ disabled model.mobbing ]
                 [ text "Change" ]
+            ]
+        , br [] []
+        , label [ for "toggle_debug_mode" ]
+            [ input [ type_ "checkbox", id "toggle_debug_mode", checked model.debugMode, onCheck ToggleDubugMode ] []
+            , text "Debug mode enforces to 2 seconds for the interval"
             ]
         ]
 
