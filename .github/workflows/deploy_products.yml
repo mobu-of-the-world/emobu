@@ -25,11 +25,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-          staging_prefix=pr-${{ steps.pr.outputs.pull_request_number }}
-          cp -rf docs "docs/$staging_prefix"
+          staging_prefix=pr-${PR_NUMBER}
+          cp -rf statics "docs/$staging_prefix"
           elm make src/Main.elm --output="docs/$staging_prefix/main.js"
         if: github.event_name == 'pull_request'
-      - run: elm make src/Main.elm --output=docs/main.js
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+      - run: elm make src/Main.elm --output=docs/latest/main.js
         if: github.event_name != 'pull_request'
       - name: git setting
         run: |
