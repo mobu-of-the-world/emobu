@@ -1,0 +1,45 @@
+name: Cleanup stagings
+on:
+  pull_request:
+    types: [closed]
+    paths-ignore:
+      - 'tests/**'
+      - '.github/workflows/test.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: git setting
+        run: |
+          git config --local user.email "kachick1+mobu-elm@gmail.com"
+          git config --local user.name "mobu-elm bot"
+      - name: Deploy to GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          git fetch
+          git checkout gh-pages
+          find . | grep -v -P '\.git(\b|ignore)|docs|LICENSE|^\.$' | xargs rm -rf
+          rm -rf "docs/pr-${PR_NUMBER}"
+          git commit -a -m 'Remove staging because the PR(#${PR_NUMBER}) has been closed'
+          git push origin gh-pages --force
+      - uses: jwalton/gh-find-current-pr@v1
+        id: findPr
+        with:
+          state: closed
+      - name: notify
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        env:
+          PR_NUMBER: ${{ steps.findPr.outputs.pr }}
+        with:
+          script: |
+              const { PR_NUMBER } = process.env
+              await github.rest.issues.createComment({
+                issue_number: PR_NUMBER,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `The staging https://kachick.github.io/mobu-elm/pr-${PR_NUMBER}/ has been removed.`
+              })
