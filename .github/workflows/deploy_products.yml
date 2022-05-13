@@ -52,4 +52,4 @@ jobs:
           git fetch
           git checkout gh-pages
           git merge "$BRANCH_NAME" --allow-unrelated-histories
-          git push origin gh-pages --force-with-lease
+          git push origin gh-pages
