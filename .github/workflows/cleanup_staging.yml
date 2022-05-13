@@ -36,7 +36,7 @@ jobs:
         with:
           script: |
               const { PR_NUMBER } = process.env
-              await github.issues.createComment({
+              await github.rest.issues.createComment({
                 issue_number: PR_NUMBER,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
