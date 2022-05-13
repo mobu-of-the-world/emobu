@@ -50,5 +50,5 @@ jobs:
           git commit -m 'Update with latest code'
           git fetch
           git checkout gh-pages
-          git merge "$BRANCH_NAME"
+          git merge "$BRANCH_NAME" --allow-unrelated-histories
           git push origin gh-pages
