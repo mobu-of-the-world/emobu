@@ -47,7 +47,7 @@ jobs:
           BRANCH_NAME="deploy-$DATE"
           git checkout -b "$BRANCH_NAME"
           git add docs
-          find . | grep -v -P '\.git|docs|LICENSE' | xargs rm -rf
+          find . | grep -v -P '\.git|docs|LICENSE|^\.$' | xargs rm -rf
           git commit -m 'Update with latest code'
           git fetch
           git checkout gh-pages
