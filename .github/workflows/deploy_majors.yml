@@ -17,6 +17,7 @@ jobs:
       - name: install npm dependencies
         run: npm install
       - run: |
+          rm -rf "docs/latest"
           cp -rf statics "docs/latest"
           elm make src/Main.elm --output=docs/latest/main.js
         if: github.event_name != 'pull_request'
