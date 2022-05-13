@@ -41,14 +41,14 @@ jobs:
           DATE=`date +"%Y%m%d-%H%M-UTC"`
           BRANCH_NAME="deploy-$DATE"
           git checkout -b "$BRANCH_NAME"
-          git add docs
           find . | grep -v -P '\.git(\b|ignore)|docs|LICENSE|^\.$' | xargs rm -rf
+          git add docs
           git commit -m 'Update with latest code'
           git fetch
           git checkout gh-pages
           git merge "$BRANCH_NAME" --allow-unrelated-histories
           find . | grep -v -P '\.git(\b|ignore)|docs|LICENSE|^\.$' | xargs rm -rf
-          git commit -m 'Update with latest code'
+          git commit -a -m 'Merge products'
           git push origin gh-pages
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
