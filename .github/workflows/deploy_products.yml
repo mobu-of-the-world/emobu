@@ -46,9 +46,10 @@ jobs:
           DATE=`date +"%Y%m%d-%H%M-UTC"`
           BRANCH_NAME="deploy-$DATE"
           git checkout -b "$BRANCH_NAME"
-          git add docs package-lock.json
+          git add docs
+          find . | grep -v -P '\.git|docs|LICENSE' | xargs rm -rf
           git commit -m 'Update with latest code'
           git fetch
           git checkout gh-pages
-          git merge "$BRANCH_NAME" --allow-unrelated-histories
+          git merge "$BRANCH_NAME" --allow-unrelated-histories --force-with-lease
           git push origin gh-pages
