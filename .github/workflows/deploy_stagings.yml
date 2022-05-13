@@ -2,6 +2,7 @@ name: Deploy stagings
 on:
   pull_request:
     paths-ignore:
+      - '**.md'
       - 'tests/**'
       - '.github/workflows/test.yml'
 jobs:

@@ -3,6 +3,7 @@ on:
   pull_request:
     types: [closed]
     paths-ignore:
+      - '**.md'
       - 'tests/**'
       - '.github/workflows/test.yml'
 jobs:
