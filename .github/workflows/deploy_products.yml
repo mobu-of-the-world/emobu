@@ -44,12 +44,7 @@ jobs:
           find . | grep -v -P '\.git(\b|ignore)|docs|LICENSE|^\.$' | xargs rm -rf
           git add docs
           git commit -m 'Update with latest code'
-          git fetch
-          git checkout gh-pages
-          git merge "$BRANCH_NAME" --allow-unrelated-histories
-          find . | grep -v -P '\.git(\b|ignore)|docs|LICENSE|^\.$' | xargs rm -rf
-          git commit -a -m 'Merge products'
-          git push origin gh-pages
+          git push origin "$BRANCH_NAME":gh-pages --force
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
         with:

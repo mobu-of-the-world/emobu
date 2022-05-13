@@ -21,9 +21,10 @@ jobs:
         run: |
           git fetch
           git checkout gh-pages
+          find . | grep -v -P '\.git(\b|ignore)|docs|LICENSE|^\.$' | xargs rm -rf
           rm -rf "docs/pr-${PR_NUMBER}"
           git commit -a -m 'Remove staging because the PR(#${PR_NUMBER}) has been closed'
-          git push origin gh-pages
+          git push origin gh-pages --force
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
         with:
