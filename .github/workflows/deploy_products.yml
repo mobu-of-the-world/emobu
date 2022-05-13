@@ -31,7 +31,9 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           PR_NUMBER: ${{ github.event.number }}
-      - run: elm make src/Main.elm --output=docs/latest/main.js
+      - run: |
+          cp -rf statics "docs/latest"
+          elm make src/Main.elm --output=docs/latest/main.js
         if: github.event_name != 'pull_request'
       - name: git setting
         run: |
