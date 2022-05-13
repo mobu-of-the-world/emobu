@@ -8,6 +8,7 @@ on:
       - 'MIT-LICENSE.txt'
       - '.editorconfig'
       - 'README.md'
+      - '.vscode/**'
   pull_request:
     paths-ignore:
       - '.github\workflows\.github\dependabot.yml'
@@ -15,6 +16,7 @@ on:
       - 'MIT-LICENSE.txt'
       - '.editorconfig'
       - 'README.md'
+      - '.vscode/**'
 jobs:
   build:
     runs-on: ubuntu-latest

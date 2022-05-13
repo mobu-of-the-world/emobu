@@ -6,6 +6,7 @@ on:
       - '**.md'
       - 'tests/**'
       - '.github/workflows/test.yml'
+      - '.vscode/**'
 jobs:
   build:
     runs-on: ubuntu-latest
