@@ -19,11 +19,6 @@ jobs:
           elm-version: 0.19.1
       - name: install npm dependencies
         run: npm install
-      - name: Get Pull Request Number
-        id: pr
-        run: echo "::set-output name=pull_request_number::$(gh pr view --json number -q .number || echo "")"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: |
           staging_prefix=pr-${PR_NUMBER}
           cp -rf statics "docs/$staging_prefix"
@@ -53,3 +48,17 @@ jobs:
           git checkout gh-pages
           git merge "$BRANCH_NAME" --allow-unrelated-histories
           git push origin gh-pages
+      - name: notify
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        with:
+          script: |
+              const { PR_NUMBER } = process.env
+              await github.issues.createComment({
+                issue_number: PR_NUMBER,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `Deployed at https://kachick.github.io/mobu-elm/pr-${PR_NUMBER}/`
+              })
