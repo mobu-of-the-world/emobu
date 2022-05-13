@@ -48,6 +48,7 @@ jobs:
           git checkout -b "$BRANCH_NAME"
           git add docs package-lock.json
           git commit -m 'Update with latest code'
-          git checkout origin/gh-pages
-          git merge -
+          git fetch
+          git checkout gh-pages
+          git merge "$BRANCH_NAME"
           git push origin gh-pages
