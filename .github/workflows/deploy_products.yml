@@ -47,12 +47,18 @@ jobs:
           git fetch
           git checkout gh-pages
           git merge "$BRANCH_NAME" --allow-unrelated-histories
+          find . | grep -v -P '\.git(\b|ignore)|docs|LICENSE|^\.$' | xargs rm -rf
+          git commit -m 'Update with latest code'
           git push origin gh-pages
+      - uses: jwalton/gh-find-current-pr@v1
+        id: findPr
+        with:
+          state: open
       - name: notify
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
-          PR_NUMBER: ${{ github.event.number }}
+          PR_NUMBER: ${{ steps.findPr.outputs.pr }}
         with:
           script: |
               const { PR_NUMBER } = process.env

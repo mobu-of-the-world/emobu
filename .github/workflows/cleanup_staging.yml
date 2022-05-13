@@ -24,11 +24,15 @@ jobs:
           rm -rf "docs/pr-${PR_NUMBER}"
           git commit -a -m 'Remove staging because the PR(#${PR_NUMBER}) has been closed'
           git push origin gh-pages
+      - uses: jwalton/gh-find-current-pr@v1
+        id: findPr
+        with:
+          state: closed
       - name: notify
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
-          PR_NUMBER: ${{ github.event.number }}
+          PR_NUMBER: ${{ steps.findPr.outputs.pr }}
         with:
           script: |
               const { PR_NUMBER } = process.env
