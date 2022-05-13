@@ -2,23 +2,19 @@ name: Test
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'src/**'
-      - 'tests/**'
-      - 'docs/**'
-      - 'elm.json'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/test.yml'
+    paths-ignore:
+      - '.github\workflows\.github\dependabot.yml'
+      - '.github\workflows\deploy_products.yml'
+      - 'MIT-LICENSE.txt'
+      - '.editorconfig'
+      - 'README.md'
   pull_request:
-    paths:
-      - 'src/**'
-      - 'tests/**'
-      - 'docs/**'
-      - 'elm.json'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/test.yml'
+    paths-ignore:
+      - '.github\workflows\.github\dependabot.yml'
+      - '.github\workflows\deploy_products.yml'
+      - 'MIT-LICENSE.txt'
+      - '.editorconfig'
+      - 'README.md'
 jobs:
   build:
     runs-on: ubuntu-latest

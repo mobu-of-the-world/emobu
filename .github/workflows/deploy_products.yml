@@ -2,21 +2,13 @@ name: Deploy products
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'src/**'
-      - 'docs/**'
-      - 'elm.json'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/deploy_products.yml'
+    paths-ignore:
+      - 'tests/**'
+      - '.github/workflows/test.yml'
   pull_request:
-    paths:
-      - 'src/**'
-      - 'docs/**'
-      - 'elm.json'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/deploy_products.yml'
+    paths-ignore:
+      - 'tests/**'
+      - '.github/workflows/test.yml'
 jobs:
   build:
     runs-on: ubuntu-latest
