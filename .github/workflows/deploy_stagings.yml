@@ -1,10 +1,5 @@
-name: Deploy products
+name: Deploy stagings
 on:
-  push:
-    branches: [ main ]
-    paths-ignore:
-      - 'tests/**'
-      - '.github/workflows/test.yml'
   pull_request:
     paths-ignore:
       - 'tests/**'
@@ -26,10 +21,6 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           PR_NUMBER: ${{ github.event.number }}
-      - run: |
-          cp -rf statics "docs/latest"
-          elm make src/Main.elm --output=docs/latest/main.js
-        if: github.event_name != 'pull_request'
       - name: git setting
         run: |
           git config --local user.email "kachick1+mobu-elm@gmail.com"
@@ -51,7 +42,6 @@ jobs:
           state: open
       - name: notify
         uses: actions/github-script@v6
-        if: github.event_name == 'pull_request'
         env:
           PR_NUMBER: ${{ steps.findPr.outputs.pr }}
         with:

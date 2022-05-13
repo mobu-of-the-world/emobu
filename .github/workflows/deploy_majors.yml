@@ -1,0 +1,36 @@
+name: Deploy major branches
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'tests/**'
+      - '.github/workflows/test.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: jorelali/setup-elm@v3
+        with:
+          elm-version: 0.19.1
+      - name: install npm dependencies
+        run: npm install
+      - run: |
+          cp -rf statics "docs/latest"
+          elm make src/Main.elm --output=docs/latest/main.js
+        if: github.event_name != 'pull_request'
+      - name: git setting
+        run: |
+          git config --local user.email "kachick1+mobu-elm@gmail.com"
+          git config --local user.name "mobu-elm bot"
+      - name: Deploy to GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE=`date +"%Y%m%d-%H%M-UTC"`
+          BRANCH_NAME="deploy-$DATE"
+          git checkout -b "$BRANCH_NAME"
+          find . | grep -v -P '\.git(\b|ignore)|docs|LICENSE|^\.$' | xargs rm -rf
+          git add docs
+          git commit -m 'Update with latest code'
+          git push origin "$BRANCH_NAME":gh-pages --force
