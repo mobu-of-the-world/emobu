@@ -1,15 +1,14 @@
-name: Test & Deploy
+name: Deploy products
 on:
   push:
     branches: [ main ]
     paths:
       - 'src/**'
-      - 'tests/**'
       - 'docs/**'
       - 'elm.json'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/test_and_deploy.yml'
+      - '.github/workflows/deploy_products.yml'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,8 +19,6 @@ jobs:
           elm-version: 0.19.1
       - name: install npm dependencies
         run: npm install
-      - name: Test
-        run: ./node_modules/elm-test/bin/elm-test
       - run: elm make src/Main.elm --output=docs/main.js
       - name: git setting
         run: |
