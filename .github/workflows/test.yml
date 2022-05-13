@@ -1,0 +1,33 @@
+name: Test
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'docs/**'
+      - 'elm.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/test.yml'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'docs/**'
+      - 'elm.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/test.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: jorelali/setup-elm@v3
+        with:
+          elm-version: 0.19.1
+      - name: install npm dependencies
+        run: npm install
+      - name: Test
+        run: ./node_modules/elm-test/bin/elm-test
