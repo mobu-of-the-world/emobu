@@ -19,8 +19,8 @@ jobs:
         run: npm install
       - run: |
           rm -rf "docs/latest"
-          cp -rf statics "docs/latest"
-          elm make src/Main.elm --output=docs/latest/main.js
+          npm run build
+          cp -rf dist "docs/latest"
         if: github.event_name != 'pull_request'
       - name: git setting
         run: |

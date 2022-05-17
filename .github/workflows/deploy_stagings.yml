@@ -18,8 +18,8 @@ jobs:
         run: npm install
       - run: |
           staging_prefix=pr-${PR_NUMBER}
-          cp -rf statics "docs/$staging_prefix"
-          elm make src/Main.elm --output="docs/$staging_prefix/main.js"
+          npm run build
+          cp -rf dist "docs/$staging_prefix"
         if: github.event_name == 'pull_request'
         env:
           PR_NUMBER: ${{ github.event.number }}

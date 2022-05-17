@@ -12,13 +12,7 @@ Latest version is deployed at [here](https://kachick.github.io/mobu-elm/latest)
 ## How to check the behaviors with local
 
 ```console
-$ elm make src/Main.elm --output=statics/main.js
-Success!
-
-    Main ───> statics/main.js
-
-$ open ./statics/index.html
-Opened in your browser
+$ npm run build
 ```
 
 ## Cat meow as the bell

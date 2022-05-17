@@ -140,7 +140,7 @@ update msg model =
                         newElapsedSeconds
               }
             , if timeOver then
-                playSound "assets/audio/meow.mp3"
+                playSound "/audio/meow.mp3"
 
               else
                 Cmd.none
