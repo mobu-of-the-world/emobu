@@ -16,10 +16,13 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.24.0",
     "@typescript-eslint/parser": "^5.24.0",
+    "autoprefixer": "^10.4.7",
     "elm-test": "^0.19.1-revision7",
     "eslint": "^8.15.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
+    "postcss": "^8.4.13",
+    "tailwindcss": "^3.0.24",
     "vite": "^2.9.9",
     "vite-plugin-elm": "^2.6.1"
   }
