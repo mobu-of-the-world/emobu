@@ -1,4 +1,4 @@
-name: Test
+name: Test & Lint
 on:
   push:
     branches: [ main ]
@@ -38,4 +38,8 @@ jobs:
       - name: install npm dependencies
         run: npm install
       - name: Test
-        run: ./node_modules/elm-test/bin/elm-test
+        run: npx elm-test
+      - name: Lint Elm code
+        run: npx elm-review
+      - name: Lint JavaScript/TypeScript code
+        run: npm run prettier-check && npm run eslint
