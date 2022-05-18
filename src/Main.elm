@@ -1,4 +1,4 @@
-port module Main exposing (..)
+port module Main exposing (Msg(..), main)
 
 import Browser
 import Html exposing (..)
