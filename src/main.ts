@@ -1,8 +1,5 @@
 import { Elm } from './Main.elm';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import 'tailwindcss/tailwind.css';
-
 const storedData = localStorage.getItem('mobu-model');
 const flags = storedData ? JSON.parse(storedData) : null;
 const app = Elm.Main.init({
