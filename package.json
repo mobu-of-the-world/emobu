@@ -14,6 +14,7 @@
   "author": "Kenichi Kamiya <kachick1@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/tailwindcss": "^3.0.10",
     "@typescript-eslint/eslint-plugin": "^5.24.0",
     "@typescript-eslint/parser": "^5.24.0",
     "autoprefixer": "^10.4.7",
