@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "serve dist -l 8938 -n",
-    "test:server": "run-p 'dev -- --port 8936' serve"
+    "test:server": "run-p 'dev -- --port 8936' serve",
+    "preview": "vite preview"
   },
   "author": "Kenichi Kamiya <kachick1@gmail.com>",
   "license": "MIT",
