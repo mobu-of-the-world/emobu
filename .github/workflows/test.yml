@@ -10,6 +10,8 @@ on:
       - '.firebaserc'
       - 'MIT-LICENSE.txt'
       - '.editorconfig'
+      - '.prettierrc'
+      - '.eslintrc.js'
       - 'README.md'
       - '.vscode/**'
   pull_request:
@@ -21,6 +23,8 @@ on:
       - '.firebaserc'
       - 'MIT-LICENSE.txt'
       - '.editorconfig'
+      - '.prettierrc'
+      - '.eslintrc.js'
       - 'README.md'
       - '.vscode/**'
 jobs:
