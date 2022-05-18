@@ -7,18 +7,12 @@ A web application to manage participants and timer for mob-programming!
 
 This project currently is Just an Elm clone of [TypeScript & React](https://github.com/mobu-of-the-world/mobu), but this will overtake it in near future!
 
-Latest version is deployed at [here](https://kachick.github.io/mobu-elm/latest)
+main branch is deployed at [firebase](https://mobu-elm.web.app/) and PRs will be deployed to firebase too.
 
 ## How to check the behaviors with local
 
 ```console
-$ elm make src/Main.elm --output=statics/main.js
-Success!
-
-    Main ───> statics/main.js
-
-$ open ./statics/index.html
-Opened in your browser
+$ npm run dev
 ```
 
 ## Cat meow as the bell
