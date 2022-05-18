@@ -1,0 +1,9 @@
+{
+  "[elm]": {
+    "editor.formatOnSave": true,
+    "tailwindCSS.experimental.classRegex": ["\\bclass\\s+\"([^\"]*)\""]
+  },
+  "tailwindCSS.includeLanguages": {
+    "elm": "html"
+  }
+}

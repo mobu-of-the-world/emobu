@@ -20,12 +20,19 @@ export namespace Elm {
     }
 
     interface Subscribe<T> {
-      subscribe(callback: (value: T) => any): void;
+      subscribe(callback: (value: T) => void): void;
     }
 
-    // interface Send<T> {
-    //   send(value: T): void;
-    // }
+    interface Send<T> {
+      send(value: T): void;
+    }
+
+    interface KeyEvent {
+      sequence: string;
+      ctrl: boolean;
+      meta: boolean;
+      shift: boolean;
+    }
 
     function init(args: Args): App;
   }
