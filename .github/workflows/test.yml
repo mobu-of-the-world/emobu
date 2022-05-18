@@ -3,16 +3,22 @@ on:
   push:
     branches: [ main ]
     paths-ignore:
-      - '.github\workflows\.github\dependabot.yml'
-      - '.github\workflows\deploy_products.yml'
+      - '.github/dependabot.yml'
+      - '.github/workflows/firebase-hosting-merge.yml'
+      - '.github/workflows/firebase-hosting-pull-request.yml'
+      - 'firebase.json'
+      - '.firebaserc'
       - 'MIT-LICENSE.txt'
       - '.editorconfig'
       - 'README.md'
       - '.vscode/**'
   pull_request:
     paths-ignore:
-      - '.github\workflows\.github\dependabot.yml'
-      - '.github\workflows\deploy_products.yml'
+      - '.github/dependabot.yml'
+      - '.github/workflows/firebase-hosting-merge.yml'
+      - '.github/workflows/firebase-hosting-pull-request.yml'
+      - 'firebase.json'
+      - '.firebaserc'
       - 'MIT-LICENSE.txt'
       - '.editorconfig'
       - 'README.md'
