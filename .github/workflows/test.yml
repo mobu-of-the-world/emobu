@@ -39,6 +39,8 @@ jobs:
         run: npm install
       - name: Test
         run: npx elm-test
+      - name: Ensure build correctnes
+        run: npm run build
       - name: Lint Elm code
         run: npx elm-review
       - name: Lint JavaScript/TypeScript code
