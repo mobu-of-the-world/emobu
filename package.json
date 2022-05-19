@@ -10,8 +10,8 @@
     "serve": "serve dist -l 8938 -n",
     "test:server": "run-p 'dev -- --port 8936' serve",
     "preview": "vite preview",
-    "prettier-check": "prettier --list-different \"src/**/*.{js,ts,tsx,css,scss}\"",
-    "prettier:fix": "prettier --write \"src/**/*.{js,ts,tsx,css,scss}\"",
+    "prettier-check": "prettier --list-different \"src/**/*.{js,ts,tsx,css,scss,html}\" \"./*.html\"",
+    "prettier:fix": "prettier --write \"src/**/*.{js,ts,tsx,css,scss,html}\" \"./*.html\"",
     "eslint": "eslint --ignore-pattern \"src/**/*d.ts\" \"src/**/*.{js,ts,tsx}\"",
     "eslint:fix": "eslint --ignore-pattern \"src/**/*d.ts\" --fix \"src/**/*.{js,ts,tsx}\""
   },
