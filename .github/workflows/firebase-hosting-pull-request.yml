@@ -10,6 +10,8 @@ name: Deploy to Firebase Hosting on PR
       - '.editorconfig'
       - 'README.md'
       - '.vscode/**'
+      - '.prettierrc'
+      - '.eslintrc.js'
 jobs:
   build_and_preview:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'

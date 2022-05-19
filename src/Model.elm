@@ -32,7 +32,14 @@ defaultIntervalMinutes =
 
 defaultValues : Model
 defaultValues =
-    { users = [], inputtedUsername = "", elapsedSeconds = 0, intervalSeconds = defaultIntervalMinutes * 60, inputtedIntervalMinutes = String.fromInt defaultIntervalMinutes, mobbing = False, debugMode = False }
+    { users = []
+    , inputtedUsername = ""
+    , elapsedSeconds = 0
+    , intervalSeconds = defaultIntervalMinutes * 60
+    , inputtedIntervalMinutes = String.fromInt defaultIntervalMinutes
+    , mobbing = False
+    , debugMode = False
+    }
 
 
 userEncoder : User -> Json.Encode.Value

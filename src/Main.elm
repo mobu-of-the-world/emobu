@@ -1,13 +1,13 @@
-port module Main exposing (..)
+port module Main exposing (Msg(..), main)
 
 import Browser
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Html exposing (Html, br, button, div, form, img, input, label, li, text, ul)
+import Html.Attributes exposing (checked, disabled, for, id, placeholder, src, style, type_, value)
+import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
 import List.Extra
-import Model exposing (..)
+import Model exposing (Model, User, decoder, defaultValues, encode)
 import Random
 import Random.List
 import Time
@@ -106,6 +106,7 @@ update msg model =
         ResetTimer ->
             ( { model | mobbing = False, elapsedSeconds = 0 }, Cmd.none )
 
+        -- TODO: Consider to change calc with current time intead of incrementing seconds
         Tick _ ->
             let
                 newElapsedSeconds : Int
@@ -148,6 +149,7 @@ update msg model =
 
         FetchGithubAvatarError username ->
             let
+                setFallbackAvatar : Model.User -> Model.User
                 setFallbackAvatar user =
                     if user.username == username then
                         { user | avatarUrl = "https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png" }
@@ -155,6 +157,7 @@ update msg model =
                     else
                         user
 
+                newUsers : List Model.User
                 newUsers =
                     List.map setFallbackAvatar model.users
             in
@@ -181,7 +184,7 @@ updateWithStorage msg oldModel =
 view : Model -> Html Msg
 view model =
     div []
-        [ Html.form [ onSubmit AddUser ]
+        [ form [ onSubmit AddUser ]
             [ input [ value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
             , button
                 [ disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
