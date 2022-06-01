@@ -1,0 +1,21 @@
+name: 'Dependency Review'
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/dependency-review.yml'
+      - 'elm.json'
+      - 'elm-tooling.json' # I don' have confident this is needless or not
+      - 'package.json'
+      - 'package-lock.json'
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v3
+      - name: 'Dependency Review'
+        uses: actions/dependency-review-action@v1
