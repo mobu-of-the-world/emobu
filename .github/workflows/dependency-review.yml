@@ -2,7 +2,7 @@ name: 'Dependency Review'
 on:
   pull_request:
     paths:
-      - '.github/workflows/dependency-review.yml'
+      - '.github/workflows/**'
       - 'elm.json'
       - 'elm-tooling.json' # I don' have confident this is needless or not
       - 'package.json'

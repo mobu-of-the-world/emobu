@@ -4,8 +4,10 @@ on:
     branches: [ main ]
     paths-ignore:
       - '.github/dependabot.yml'
+      - '.github/workflows/auto-merge-dependabot-prs.yml'
       - '.github/workflows/firebase-hosting-merge.yml'
       - '.github/workflows/firebase-hosting-pull-request.yml'
+      - '.github/workflows/dependency-review.yml'
       - 'firebase.json'
       - '.firebaserc'
       - 'MIT-LICENSE.txt'
@@ -17,8 +19,10 @@ on:
   pull_request:
     paths-ignore:
       - '.github/dependabot.yml'
+      - '.github/workflows/auto-merge-dependabot-prs.yml'
       - '.github/workflows/firebase-hosting-merge.yml'
       - '.github/workflows/firebase-hosting-pull-request.yml'
+      - '.github/workflows/dependency-review.yml'
       - 'firebase.json'
       - '.firebaserc'
       - 'MIT-LICENSE.txt'
@@ -28,18 +32,33 @@ on:
       - 'README.md'
       - '.vscode/**'
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: jorelali/setup-elm@v3
         with:
           elm-version: 0.19.1
-      - name: install npm dependencies
-        run: npm install
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      - uses: actions/cache@v3
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - if: ${{ steps.cache-npm.outputs.cache-hit == 'false' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: npm list
+      - name: install dependencies
+        run: npm ci
       - name: Test
         run: npx elm-test
-      - name: Ensure build correctnes
+      - name: Build
         run: npm run build
       - name: Lint Elm code
         run: npx elm-review
