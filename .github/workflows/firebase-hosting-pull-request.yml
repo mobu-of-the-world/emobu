@@ -14,7 +14,7 @@ name: Deploy to Firebase Hosting on PR
       - '.eslintrc.js'
 jobs:
   build_and_preview:
-    if: '${{ (github.event.pull_request.head.repo.full_name == github.repository) && (github.actor != "dependabot[bot]") }}'
+    if: ${{ (github.event.pull_request.head.repo.full_name == github.repository) && (github.actor != 'dependabot[bot]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
