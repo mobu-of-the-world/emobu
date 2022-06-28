@@ -1,0 +1,20 @@
+name: Send Elm dependencies
+on:
+  push:
+    branches:
+      - main
+
+# The API requires write permission on the repository to submit dependencies
+permissions:
+  contents: write
+
+jobs:
+  elm-dependency-submission:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v3
+      - name: Run snapshot action
+        uses: kachick/elm-dependency-submission@v1
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
