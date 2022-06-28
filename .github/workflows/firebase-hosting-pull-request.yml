@@ -13,7 +13,7 @@ name: Deploy to Firebase Hosting on PR
       - '.editorconfig'
       - 'README.md'
       - '.vscode/**'
-      - '.prettierrc'
+      - 'dprint.json'
       - '.eslintrc.js'
 jobs:
   build_and_preview:

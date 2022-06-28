@@ -12,7 +12,7 @@ on:
       - '.firebaserc'
       - 'MIT-LICENSE.txt'
       - '.editorconfig'
-      - '.prettierrc'
+      - 'dprint.json'
       - '.eslintrc.js'
       - 'README.md'
       - '.vscode/**'
@@ -27,7 +27,7 @@ on:
       - '.firebaserc'
       - 'MIT-LICENSE.txt'
       - '.editorconfig'
-      - '.prettierrc'
+      - 'dprint.json'
       - '.eslintrc.js'
       - 'README.md'
       - '.vscode/**'
@@ -63,4 +63,4 @@ jobs:
       - name: Lint Elm code
         run: npx elm-review
       - name: Lint JavaScript/TypeScript code
-        run: npm run prettier-check && npm run eslint
+        run: npm run format:check && npm run eslint
