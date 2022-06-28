@@ -15,7 +15,7 @@ name: Deploy to Firebase Hosting on merge
       - '.editorconfig'
       - 'README.md'
       - '.vscode/**'
-      - '.prettierrc'
+      - 'dprint.json'
       - '.eslintrc.js'
 jobs:
   build_and_deploy:
