@@ -63,4 +63,4 @@ jobs:
       - name: Lint Elm code
         run: npx elm-review
       - name: Lint JavaScript/TypeScript code
-        run: npm run format:check && npm run eslint
+        run: npm run eslint
