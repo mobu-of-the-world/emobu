@@ -13,7 +13,7 @@
   "excludes": ["**/node_modules", "**/*-lock.json", "lib/**", "dist/**", "elm-stuff", "review"],
   "plugins": [
     "https://plugins.dprint.dev/typescript-0.71.2.wasm",
-    "https://plugins.dprint.dev/json-0.15.4.wasm",
+    "https://plugins.dprint.dev/json-0.15.5.wasm",
     "https://plugins.dprint.dev/markdown-0.13.3.wasm"
   ]
 }
