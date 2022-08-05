@@ -6,5 +6,6 @@
   "labels": [
     "renovate"
   ],
+  "automerge": true,
   "enabledManagers": ["regex"]
 }
