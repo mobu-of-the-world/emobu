@@ -20,7 +20,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
-    "dprint": "^0.31.1",
+    "dprint": "^0.32.1",
     "elm-review": "^2.7.5",
     "elm-test": "^0.19.1-revision9",
     "eslint": "^8.23.0",
