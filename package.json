@@ -18,7 +18,7 @@
   "author": "Kenichi Kamiya <kachick1@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.45.1",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
     "@typescript-eslint/parser": "^5.45.1",
     "dprint": "^0.33.0",
     "elm-json": "^0.2.13",
