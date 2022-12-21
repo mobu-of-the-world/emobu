@@ -183,7 +183,7 @@ updateWithStorage msg oldModel =
 
 view : Model -> Html Msg
 view model =
-    div [ style "font-family" "'Inconsolata', monospace" ]
+    div [ ]
         [ form [ onSubmit AddUser ]
             [ input [ value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
             , button
