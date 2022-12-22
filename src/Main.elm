@@ -1,8 +1,8 @@
 port module Main exposing (Msg(..), main)
 
 import Browser
-import Html exposing (Html, br, button, div, footer, form, header, img, input, label, li, text, ul)
-import Html.Attributes exposing (checked, class, disabled, for, id, placeholder, src, style, type_, value)
+import Html exposing (Html, a, br, button, div, footer, form, header, img, input, label, li, text, ul)
+import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, style, type_, value)
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
@@ -11,8 +11,6 @@ import Model exposing (Model, User, decoder, defaultValues, encode)
 import Random
 import Random.List
 import Time
-import Html exposing (a)
-import Html.Attributes exposing (href)
 
 
 main : Program Json.Encode.Value Model Msg
@@ -229,12 +227,14 @@ timerPanel model =
             ]
         ]
 
+
 appHeader : Html Msg
 appHeader =
-    header [] [
-        text "mobu-elm",
-        a [href "https://github.com/kachick/mobu-elm"] [img [src "/images/github-mark.svg", style "width" "24px"] []]
-    ]
+    header []
+        [ text "mobu-elm"
+        , a [ href "https://github.com/kachick/mobu-elm" ] [ img [ src "/images/github-mark.svg", style "width" "24px" ] [] ]
+        ]
+
 
 view : Model -> Html Msg
 view model =

@@ -5,5 +5,8 @@
     "dprint",
     "firebaserc",
     "mobu"
-  ]
+  ],
+  "[elm]": {
+    "editor.defaultFormatter": "elmTooling.elm-ls-vscode"
+  }
 }
