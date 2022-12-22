@@ -28,6 +28,7 @@ jobs:
     outputs:
       tool-versions: '${{ steps.parse.outputs.json }}'
   build_and_deploy:
+    needs: [asdf-parser]
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
