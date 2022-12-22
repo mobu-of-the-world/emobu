@@ -7,7 +7,7 @@ html {
   display: grid;
   grid-template:
     'head head' minmax(20px, 5vh)
-    'usersPanel timer-panel' min(90vh)
+    'users-panel timer-panel' min(90vh)
     'foot foot' minmax(20px, 5vh) / 1fr 1fr;
   height: 100vw;
 }
@@ -38,7 +38,7 @@ html {
 }
 
 .users-panel {
-  grid-area: usersPanel;
+  grid-area: users-panel;
 }
 
 .users-panel ul {
