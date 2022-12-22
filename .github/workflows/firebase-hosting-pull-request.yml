@@ -41,6 +41,11 @@ jobs:
           elm-version: '${{ fromJson(needs.asdf-parser.outputs.tool-versions).elm }}'
       - name: Build
         run: npm run build
+      - name: Wait other jobs
+        uses: kachick/wait-other-jobs@v1
+        timeout-minutes: 15
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
