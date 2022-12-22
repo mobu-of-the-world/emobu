@@ -57,7 +57,7 @@ jobs:
       - name: install dependencies
         run: npm ci
       - name: Test
-        run: npx elm-test
+        run: npm test
       - name: Build
         run: npm run build
       - name: Lint Elm code

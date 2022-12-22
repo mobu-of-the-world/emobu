@@ -52,7 +52,7 @@ userEncoder user =
 encode : Model -> Json.Encode.Value
 encode model =
     Json.Encode.object
-        [ ( "users", Json.Encode.list userEncoder model.users ) ]
+        [ ( "users", Json.Encode.list userEncoder model.users ), ( "commitRef", Json.Encode.string "" ) ]
 
 
 userDecoder : Json.Decode.Decoder User
