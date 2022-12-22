@@ -233,7 +233,7 @@ timerPanel model =
         ]
 
 
-appHeader : Html Msg
+appHeader : Html msg
 appHeader =
     header []
         [ text "mobu-elm"
@@ -241,7 +241,7 @@ appHeader =
         ]
 
 
-appFooter : Model -> Html Msg
+appFooter : Model -> Html msg
 appFooter model =
     footer []
         [ text "rev - ", a [ href ("https://github.com/kachick/mobu-elm/tree/" ++ model.commitRef) ] [ text model.commitRef ] ]
