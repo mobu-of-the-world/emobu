@@ -1,6 +1,6 @@
 html {
   font-family: 'Inconsolata', monospace;
-  background-color: #478384;
+  background-color: #6A8372;
 }
 
 #page {
@@ -25,10 +25,6 @@ html {
 #page > footer {
   grid-area: foot;
   text-align: center;
-  /* position: sticky;
-  top: 100vh;
-  margin-bottom: 0.3rem;
-  align-self: start */
 }
 
 .usersPanel {
@@ -39,6 +35,25 @@ html {
   list-style-type: none;
 }
 
+.usersPanel > ul > li:nth-child(1) {
+  list-style-type: "🚗";
+}
+
 .timerPanel {
   grid-area: timerPanel;
+}
+
+.emojiButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.inputUnit {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.inputMinutes {
+  width: 6ch;
 }

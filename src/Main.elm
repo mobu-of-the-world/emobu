@@ -1,7 +1,7 @@
 port module Main exposing (Msg(..), main)
 
 import Browser
-import Html exposing (Html, a, br, button, div, footer, form, header, img, input, label, li, text, ul)
+import Html exposing (Html, a, br, button, div, footer, form, header, img, input, label, li, span, text, ul)
 import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, style, type_, value)
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
@@ -187,10 +187,10 @@ userPanel model =
         [ form [ onSubmit AddUser ]
             [ input [ value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
             , button
-                [ disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
-                [ text "Add" ]
+                [ class "emojiButton", disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
+                [ text "➕" ]
             ]
-        , button [ disabled (List.length model.users < 2), onClick ShuffleUsers ] [ text "Shuffle" ]
+        , button [ class "emojiButton", disabled (List.length model.users < 2), onClick ShuffleUsers ] [ text "🔀" ]
         , ul [] (List.map viewUser model.users)
         ]
 
@@ -203,8 +203,8 @@ timerPanel model =
         , text ("Elapsed minutes: " ++ String.fromInt (model.elapsedSeconds // 60))
         , br [] []
         , button
-            [ disabled (List.length model.users < 2), onClick ToggleMobbingState ]
-            [ text "Start/Pause" ]
+            [ class "emojiButton", disabled (List.length model.users < 2), onClick ToggleMobbingState ]
+            [ text "⏯️" ]
         , br [] []
         , button
             [ onClick ResetTimer ]
@@ -215,9 +215,10 @@ timerPanel model =
         , text ("Current interval(minutes): " ++ String.fromInt (model.intervalSeconds // 60))
         , br [] []
         , Html.form [ onSubmit UpdateInterval ]
-            [ input [ value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1", disabled model.debugMode ] []
+            [ input [ class "inputMinutes", value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1", disabled model.debugMode ] []
+            , span [ class "inputUnit" ] [ text "min" ]
             , button
-                [ disabled (model.mobbing || model.debugMode) ]
+                [ disabled (model.mobbing || model.debugMode || model.inputtedIntervalMinutes == String.fromInt (model.intervalSeconds // 60)) ]
                 [ text "Change" ]
             ]
         , br [] []
@@ -257,7 +258,7 @@ viewUser user =
     li []
         [ img [ src user.avatarUrl, style "width" "32px", style "border-radius" "50%", on "error" (Json.Decode.succeed (FetchGithubAvatarError user.username)) ] []
         , text user.username
-        , button [ onClick (DeleteUser user.username) ] [ text "Delete" ]
+        , button [ onClick (DeleteUser user.username), class "emojiButton" ] [ text "👋" ]
         ]
 
 
