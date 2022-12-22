@@ -3,9 +3,15 @@ import { Elm } from './Main.elm';
 declare const APP_COMMIT_REF: string;
 
 const storedData = localStorage.getItem('mobu-model');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const flags = storedData ? { ...JSON.parse(storedData), commitRef: APP_COMMIT_REF } : null;
+const mobuNode = document.getElementById('mobu');
+if (!mobuNode) {
+  throw Error('Not found node');
+}
 const app = Elm.Main.init({
-  node: document.getElementById('mobu')!,
+  node: mobuNode,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   flags,
 });
 app.ports.setStorage.subscribe((state: object) => {
@@ -13,5 +19,5 @@ app.ports.setStorage.subscribe((state: object) => {
 });
 app.ports.playSound.subscribe((url: string) => {
   const meowing = new Audio(url);
-  meowing.play();
+  void meowing.play();
 });
