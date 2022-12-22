@@ -1,16 +1,14 @@
 html {
-  font-family: 'Inconsolata', monospace;
+  font-family: Inconsolata, monospace;
   background-color: #6a8372;
 }
 
 #page {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: minmax(20px, 5vh) min(90vh) minmax(20px, 5vh);
-  grid-template-areas:
-    'head head'
-    'usersPanel timer-panel'
-    'foot foot';
+  grid-template:
+    'head head' minmax(20px, 5vh)
+    'usersPanel timer-panel' min(90vh)
+    'foot foot' minmax(20px, 5vh) / 1fr 1fr;
   height: 100vw;
 }
 
@@ -21,6 +19,7 @@ html {
   font-size: 18px;
   background-color: #43676b;
   align-items: center;
+  padding: 0 2ch;
 }
 
 #page > .header .github-logo {

@@ -4,6 +4,7 @@
     "editorconfig.editorconfig",
     "streetsidesoftware.code-spell-checker",
     "dbaeumer.vscode-eslint",
-    "dprint.dprint"
+    "dprint.dprint",
+    "stylelint.vscode-stylelint"
   ]
 }

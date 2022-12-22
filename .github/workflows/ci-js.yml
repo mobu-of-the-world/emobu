@@ -1,4 +1,4 @@
-name: CI
+name: CI - JS and CSS
 on:
   push:
     branches: [main]
@@ -29,7 +29,7 @@ jobs:
         id: parse
     outputs:
       tool-versions: '${{ steps.parse.outputs.json }}'
-  lint:
+  eslint:
     needs: [asdf-parser]
     runs-on: ubuntu-latest
     steps:
@@ -42,3 +42,16 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Lint
         run: npm run eslint
+  stylelint:
+    needs: [asdf-parser]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '${{ fromJson(needs.asdf-parser.outputs.tool-versions).nodejs }}'
+          cache: npm
+      - name: Install npm dependencies
+        run: npm ci --ignore-scripts
+      - name: Lint
+        run: npm run stylelint
