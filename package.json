@@ -9,13 +9,14 @@
     "build": "vite build",
     "serve": "serve dist -l 8938 -n",
     "test": "elm-test",
-    "lint": "elm-review && npm run eslint",
+    "lint": "elm-review && npm run eslint && npm run stylelint",
     "check": "npm run format:check && npm test && npm run lint",
     "preview": "vite preview",
     "format:check": "dprint check && npx elm-format --validate src",
     "format:fix": "dprint fmt && npx elm-format src",
     "eslint": "eslint --ignore-pattern \"src/**/*d.ts\" \"src/**/*.{js,ts,tsx}\"",
-    "eslint:fix": "eslint --ignore-pattern \"src/**/*d.ts\" --fix \"src/**/*.{js,ts,tsx}\""
+    "eslint:fix": "eslint --ignore-pattern \"src/**/*d.ts\" --fix \"src/**/*.{js,ts,tsx}\"",
+    "stylelint": "npx stylelint '{src,public}/**/*.css'"
   },
   "author": "Kenichi Kamiya <kachick1@gmail.com>",
   "license": "MIT",
