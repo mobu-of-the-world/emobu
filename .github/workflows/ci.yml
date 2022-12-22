@@ -1,4 +1,4 @@
-name: Test & Lint
+name: CI
 on:
   push:
     branches: [main]
@@ -10,10 +10,9 @@ on:
       - '.github/workflows/dependency-review.yml'
       - 'firebase.json'
       - '.firebaserc'
-      - 'MIT-LICENSE.txt'
+      - 'LICENSE'
       - '.editorconfig'
       - 'dprint.json'
-      - '.eslintrc.js'
       - 'README.md'
       - '.vscode/**'
   pull_request:
@@ -25,10 +24,9 @@ on:
       - '.github/workflows/dependency-review.yml'
       - 'firebase.json'
       - '.firebaserc'
-      - 'MIT-LICENSE.txt'
+      - 'LICENSE'
       - '.editorconfig'
       - 'dprint.json'
-      - '.eslintrc.js'
       - 'README.md'
       - '.vscode/**'
 jobs:
@@ -56,11 +54,5 @@ jobs:
         run: npm list
       - name: install dependencies
         run: npm ci
-      - name: Test
-        run: npm test
-      - name: Build
-        run: npm run build
-      - name: Lint Elm code
-        run: npx elm-review
-      - name: Lint JavaScript/TypeScript code
-        run: npm run eslint
+      - name: Test & Lint
+        run: npm check

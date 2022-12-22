@@ -1,4 +1,4 @@
-name: format check with dprint
+name: dprint
 on:
   push:
     branches: [main]

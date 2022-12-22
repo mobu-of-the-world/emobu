@@ -1,6 +1,6 @@
 # mobu-elm
 
-[![Build Status](https://github.com/kachick/mobu-elm/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/kachick/mobu-elm/actions/workflows/test.yml/?branch=main)
+[![Build Status](https://github.com/kachick/mobu-elm/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/kachick/mobu-elm/actions/workflows/ci.yml/?branch=main)
 [![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)](https://github.dev/kachick/mobu-elm)
 
 https://mobu-elm.web.app/

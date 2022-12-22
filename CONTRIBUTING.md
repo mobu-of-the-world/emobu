@@ -8,14 +8,13 @@ Runs the app in the development mode.<br />
 Open [http://localhost:5173/](http://localhost:5173/) to view it in your browser.
 
 The page will reload when you make changes.<br />
-You may also see any lint errors in the console.
 
 NOTE: This project is developped by elm, however this hot reloading uses vite for now.
 
-### `npm test`
+### `npm run check`
 
-Launches the test runner.\
-See the section about [elm-test](https://package.elm-lang.org/packages/elm-explorations/test/latest) for more information.
+Run linters, formatters, and tests. You can dig further detail in [task scripts](package.json).
+Especially recommend to visit the section about [elm-test](https://package.elm-lang.org/packages/elm-explorations/test/latest) for the test runner.
 
 ### `npm run build`
 
