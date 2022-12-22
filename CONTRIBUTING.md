@@ -10,7 +10,7 @@ This repository manage the language versions with [.tool-versions](.tool-version
 
 `asdf install`
 
-Them requires to install npm dependencies.
+Then requires to install npm dependencies.
 
 `npm install`
 
@@ -25,7 +25,7 @@ NOTE: This project is developped by elm, however this hot reloading uses vite fo
 
 ### `npm run check`
 
-Run linters, formatters, and tests. You can dig further detail in [task scripts](package.json).
+Run linters, formatters, and tests. You can dig further detail in [task scripts](package.json).\
 Especially recommend to visit the section about [elm-test](https://package.elm-lang.org/packages/elm-explorations/test/latest) for the test runner.
 
 ### `npm run build`
