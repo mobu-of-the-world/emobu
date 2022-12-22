@@ -1,8 +1,8 @@
-port module Main exposing (Msg(..), main)
+port module Main exposing (Msg(..), main, userPanel)
 
 import Browser
-import Html exposing (Html, br, button, div, form, img, input, label, li, text, ul)
-import Html.Attributes exposing (checked, disabled, for, id, placeholder, src, style, type_, value)
+import Html exposing (Html, br, button, div, footer, form, header, img, input, label, li, main_, text, ul)
+import Html.Attributes exposing (checked, class, disabled, for, id, placeholder, src, style, type_, value)
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
@@ -11,6 +11,8 @@ import Model exposing (Model, User, decoder, defaultValues, encode)
 import Random
 import Random.List
 import Time
+import Html exposing (a)
+import Html.Attributes exposing (href)
 
 
 main : Program Json.Encode.Value Model Msg
@@ -181,21 +183,24 @@ updateWithStorage msg oldModel =
     )
 
 
-view : Model -> Html Msg
-view model =
-    div []
+userPanel : Model -> Html Msg
+userPanel model =
+    div [ class "usersPanel" ]
         [ form [ onSubmit AddUser ]
             [ input [ value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
             , button
                 [ disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
                 [ text "Add" ]
             ]
-        , button
-            [ disabled (List.length model.users < 2), onClick ShuffleUsers ]
-            [ text "Shuffle" ]
+        , button [ disabled (List.length model.users < 2), onClick ShuffleUsers ] [ text "Shuffle" ]
         , ul [] (List.map viewUser model.users)
-        , br [] []
-        , text ("Elapsed seconds: " ++ String.fromInt model.elapsedSeconds)
+        ]
+
+
+timerPanel : Model -> Html Msg
+timerPanel model =
+    div [ class "timerPanel" ]
+        [ text ("Elapsed seconds: " ++ String.fromInt model.elapsedSeconds)
         , br [] []
         , text ("Elapsed minutes: " ++ String.fromInt (model.elapsedSeconds // 60))
         , br [] []
@@ -212,9 +217,9 @@ view model =
         , text ("Current interval(minutes): " ++ String.fromInt (model.intervalSeconds // 60))
         , br [] []
         , Html.form [ onSubmit UpdateInterval ]
-            [ input [ value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1" ] []
+            [ input [ value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1", disabled model.debugMode ] []
             , button
-                [ disabled model.mobbing ]
+                [ disabled (model.mobbing || model.debugMode) ]
                 [ text "Change" ]
             ]
         , br [] []
@@ -222,6 +227,22 @@ view model =
             [ input [ type_ "checkbox", id "toggle_debug_mode", checked model.debugMode, onCheck ToggleDubugMode ] []
             , text "Debug mode enforces to 2 seconds for the interval"
             ]
+        ]
+
+appHeader : Html Msg
+appHeader =
+    header [] [
+        text "mobu-elm",
+        a [href "https://github.com/kachick/mobu-elm"] [img [src "/images/github-mark.svg", style "width" "24px"] []]
+    ]
+
+view : Model -> Html Msg
+view model =
+    div [ id "page" ]
+        [ appHeader
+        , userPanel model
+        , timerPanel model
+        , footer [] []
         ]
 
 

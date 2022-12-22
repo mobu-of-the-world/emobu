@@ -1,0 +1,36 @@
+html {
+  font-family: 'Inconsolata', monospace;
+  background-color: #478384;
+}
+
+#page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 6fr 1fr;
+  grid-template-areas:
+    "head head"
+    "usersPanel timerPanel"
+    "foot foot";
+}
+
+#page > header {
+  grid-area: head;
+  display: flex;
+  justify-content: space-between;
+  font-size: large;
+  background-color: #43676b;
+}
+
+#page > footer { grid-area: foot; }
+
+.usersPanel {
+  grid-area: usersPanel;
+}
+
+.usersPanel > ul {
+  list-style-type: none;
+}
+
+.timerPanel {
+  grid-area: timerPanel;
+}
