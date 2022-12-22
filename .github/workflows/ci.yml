@@ -46,4 +46,4 @@ jobs:
         with:
           elm-version: '${{ fromJson(steps.asdf-parser.outputs.json).elm }}'
       - name: Test & Lint
-        run: npm check
+        run: npm run check
