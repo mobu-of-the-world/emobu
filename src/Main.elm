@@ -184,14 +184,18 @@ updateWithStorage msg oldModel =
 userPanel : Model -> Html Msg
 userPanel model =
     div [ class "usersPanel" ]
-        [ form [ onSubmit AddUser ]
-            [ input [ value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
-            , button
-                [ class "emojiButton", disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
-                [ text "➕" ]
-            ]
-        , button [ class "emojiButton", disabled (List.length model.users < 2), onClick ShuffleUsers ] [ text "🔀" ]
-        , ul [] (List.map viewUser model.users)
+        [ ul []
+            (List.map viewUser model.users
+                ++ [ li []
+                        [ form [ onSubmit AddUser ]
+                            [ input [ value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
+                            , button
+                                [ class "emojiButton", disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
+                                [ text "➕" ]
+                            ]
+                        ]
+                   ]
+            )
         ]
 
 
@@ -205,10 +209,10 @@ timerPanel model =
         , button
             [ class "emojiButton", disabled (List.length model.users < 2), onClick ToggleMobbingState ]
             [ text "⏯️" ]
-        , br [] []
+        , button [ class "emojiButton", disabled (List.length model.users < 2), onClick ShuffleUsers ] [ text "🔀" ]
         , button
-            [ onClick ResetTimer ]
-            [ text "Reset" ]
+            [ class "emojiButton", onClick ResetTimer ]
+            [ text "↩️" ]
         , br [] []
         , text ("Current interval(seconds): " ++ String.fromInt model.intervalSeconds)
         , br [] []

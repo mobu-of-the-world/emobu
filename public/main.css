@@ -27,6 +27,11 @@ html {
   text-align: center;
 }
 
+a {
+  text-decoration: none;
+  color: #724938;
+}
+
 .usersPanel {
   grid-area: usersPanel;
 }
@@ -41,6 +46,7 @@ html {
 
 .timerPanel {
   grid-area: timerPanel;
+  margin-top: 2ch;
 }
 
 .emojiButton {
