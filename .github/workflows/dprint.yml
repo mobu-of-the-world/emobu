@@ -1,7 +1,7 @@
 name: format check with dprint
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
 
 jobs:

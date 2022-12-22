@@ -17,4 +17,4 @@ jobs:
       - name: Run snapshot action
         uses: kachick/elm-dependency-submission@v1
         with:
-          token: "${{ secrets.GITHUB_TOKEN }}"
+          token: '${{ secrets.GITHUB_TOKEN }}'
