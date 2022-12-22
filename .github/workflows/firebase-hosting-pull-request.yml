@@ -40,6 +40,8 @@ jobs:
       - uses: jorelali/setup-elm@v3
         with:
           elm-version: '${{ fromJson(needs.asdf-parser.outputs.tool-versions).elm }}'
+      - name: Specify actual commit ref for revisions
+        run: echo VITE_COMMIT_REF=${{ github.event.pull_request.head.sha }} > .env
       - name: Build
         run: npm run build
       - name: Wait other jobs
