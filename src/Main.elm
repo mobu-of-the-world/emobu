@@ -27,7 +27,7 @@ init : Json.Encode.Value -> ( Model, Cmd Msg )
 init flags =
     ( case Json.Decode.decodeValue decoder flags of
         Ok decodedModel ->
-            { defaultValues | users = decodedModel.users }
+            { defaultValues | users = decodedModel.users, commitRef = decodedModel.commitRef }
 
         Err _ ->
             defaultValues
@@ -232,8 +232,14 @@ appHeader : Html Msg
 appHeader =
     header []
         [ text "mobu-elm"
-        , a [ href "https://github.com/kachick/mobu-elm" ] [ img [ src "/images/github-mark.svg", style "width" "24px" ] [] ]
+        , a [ href "https://github.com/kachick/mobu-elm/" ] [ img [ src "/images/github-mark.svg", style "width" "24px" ] [] ]
         ]
+
+
+appFooter : Model -> Html Msg
+appFooter model =
+    footer []
+        [ text "rev - ", a [ href ("https://github.com/kachick/mobu-elm/tree/" ++ model.commitRef) ] [ text model.commitRef ] ]
 
 
 view : Model -> Html Msg
@@ -242,7 +248,7 @@ view model =
         [ appHeader
         , userPanel model
         , timerPanel model
-        , footer [] []
+        , appFooter model
         ]
 
 

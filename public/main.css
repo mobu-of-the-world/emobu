@@ -6,22 +6,30 @@ html {
 #page {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 6fr 1fr;
+  grid-template-rows: minmax(20px, 5vh) min(90vh) minmax(20px, 5vh);
   grid-template-areas:
     "head head"
     "usersPanel timerPanel"
     "foot foot";
+  height: 100vw;
 }
 
 #page > header {
   grid-area: head;
   display: flex;
   justify-content: space-between;
-  font-size: large;
+  font-size: 18px;
   background-color: #43676b;
 }
 
-#page > footer { grid-area: foot; }
+#page > footer {
+  grid-area: foot;
+  text-align: center;
+  /* position: sticky;
+  top: 100vh;
+  margin-bottom: 0.3rem;
+  align-self: start */
+}
 
 .usersPanel {
   grid-area: usersPanel;

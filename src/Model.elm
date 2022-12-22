@@ -18,11 +18,12 @@ type alias Model =
     , inputtedIntervalMinutes : String
     , mobbing : Bool
     , debugMode : Bool
+    , commitRef : String
     }
 
 
 type alias DecodedModel =
-    { users : List User }
+    { users : List User, commitRef : String }
 
 
 defaultIntervalMinutes : Int
@@ -39,6 +40,7 @@ defaultValues =
     , inputtedIntervalMinutes = String.fromInt defaultIntervalMinutes
     , mobbing = False
     , debugMode = False
+    , commitRef = ""
     }
 
 
@@ -62,5 +64,6 @@ userDecoder =
 
 decoder : Json.Decode.Decoder DecodedModel
 decoder =
-    Json.Decode.map DecodedModel
+    Json.Decode.map2 DecodedModel
         (Json.Decode.field "users" (Json.Decode.list userDecoder))
+        (Json.Decode.field "commitRef" Json.Decode.string)
