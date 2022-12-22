@@ -1,7 +1,7 @@
-port module Main exposing (Msg(..), main, userPanel)
+port module Main exposing (Msg(..), main)
 
 import Browser
-import Html exposing (Html, br, button, div, footer, form, header, img, input, label, li, main_, text, ul)
+import Html exposing (Html, br, button, div, footer, form, header, img, input, label, li, text, ul)
 import Html.Attributes exposing (checked, class, disabled, for, id, placeholder, src, style, type_, value)
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
