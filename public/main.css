@@ -9,12 +9,12 @@ html {
   grid-template-rows: minmax(20px, 5vh) min(90vh) minmax(20px, 5vh);
   grid-template-areas:
     'head head'
-    'usersPanel timerPanel'
+    'usersPanel timer-panel'
     'foot foot';
   height: 100vw;
 }
 
-#page > header {
+#page > .header {
   grid-area: head;
   display: flex;
   justify-content: space-between;
@@ -22,44 +22,44 @@ html {
   background-color: #43676b;
 }
 
-#page > footer {
+#page > .footer {
   grid-area: foot;
   text-align: center;
 }
 
-a {
+.revision-link {
   text-decoration: none;
   color: #724938;
 }
 
-.usersPanel {
+.users-panel {
   grid-area: usersPanel;
 }
 
-.usersPanel > ul {
+.users-panel ul {
   list-style-type: none;
 }
 
-.usersPanel > ul > li:nth-child(1) {
+.users-panel ul > li:nth-child(1) {
   list-style-type: '🚗';
 }
 
-.timerPanel {
-  grid-area: timerPanel;
+.timer-panel {
+  grid-area: timer-panel;
   margin-top: 2ch;
 }
 
-.emojiButton {
+.emoji-button {
   background-color: transparent;
   border: none;
   cursor: pointer;
 }
 
-.inputUnit {
+.timer-panel .unit-label {
   margin-left: 5px;
   margin-right: 5px;
 }
 
-.inputMinutes {
+.timer-panel .minutes-input {
   width: 6ch;
 }

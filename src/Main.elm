@@ -183,14 +183,14 @@ updateWithStorage msg oldModel =
 
 userPanel : Model -> Html Msg
 userPanel model =
-    div [ class "usersPanel" ]
+    div [ class "users-panel" ]
         [ ul []
             (List.map viewUser model.users
                 ++ [ li []
                         [ form [ onSubmit AddUser ]
                             [ input [ value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
                             , button
-                                [ class "emojiButton", disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
+                                [ class "emoji-button", disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
                                 [ text "➕" ]
                             ]
                         ]
@@ -201,17 +201,17 @@ userPanel model =
 
 timerPanel : Model -> Html Msg
 timerPanel model =
-    div [ class "timerPanel" ]
+    div [ class "timer-panel" ]
         [ text ("Elapsed seconds: " ++ String.fromInt model.elapsedSeconds)
         , br [] []
         , text ("Elapsed minutes: " ++ String.fromInt (model.elapsedSeconds // 60))
         , br [] []
         , button
-            [ class "emojiButton", disabled (List.length model.users < 2), onClick ToggleMobbingState ]
+            [ class "emoji-button", disabled (List.length model.users < 2), onClick ToggleMobbingState ]
             [ text "⏯️" ]
-        , button [ class "emojiButton", disabled (List.length model.users < 2), onClick ShuffleUsers ] [ text "🔀" ]
+        , button [ class "emoji-button", disabled (List.length model.users < 2), onClick ShuffleUsers ] [ text "🔀" ]
         , button
-            [ class "emojiButton", onClick ResetTimer ]
+            [ class "emoji-button", onClick ResetTimer ]
             [ text "↩️" ]
         , br [] []
         , text ("Current interval(seconds): " ++ String.fromInt model.intervalSeconds)
@@ -219,8 +219,8 @@ timerPanel model =
         , text ("Current interval(minutes): " ++ String.fromInt (model.intervalSeconds // 60))
         , br [] []
         , Html.form [ onSubmit UpdateInterval ]
-            [ input [ class "inputMinutes", value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1", disabled model.debugMode ] []
-            , span [ class "inputUnit" ] [ text "min" ]
+            [ input [ class "minutes-input", value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1", disabled model.debugMode ] []
+            , span [ class "unit-label" ] [ text "min" ]
             , button
                 [ disabled (model.mobbing || model.debugMode || model.inputtedIntervalMinutes == String.fromInt (model.intervalSeconds // 60)) ]
                 [ text "Change" ]
@@ -235,7 +235,7 @@ timerPanel model =
 
 appHeader : Html msg
 appHeader =
-    header []
+    header [ class "header" ]
         [ text "mobu-elm"
         , a [ href "https://github.com/kachick/mobu-elm/" ] [ img [ src "/images/github-mark.svg", style "height" "90%" ] [] ]
         ]
@@ -243,8 +243,8 @@ appHeader =
 
 appFooter : Model -> Html msg
 appFooter model =
-    footer []
-        [ text "rev - ", a [ href ("https://github.com/kachick/mobu-elm/tree/" ++ model.commitRef) ] [ text model.commitRef ] ]
+    footer [ class "footer" ]
+        [ text "rev - ", a [ class "revision-link", href ("https://github.com/kachick/mobu-elm/tree/" ++ model.commitRef) ] [ text model.commitRef ] ]
 
 
 view : Model -> Html Msg
@@ -262,7 +262,7 @@ viewUser user =
     li []
         [ img [ src user.avatarUrl, style "width" "32px", style "border-radius" "50%", on "error" (Json.Decode.succeed (FetchGithubAvatarError user.username)) ] []
         , text user.username
-        , button [ onClick (DeleteUser user.username), class "emojiButton" ] [ text "👋" ]
+        , button [ onClick (DeleteUser user.username), class "emoji-button" ] [ text "👋" ]
         ]
 
 
