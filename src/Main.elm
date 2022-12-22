@@ -65,7 +65,7 @@ update msg model =
                 username =
                     String.trim model.inputtedUsername
             in
-            ( { model | inputtedUsername = "", users = { username = username, avatarUrl = getGithubAvatarUrl username } :: model.users }, Cmd.none )
+            ( { model | inputtedUsername = "", users = model.users ++ [ { username = username, avatarUrl = getGithubAvatarUrl username } ] }, Cmd.none )
 
         UpdateInterval ->
             let
