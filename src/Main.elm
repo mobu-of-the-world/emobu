@@ -237,7 +237,7 @@ appHeader : Html msg
 appHeader =
     header [ class "header" ]
         [ text "mobu-elm"
-        , a [ href "https://github.com/kachick/mobu-elm/" ] [ img [ src "/images/github-mark.svg", style "height" "90%" ] [] ]
+        , a [ href "https://github.com/kachick/mobu-elm/" ] [ img [ class "github-logo", src "/images/github-mark.svg" ] [] ]
         ]
 
 

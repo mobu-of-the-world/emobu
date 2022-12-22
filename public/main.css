@@ -20,6 +20,12 @@ html {
   justify-content: space-between;
   font-size: 18px;
   background-color: #43676b;
+  align-items: center;
+}
+
+#page > .header .github-logo {
+  height: 2ch;
+  max-height: 30px;
 }
 
 #page > .footer {
