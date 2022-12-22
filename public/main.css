@@ -9,7 +9,7 @@ html {
     'head head' minmax(20px, 5vh)
     'users-panel timer-panel' min(90vh)
     'foot foot' minmax(20px, 5vh) / 1fr 1fr;
-  height: 100vw;
+  height: 100vh;
 }
 
 #page > .header {
