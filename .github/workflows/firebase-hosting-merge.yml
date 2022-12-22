@@ -8,15 +8,16 @@ name: Deploy to Firebase Hosting on merge
       - main
     paths-ignore:
       - '.github/dependabot.yml'
+      - '.github/workflows/ci-**'
       - '.github/workflows/merge-bot-pr.yml'
       - '.github/workflows/firebase-hosting-merge.yml'
       - '.github/workflows/dependency-review.yml'
-      - 'MIT-LICENSE.txt'
+      - 'LICENSE'
       - '.editorconfig'
-      - 'README.md'
+      - '**.md'
       - '.vscode/**'
       - 'dprint.json'
-      - '.eslintrc.js'
+      - '.eslintrc.yml'
 jobs:
   asdf-parser:
     runs-on: ubuntu-latest
