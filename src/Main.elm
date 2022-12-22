@@ -11,6 +11,8 @@ import Model exposing (Model, User, decoder, defaultValues, encode)
 import Random
 import Random.List
 import Time
+import Html exposing (a)
+import Html.Attributes exposing (href)
 
 
 main : Program Json.Encode.Value Model Msg
@@ -183,7 +185,7 @@ updateWithStorage msg oldModel =
 
 userPanel : Model -> Html Msg
 userPanel model =
-    div [ class "users" ]
+    div [ class "usersPanel" ]
         [ form [ onSubmit AddUser ]
             [ input [ value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
             , button
@@ -215,9 +217,9 @@ timerPanel model =
         , text ("Current interval(minutes): " ++ String.fromInt (model.intervalSeconds // 60))
         , br [] []
         , Html.form [ onSubmit UpdateInterval ]
-            [ input [ value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1" ] []
+            [ input [ value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1", disabled model.debugMode ] []
             , button
-                [ disabled model.mobbing ]
+                [ disabled (model.mobbing || model.debugMode) ]
                 [ text "Change" ]
             ]
         , br [] []
@@ -227,11 +229,17 @@ timerPanel model =
             ]
         ]
 
+appHeader : Html Msg
+appHeader =
+    header [] [
+        text "mobu-elm",
+        a [href "https://github.com/kachick/mobu-elm"] [img [src "/images/github-mark.svg", style "width" "24px"] []]
+    ]
 
 view : Model -> Html Msg
 view model =
     div [ id "page" ]
-        [ header [] []
+        [ appHeader
         , userPanel model
         , timerPanel model
         , footer [] []

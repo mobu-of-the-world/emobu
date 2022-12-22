@@ -1,5 +1,6 @@
 html {
   font-family: 'Inconsolata', monospace;
+  background-color: #478384;
 }
 
 #page {
@@ -8,15 +9,26 @@ html {
   grid-template-rows: 1fr 6fr 1fr;
   grid-template-areas:
     "head head"
-    "users timerPanel"
+    "usersPanel timerPanel"
     "foot foot";
 }
 
-#page > header { grid-area: head; }
+#page > header {
+  grid-area: head;
+  display: flex;
+  justify-content: space-between;
+  font-size: large;
+  background-color: #43676b;
+}
+
 #page > footer { grid-area: foot; }
 
-.users {
-  grid-area: users;
+.usersPanel {
+  grid-area: usersPanel;
+}
+
+.usersPanel > ul {
+  list-style-type: none;
 }
 
 .timerPanel {
