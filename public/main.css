@@ -1,6 +1,6 @@
 html {
   font-family: 'Inconsolata', monospace;
-  background-color: #6A8372;
+  background-color: #6a8372;
 }
 
 #page {
@@ -8,9 +8,9 @@ html {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: minmax(20px, 5vh) min(90vh) minmax(20px, 5vh);
   grid-template-areas:
-    "head head"
-    "usersPanel timerPanel"
-    "foot foot";
+    'head head'
+    'usersPanel timerPanel'
+    'foot foot';
   height: 100vw;
 }
 
@@ -41,7 +41,7 @@ a {
 }
 
 .usersPanel > ul > li:nth-child(1) {
-  list-style-type: "🚗";
+  list-style-type: '🚗';
 }
 
 .timerPanel {
