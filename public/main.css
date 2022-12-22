@@ -1,3 +1,24 @@
 html {
   font-family: 'Inconsolata', monospace;
 }
+
+#page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 6fr 1fr;
+  grid-template-areas:
+    "head head"
+    "users timerPanel"
+    "foot foot";
+}
+
+#page > header { grid-area: head; }
+#page > footer { grid-area: foot; }
+
+.users {
+  grid-area: users;
+}
+
+.timerPanel {
+  grid-area: timerPanel;
+}
