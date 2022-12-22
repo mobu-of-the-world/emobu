@@ -236,15 +236,15 @@ timerPanel model =
 appHeader : Html msg
 appHeader =
     header [ class "header" ]
-        [ text "mobu-elm"
-        , a [ href "https://github.com/kachick/mobu-elm/" ] [ img [ class "github-logo", src "/images/github-mark.svg" ] [] ]
+        [ text "emobu"
+        , a [ href "https://github.com/mobu-of-the-world/emobu/" ] [ img [ class "github-logo", src "/images/github-mark.svg" ] [] ]
         ]
 
 
 appFooter : Model -> Html msg
 appFooter model =
     footer [ class "footer" ]
-        [ text "rev - ", a [ class "revision-link", href ("https://github.com/kachick/mobu-elm/tree/" ++ model.commitRef) ] [ text model.commitRef ] ]
+        [ text "rev - ", a [ class "revision-link", href ("https://github.com/mobu-of-the-world/emobu/tree/" ++ model.commitRef) ] [ text model.commitRef ] ]
 
 
 view : Model -> Html Msg
