@@ -19,6 +19,7 @@ html {
   font-size: 18px;
   background-color: #43676b;
   align-items: center;
+  padding: 0 2ch;
 }
 
 #page > .header .github-logo {
