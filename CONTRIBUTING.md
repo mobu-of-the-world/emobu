@@ -16,10 +16,10 @@ Then requires to install npm dependencies.
 
 ### `npm run dev`
 
-Runs the app in the development mode.<br />
+Runs the app in the development mode.
 Open [http://localhost:5173/](http://localhost:5173/) to view it in your browser.
 
-The page will reload when you make changes.<br />
+The page will reload when you make changes.
 
 NOTE: This project is developped by elm, however this hot reloading uses vite for now.
 
@@ -30,7 +30,7 @@ Especially recommend to visit the section about [elm-test](https://package.elm-l
 
 ### `npm run build`
 
-Builds the app for production to the `dist` folder.<br />
+Builds the app for production to the `dist` folder.
 
 ## CSS naming convention
 
