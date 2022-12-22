@@ -17,4 +17,4 @@ MIT
 
 ## Authors
 
-- Kenichi Kamiya (@kachick)
+- Kenichi Kamiya ([@kachick](https://github.com/kachick))
