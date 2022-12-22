@@ -7,7 +7,7 @@ https://mobu-elm.web.app/
 
 A web application to manage participants and timer for mob-programming
 
-This elm project should take over [TypeScript & React project](https://github.com/mobu-of-the-world/mobu)! (It is an authors hope...)
+This elm project might take over [TypeScript & React project](https://github.com/mobu-of-the-world/mobu)! (It is an author's hope...)
 
 [How to development](CONTRIBUTING.md)
 
