@@ -44,8 +44,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: kachick/action-parse-asdf-tool-versions@v1
-        id: asdf-parser
       - uses: actions/setup-node@v3
         with:
           node-version: '${{ fromJson(needs.asdf-parser.outputs.tool-versions).nodejs }}'
