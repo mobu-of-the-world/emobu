@@ -1,7 +1,7 @@
 # mobu-elm
 
-[![CI Status - Elm](actions/workflows/ci-elm.yml/badge.svg?branch=main)](actions/workflows/ci-elm.yml/?branch=main)
-[![CI Status - JavaScript](actions/workflows/ci-js.yml/badge.svg?branch=main)](actions/workflows/ci-js.yml/?branch=main)
+[![CI Status - Elm](https://github.com/kachick/mobu-elm/actions/workflows/ci-elm.yml/badge.svg?branch=main)](https://github.com/kachick/mobu-elm/actions/workflows/ci-elm.yml/?branch=main)
+[![CI Status - JavaScript](https://github.com/kachick/mobu-elm/actions/workflows/ci-js.yml/badge.svg?branch=main)](https://github.com/kachick/mobu-elm/actions/workflows/ci-js.yml/?branch=main)
 
 https://mobu-elm.web.app/
 
