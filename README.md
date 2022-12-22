@@ -1,7 +1,7 @@
 # mobu-elm
 
-[![Build Status](https://github.com/kachick/mobu-elm/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/kachick/mobu-elm/actions/workflows/ci.yml/?branch=main)
-[![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)](https://github.dev/kachick/mobu-elm)
+[![CI Status - Elm](https://github.com/kachick/mobu-elm/actions/workflows/ci-elm.yml/badge.svg?branch=main)](https://github.com/kachick/mobu-elm/actions/workflows/ci-elm.yml/?branch=main)
+[![CI Status - JavaScript](https://github.com/kachick/mobu-elm/actions/workflows/ci-js.yml/badge.svg?branch=main)](https://github.com/kachick/mobu-elm/actions/workflows/ci-js.yml/?branch=main)
 
 https://mobu-elm.web.app/
 
@@ -17,4 +17,4 @@ MIT
 
 ## Authors
 
-- Kenichi Kamiya (@kachick)
+- Kenichi Kamiya ([@kachick](https://github.com/kachick))

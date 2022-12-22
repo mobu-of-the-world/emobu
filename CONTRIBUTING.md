@@ -2,6 +2,18 @@
 
 ## How to start development
 
+### Setup
+
+Needs elm and nodejs for development.\
+Author is using [asdf](https://asdf-vm.com/) to install them.\
+This repository manage the language versions with [.tool-versions](.tool-versions). So you can install them as below.
+
+`asdf install`
+
+Them requires to install npm dependencies.
+
+`npm install`
+
 ### `npm run dev`
 
 Runs the app in the development mode.<br />
