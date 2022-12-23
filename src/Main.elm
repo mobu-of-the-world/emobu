@@ -10,7 +10,7 @@ import List.Extra
 import Model exposing (Model, User, decoder, defaultValues, encode)
 import Random
 import Random.List
-import Time
+import Time exposing (Posix, every, millisToPosix, toHour, toMinute, toSecond, utc)
 
 
 main : Program Json.Encode.Value Model Msg
@@ -41,7 +41,7 @@ type Msg
     | ShuffleUsers
     | GotNewUsers (List User)
     | DeleteUser String
-    | Tick Time.Posix
+    | Tick Posix
     | InputIntervalMinutes String
     | UpdateInterval
     | ToggleMobbingState
@@ -201,12 +201,24 @@ userPanel model =
         ]
 
 
+readableDuration : Int -> String
+readableDuration seconds =
+    let
+        time : Posix
+        time =
+            millisToPosix (seconds * 1000)
+    in
+    String.padLeft 2 '0' (String.fromInt (toHour utc time))
+        ++ ":"
+        ++ String.padLeft 2 '0' (String.fromInt (toMinute utc time))
+        ++ ":"
+        ++ String.padLeft 2 '0' (String.fromInt (toSecond utc time))
+
+
 timerPanel : Model -> Html Msg
 timerPanel model =
     div [ class "timer-panel" ]
-        [ text ("Elapsed seconds: " ++ String.fromInt model.elapsedSeconds)
-        , br [] []
-        , text ("Elapsed minutes: " ++ String.fromInt (model.elapsedSeconds // 60))
+        [ text ("Elapsed: " ++ readableDuration model.elapsedSeconds)
         , br [] []
         , button
             [ class "emoji-button major", disabled (List.length model.users < 2), onClick ToggleMobbingState ]
@@ -216,16 +228,16 @@ timerPanel model =
             [ class "emoji-button major", onClick ResetTimer ]
             [ text "↩️" ]
         , br [] []
-        , text ("Current interval(seconds): " ++ String.fromInt model.intervalSeconds)
-        , br [] []
-        , text ("Current interval(minutes): " ++ String.fromInt (model.intervalSeconds // 60))
-        , br [] []
-        , Html.form [ onSubmit UpdateInterval ]
-            [ input [ class "minutes-input", value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1", disabled model.debugMode ] []
-            , span [ class "unit-label" ] [ text "min" ]
-            , button
-                [ class "emoji-button", disabled (model.mobbing || model.debugMode || model.inputtedIntervalMinutes == String.fromInt (model.intervalSeconds // 60)) ]
-                [ text "✔️" ]
+        , div [ class "row" ]
+            [ text ("Interval: " ++ readableDuration model.intervalSeconds)
+            , span [] [ text "➡" ]
+            , Html.form [ onSubmit UpdateInterval ]
+                [ input [ class "minutes-input", value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1", disabled model.debugMode ] []
+                , span [ class "unit-label" ] [ text "min" ]
+                , button
+                    [ class "emoji-button", disabled (model.mobbing || model.debugMode || model.inputtedIntervalMinutes == String.fromInt (model.intervalSeconds // 60)) ]
+                    [ text "✔️" ]
+                ]
             ]
         , label [ for "toggle_debug_mode" ]
             [ input [ type_ "checkbox", id "toggle_debug_mode", checked model.debugMode, onCheck ToggleDubugMode ] []
@@ -282,7 +294,7 @@ getShuffledUsers model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     if model.mobbing then
-        Time.every 1000 Tick
+        every 1000 Tick
 
     else
         Sub.none

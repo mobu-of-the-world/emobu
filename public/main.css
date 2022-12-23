@@ -123,6 +123,10 @@ html {
   width: 7ch;
 }
 
+#page .row {
+  display: inline-block;
+}
+
 #page .major {
   font-size: xx-large;
 }
