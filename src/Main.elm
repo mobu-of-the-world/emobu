@@ -6,7 +6,7 @@ import Html.Attributes exposing (checked, class, disabled, for, href, id, placeh
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
-import List.Extra
+import List exposing (drop, take)
 import Model exposing (Model, User, decoder, defaultValues, encode)
 import Random
 import Random.List
@@ -120,7 +120,7 @@ update msg model =
                 newUsers : List User
                 newUsers =
                     if timeOver then
-                        List.Extra.swapAt 0 (List.length model.users - 1) model.users
+                        drop 1 model.users ++ take 1 model.users
 
                     else
                         model.users
