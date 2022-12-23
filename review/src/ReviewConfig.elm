@@ -47,7 +47,6 @@ config =
     , NoMissingTypeExpose.rule
     , NoSimpleLetBody.rule
     , NoPrematureLetComputation.rule
-    , NoUnused.CustomTypeConstructors.rule []
     -- , NoUnused.CustomTypeConstructorArgs.rule # This false positive alerts. e.g. Tick Time.Posix
     , NoUnused.Dependencies.rule
     , NoUnused.Exports.rule
