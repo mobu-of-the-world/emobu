@@ -186,12 +186,14 @@ userPanel model =
     div [ class "users-panel" ]
         [ ul []
             (List.map viewUser model.users
-                ++ [ li []
-                        [ form [ onSubmit AddUser ]
-                            [ input [ value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
-                            , button
-                                [ class "emoji-button", disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
-                                [ text "➕" ]
+                ++ [ div [ class "list-item" ]
+                        [ li []
+                            [ form [ onSubmit AddUser ]
+                                [ input [ class "add-input", value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
+                                , button
+                                    [ class "emoji-button", disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
+                                    [ text "➕" ]
+                                ]
                             ]
                         ]
                    ]
@@ -207,11 +209,11 @@ timerPanel model =
         , text ("Elapsed minutes: " ++ String.fromInt (model.elapsedSeconds // 60))
         , br [] []
         , button
-            [ class "emoji-button", disabled (List.length model.users < 2), onClick ToggleMobbingState ]
+            [ class "emoji-button major", disabled (List.length model.users < 2), onClick ToggleMobbingState ]
             [ text "⏯️" ]
-        , button [ class "emoji-button", disabled (List.length model.users < 2), onClick ShuffleUsers ] [ text "🔀" ]
+        , button [ class "emoji-button major", disabled (List.length model.users < 2), onClick ShuffleUsers ] [ text "🔀" ]
         , button
-            [ class "emoji-button", onClick ResetTimer ]
+            [ class "emoji-button major", onClick ResetTimer ]
             [ text "↩️" ]
         , br [] []
         , text ("Current interval(seconds): " ++ String.fromInt model.intervalSeconds)

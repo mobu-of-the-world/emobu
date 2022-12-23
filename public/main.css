@@ -51,6 +51,13 @@ html {
   text-align: center;
 }
 
+#page input {
+  border: none;
+  border-radius: 1.5ch;
+  background-color: #d7c4bb;
+  text-align: center;
+}
+
 .revision-link {
   text-decoration: none;
   color: #724938;
@@ -73,6 +80,10 @@ html {
   margin: 1ch 0;
   margin-left: 1ch;
   vertical-align: middle;
+}
+
+.users-panel .add-input {
+  width: 18ch;
 }
 
 .users-panel ul > li .user-image {
@@ -109,9 +120,9 @@ html {
 }
 
 .timer-panel .minutes-input {
-  width: 6ch;
+  width: 7ch;
 }
 
-.timer-panel .emoji-button {
+#page .major {
   font-size: xx-large;
 }
