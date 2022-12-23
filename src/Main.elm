@@ -222,8 +222,8 @@ timerPanel model =
             [ input [ class "minutes-input", value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1", disabled model.debugMode ] []
             , span [ class "unit-label" ] [ text "min" ]
             , button
-                [ disabled (model.mobbing || model.debugMode || model.inputtedIntervalMinutes == String.fromInt (model.intervalSeconds // 60)) ]
-                [ text "Change" ]
+                [ class "emoji-button", disabled (model.mobbing || model.debugMode || model.inputtedIntervalMinutes == String.fromInt (model.intervalSeconds // 60)) ]
+                [ text "✔️" ]
             ]
         , label [ for "toggle_debug_mode" ]
             [ input [ type_ "checkbox", id "toggle_debug_mode", checked model.debugMode, onCheck ToggleDubugMode ] []

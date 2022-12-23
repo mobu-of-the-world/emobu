@@ -99,6 +99,10 @@ html {
   cursor: pointer;
 }
 
+.emoji-button:enabled {
+  color: limegreen;
+}
+
 .timer-panel .unit-label {
   margin-left: 5px;
   margin-right: 5px;
