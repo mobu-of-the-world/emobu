@@ -2,7 +2,7 @@ port module Main exposing (Msg(..), main)
 
 import Browser
 import Html exposing (Html, a, br, button, div, footer, form, header, img, input, label, li, span, text, ul)
-import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, style, type_, value)
+import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, type_, value)
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
