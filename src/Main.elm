@@ -225,10 +225,9 @@ timerPanel model =
                 [ disabled (model.mobbing || model.debugMode || model.inputtedIntervalMinutes == String.fromInt (model.intervalSeconds // 60)) ]
                 [ text "Change" ]
             ]
-        , br [] []
         , label [ for "toggle_debug_mode" ]
             [ input [ type_ "checkbox", id "toggle_debug_mode", checked model.debugMode, onCheck ToggleDubugMode ] []
-            , text "Debug mode enforces to 2 seconds for the interval"
+            , text "Debug mode (2 seconds)"
             ]
         ]
 
@@ -260,9 +259,11 @@ view model =
 viewUser : User -> Html Msg
 viewUser user =
     li []
-        [ img [ src user.avatarUrl, style "width" "32px", style "border-radius" "50%", on "error" (Json.Decode.succeed (FetchGithubAvatarError user.username)) ] []
-        , text user.username
-        , button [ onClick (DeleteUser user.username), class "emoji-button" ] [ text "👋" ]
+        [ div [ class "list-item" ]
+            [ img [ class "user-image", src user.avatarUrl, on "error" (Json.Decode.succeed (FetchGithubAvatarError user.username)) ] []
+            , text user.username
+            , button [ onClick (DeleteUser user.username), class "emoji-button" ] [ text "👋" ]
+            ]
         ]
 
 

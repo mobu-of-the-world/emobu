@@ -5,11 +5,30 @@ html {
 
 #page {
   display: grid;
-  grid-template:
-    'head head' minmax(20px, 5vh)
-    'users-panel timer-panel' min(90vh)
-    'foot foot' minmax(20px, 5vh) / 1fr 1fr;
   height: 100vh;
+}
+
+@media screen and (max-width: 799px) {
+  #page {
+    grid-template:
+      'head' minmax(20px, 5vh)
+      'timer-panel' min(30vh)
+      'users-panel' min(60vh)
+      'foot' minmax(20px, 5vh) / 1fr;
+  }
+
+  .users-panel {
+    margin-top: 3ch;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  #page {
+    grid-template:
+      'head head' minmax(20px, 5vh)
+      'users-panel timer-panel' min(90vh)
+      'foot foot' minmax(20px, 5vh) / 1fr 1fr;
+  }
 }
 
 #page > .header {
@@ -45,6 +64,24 @@ html {
   list-style-type: none;
 }
 
+.users-panel ul > li {
+  list-style-position: outside;
+}
+
+.users-panel .list-item {
+  display: inline-block;
+  margin: 1ch 0;
+  margin-left: 1ch;
+  vertical-align: middle;
+}
+
+.users-panel ul > li .user-image {
+  margin-right: 2ch;
+  width: 32px;
+  border-radius: 50%;
+  float: left;
+}
+
 .users-panel ul > li:nth-child(1) {
   list-style-type: '🚗';
 }
@@ -52,6 +89,8 @@ html {
 .timer-panel {
   grid-area: timer-panel;
   margin-top: 2ch;
+  margin-left: 2ch;
+  margin-right: 2ch;
 }
 
 .emoji-button {
@@ -67,4 +106,8 @@ html {
 
 .timer-panel .minutes-input {
   width: 6ch;
+}
+
+.timer-panel .emoji-button {
+  font-size: xx-large;
 }
