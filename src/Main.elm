@@ -218,9 +218,7 @@ readableDuration seconds =
 timerPanel : Model -> Html Msg
 timerPanel model =
     div [ class "timer-panel" ]
-        [ text ("Elapsed: " ++ readableDuration model.elapsedSeconds)
-        , br [] []
-        , button
+        [ button
             [ class "emoji-button major", disabled (List.length model.users < 2), onClick ToggleMobbingState ]
             [ text "⏯️" ]
         , button [ class "emoji-button major", disabled (List.length model.users < 2), onClick ShuffleUsers ] [ text "🔀" ]
@@ -228,9 +226,9 @@ timerPanel model =
             [ class "emoji-button major", onClick ResetTimer ]
             [ text "↩️" ]
         , br [] []
-        , div [ class "row" ]
-            [ text ("Interval: " ++ readableDuration model.intervalSeconds)
-            , span [] [ text "➡" ]
+        , text ("⏲️ " ++ readableDuration model.elapsedSeconds ++ "/" ++ readableDuration model.intervalSeconds)
+        , div [ class "newinterval-row" ]
+            [ span [] [ text "➡" ]
             , Html.form [ onSubmit UpdateInterval ]
                 [ input [ class "minutes-input", value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1", disabled model.debugMode ] []
                 , span [ class "unit-label" ] [ text "min" ]
@@ -239,9 +237,11 @@ timerPanel model =
                     [ text "✔️" ]
                 ]
             ]
-        , label [ for "toggle_debug_mode" ]
-            [ input [ type_ "checkbox", id "toggle_debug_mode", checked model.debugMode, onCheck ToggleDubugMode ] []
-            , text "Debug mode (2 seconds)"
+        , div [ class "debug-toggle" ]
+            [ label [ for "toggle_debug_mode" ]
+                [ input [ type_ "checkbox", id "toggle_debug_mode", checked model.debugMode, onCheck ToggleDubugMode ] []
+                , text "Debug mode (2 seconds)"
+                ]
             ]
         ]
 

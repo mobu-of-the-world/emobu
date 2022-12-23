@@ -123,12 +123,17 @@ html {
   width: 7ch;
 }
 
-#page .row {
+.newinterval-row {
   display: flex;
   justify-content: space-between;
-  width: 40ch;
+  width: 18ch;
+  margin-left: 2ch;
 }
 
 #page .major {
   font-size: xx-large;
+}
+
+.debug-toggle {
+  margin-top: 1ch;
 }
