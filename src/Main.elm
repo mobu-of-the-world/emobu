@@ -1,13 +1,13 @@
 module Main exposing (main)
 
+import App.Messages exposing (Msg(..))
+import App.Model exposing (Model, decoder, defaultValues)
+import App.Update exposing (updateWithStorage)
+import App.View exposing (view)
 import Browser
 import Json.Decode
 import Json.Encode
-import Messages exposing (Msg(..))
-import Model exposing (Model, decoder, defaultValues)
-import Page.App exposing (view)
 import Time exposing (every)
-import Update exposing (updateWithStorage)
 
 
 main : Program Json.Encode.Value Model Msg

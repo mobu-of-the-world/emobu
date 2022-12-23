@@ -1,19 +1,29 @@
-module Page.App exposing (view)
+module App.View exposing (view)
 
+import App.Messages exposing (Msg(..))
+import App.Model exposing (Model, User)
 import Html exposing (Html, a, br, button, div, footer, form, header, img, input, label, li, span, text, ul)
 import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, type_, value)
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
-import Messages exposing (Msg(..))
-import Model exposing (Model, User)
 import Time exposing (Posix, millisToPosix, toHour, toMinute, toSecond, utc)
+
+
+view : Model -> Html Msg
+view model =
+    div [ id "page" ]
+        [ appHeader
+        , userPanel model
+        , timerPanel model
+        , appFooter model
+        ]
 
 
 userPanel : Model -> Html Msg
 userPanel model =
     div [ class "users-panel" ]
         [ ul []
-            (List.map viewUser model.users
+            (List.map userRow model.users
                 ++ [ div [ class "list-item" ]
                         [ li []
                             [ form [ onSubmit AddUser ]
@@ -29,18 +39,8 @@ userPanel model =
         ]
 
 
-view : Model -> Html Msg
-view model =
-    div [ id "page" ]
-        [ appHeader
-        , userPanel model
-        , timerPanel model
-        , appFooter model
-        ]
-
-
-viewUser : User -> Html Msg
-viewUser user =
+userRow : User -> Html Msg
+userRow user =
     li []
         [ div [ class "list-item" ]
             [ img [ class "user-image", src user.avatarUrl, on "error" (Json.Decode.succeed (FetchGithubAvatarError user.username)) ] []

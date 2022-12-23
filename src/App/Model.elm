@@ -1,4 +1,4 @@
-module Model exposing (DecodedModel, Model, User, decoder, defaultValues, encode)
+module App.Model exposing (DecodedModel, Model, User, decoder, defaultValues, encode)
 
 import Json.Decode
 import Json.Encode

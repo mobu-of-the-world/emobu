@@ -1,6 +1,6 @@
-module Messages exposing (Msg(..))
+module App.Messages exposing (Msg(..))
 
-import Model exposing (User)
+import App.Model exposing (User)
 import Time exposing (Posix)
 
 

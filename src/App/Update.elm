@@ -1,9 +1,9 @@
-port module Update exposing (updateWithStorage)
+port module App.Update exposing (updateWithStorage)
 
+import App.Messages exposing (Msg(..))
+import App.Model exposing (Model, User, encode)
 import Json.Encode
 import List exposing (drop, take)
-import Messages exposing (Msg(..))
-import Model exposing (Model, User, encode)
 import Random
 import Random.List
 
@@ -107,7 +107,7 @@ update msg model =
 
         FetchGithubAvatarError username ->
             let
-                setFallbackAvatar : Model.User -> Model.User
+                setFallbackAvatar : User -> User
                 setFallbackAvatar user =
                     if user.username == username then
                         { user | avatarUrl = "https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png" }
@@ -115,7 +115,7 @@ update msg model =
                     else
                         user
 
-                newUsers : List Model.User
+                newUsers : List User
                 newUsers =
                     List.map setFallbackAvatar model.users
             in
