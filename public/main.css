@@ -124,7 +124,9 @@ html {
 }
 
 #page .row {
-  display: inline-block;
+  display: flex;
+  justify-content: space-between;
+  width: 40ch;
 }
 
 #page .major {
