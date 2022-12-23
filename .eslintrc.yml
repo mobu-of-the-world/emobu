@@ -12,14 +12,15 @@ env:
 parserOptions:
   sourceType: module
   project: ./tsconfig.json
-  ecmaFeatures:
-    jsx: true
 rules:
   no-mixed-operators: error
   no-unused-vars: 'off'
   '@typescript-eslint/no-unused-vars':
     - error
     - argsIgnorePattern: ^_
+  '@typescript-eslint/prefer-readonly-parameter-types':
+    - error
+    - ignoreInferredTypes: true
   no-restricted-syntax:
     - error
     - selector: TSEnumDeclaration
@@ -28,8 +29,11 @@ rules:
   deprecation/deprecation: error
 overrides:
   - files:
-      - src/**/*.ts
+      - src/**/*d.ts
+  - files:
+      - src/**/*d.ts
     rules:
+      '@typescript-eslint/no-unused-vars':
+        - off
       '@typescript-eslint/prefer-readonly-parameter-types':
-        - error
-        - ignoreInferredTypes: true
+        - off
