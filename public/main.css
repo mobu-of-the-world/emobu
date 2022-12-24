@@ -126,10 +126,6 @@ html {
   margin-right: 5px;
 }
 
-.timer-panel .duration-input {
-  width: 10ch;
-}
-
 .newinterval-row {
   display: flex;
   justify-content: space-between;
@@ -143,4 +139,20 @@ html {
 
 .sound-toggle {
   margin-top: 2ch;
+}
+
+.timer-row {
+  display: flex;
+  font-size: x-large;
+  width: 34ch;
+}
+
+.timer-panel .interval-input {
+  font-size: medium;
+}
+
+.timer-panel .interval-input .each-unit {
+  width: 6ch;
+  top: 0.6ch;
+  position: relative;
 }

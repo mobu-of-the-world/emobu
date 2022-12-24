@@ -1,4 +1,4 @@
-module Model exposing (DecodedModel, IntervalUnit(..), Model, User, decoder, defaultValues, encode)
+module Model exposing (DecodedModel, InputtedInterval, Model, User, decoder, defaultValues, encode, intervalsToSeconds)
 
 import Json.Decode
 import Json.Encode
@@ -10,9 +10,17 @@ type alias User =
     }
 
 
-type IntervalUnit
-    = Min
-    | Sec
+
+-- type IntervalUnit
+--     = Min
+--     | Sec
+
+
+type alias InputtedInterval =
+    { seconds : String
+    , minutes : String
+    , hours : String
+    }
 
 
 type alias Model =
@@ -20,11 +28,12 @@ type alias Model =
     , users : List User
     , elapsedSeconds : Int
     , intervalSeconds : Int
-    , inputtedInterval : String
+    , inputtedInterval : InputtedInterval
     , mobbing : Bool
     , enabledSound : Bool
     , commitRef : String
-    , intervalUnit : IntervalUnit
+
+    -- , intervalUnit : IntervalUnit
     }
 
 
@@ -32,9 +41,52 @@ type alias DecodedModel =
     { users : List User, commitRef : Maybe String, enabledSound : Maybe Bool }
 
 
-defaultIntervalMinutes : Int
-defaultIntervalMinutes =
-    30
+defaultIntervalSeconds : Int
+defaultIntervalSeconds =
+    30 * 60
+
+
+secondsToIntervals : Int -> InputtedInterval
+secondsToIntervals totalSeconds =
+    let
+        format : Int -> String
+        format val =
+            String.padLeft 2 '0' (String.fromInt val)
+
+        sec =
+            remainderBy 60 totalSeconds
+
+        hour =
+            totalSeconds // (60 * 60)
+
+        min =
+            (totalSeconds // 60) - (hour * 60)
+    in
+    InputtedInterval (format sec) (format min) (format hour)
+
+
+intervalsToSeconds : InputtedInterval -> Maybe Int
+intervalsToSeconds intervals =
+    let
+        maybeHour =
+            String.toInt intervals.hours
+
+        maybeMinutes =
+            String.toInt intervals.minutes
+
+        maybeSeconds =
+            String.toInt intervals.seconds
+    in
+    case ( maybeHour, maybeMinutes, maybeSeconds ) of
+        ( Just hour, Just min, Just sec ) ->
+            Just ((hour * (60 * 60)) + (min * 60) + sec)
+
+        _ ->
+            Nothing
+
+
+
+-- (Maybe.withDefault 0 (String.toInt intervals.hours) * (60 * 60)) + (Maybe.withDefault 0 (String.toInt intervals.minutes) * 60) + Maybe.withDefault 0 (String.toInt intervals.seconds)
 
 
 defaultValues : Model
@@ -42,12 +94,13 @@ defaultValues =
     { users = []
     , inputtedUsername = ""
     , elapsedSeconds = 0
-    , intervalSeconds = defaultIntervalMinutes * 60
-    , inputtedInterval = String.fromInt defaultIntervalMinutes
+    , intervalSeconds = defaultIntervalSeconds
+    , inputtedInterval = secondsToIntervals defaultIntervalSeconds
     , mobbing = False
     , enabledSound = True
     , commitRef = "unknown ref"
-    , intervalUnit = Min
+
+    -- , intervalUnit = Min
     }
 
 
