@@ -39,7 +39,7 @@ type Msg
     = InputUsername String
     | AddUser
     | ShuffleUsers
-    | GotNewUsers (List User)
+    | ReplaceUsers (List User)
     | DeleteUser String
     | Tick Posix
     | InputIntervalMinutes String
@@ -92,9 +92,9 @@ update msg model =
             ( { model | debugMode = enabled, intervalSeconds = 2 }, Cmd.none )
 
         ShuffleUsers ->
-            ( model, getShuffledUsers model )
+            ( model, Random.generate ReplaceUsers <| Random.List.shuffle model.users )
 
-        GotNewUsers newUsers ->
+        ReplaceUsers newUsers ->
             ( { model | users = newUsers }, Cmd.none )
 
         DeleteUser username ->
@@ -289,11 +289,6 @@ viewUser user =
 getGithubAvatarUrl : String -> String
 getGithubAvatarUrl username =
     "https://github.com/" ++ username ++ ".png"
-
-
-getShuffledUsers : Model -> Cmd Msg
-getShuffledUsers model =
-    Random.generate GotNewUsers <| Random.List.shuffle model.users
 
 
 subscriptions : Model -> Sub Msg
