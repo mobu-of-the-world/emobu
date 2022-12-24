@@ -14,6 +14,8 @@ Then requires to install npm dependencies.
 
 `npm install`
 
+If you use vscode, installing elm-test, elm-format and elm-review into global makes better experience.
+
 ### `npm run dev`
 
 Runs the app in the development mode.

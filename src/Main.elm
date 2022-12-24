@@ -194,6 +194,7 @@ updateWithStorage msg oldModel =
 isAddableUser : Model -> Bool
 isAddableUser model =
     let
+        normalizedUsername : String
         normalizedUsername =
             String.trim model.inputtedUsername
     in

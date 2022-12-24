@@ -11,5 +11,6 @@
   ],
   "[elm]": {
     "editor.defaultFormatter": "elmTooling.elm-ls-vscode"
-  }
+  },
+  "elmLS.elmReviewDiagnostics": "error"
 }
