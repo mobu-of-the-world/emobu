@@ -2,13 +2,20 @@ module MainTests exposing (rotateTests)
 
 import Expect
 import Main exposing (rotate)
-import Test exposing (Test, test)
+import Test exposing (Test, describe, test)
 
 
 rotateTests : Test
 rotateTests =
-    test "Rotate a list" <|
-        \() ->
-            [ 1, 2, 3 ]
-                |> rotate
-                |> Expect.equal [ 2, 3, 1 ]
+    describe "Rotate"
+        [ test "rotates multiple items" <|
+            \() ->
+                [ 1, 2, 3 ]
+                    |> rotate
+                    |> Expect.equal [ 2, 3, 1 ]
+        , test "does not change empty list" <|
+            \() ->
+                []
+                    |> rotate
+                    |> Expect.equal []
+        ]
