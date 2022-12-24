@@ -22,7 +22,6 @@ type alias Model =
     , intervalSeconds : Int
     , inputtedInterval : String
     , mobbing : Bool
-    , debugMode : Bool
     , enabledSound : Bool
     , commitRef : String
     , intervalUnit : IntervalUnit
@@ -46,7 +45,6 @@ defaultValues =
     , intervalSeconds = defaultIntervalMinutes * 60
     , inputtedInterval = String.fromInt defaultIntervalMinutes
     , mobbing = False
-    , debugMode = False
     , enabledSound = True
     , commitRef = "unknown ref"
     , intervalUnit = Min

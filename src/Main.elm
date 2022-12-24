@@ -52,7 +52,6 @@ type Msg
     | ToggleMobbingState
     | ResetTimer
     | FetchGithubAvatarError String
-    | ToggleDubugMode Bool
     | ToggleSoundMode Bool
 
 
@@ -119,9 +118,6 @@ update msg model =
                                 model.intervalSeconds
             in
             ( { model | intervalSeconds = newIntervalSeconds }, Cmd.none )
-
-        ToggleDubugMode enabled ->
-            ( { model | debugMode = enabled, intervalSeconds = 2 }, Cmd.none )
 
         ToggleSoundMode enabled ->
             ( { model | enabledSound = enabled }, Cmd.none )
@@ -276,7 +272,6 @@ isChangeableInterval : Model -> Bool
 isChangeableInterval model =
     not
         (model.mobbing
-            || model.debugMode
             || ((Maybe.withDefault 0 (String.toInt model.inputtedInterval) * radixToSeconds model.intervalUnit)
                     == model.intervalSeconds
                )
@@ -298,7 +293,7 @@ timerPanel model =
         , div [ class "newinterval-row" ]
             [ span [] [ text "➡" ]
             , Html.form [ onSubmit UpdateInterval ]
-                [ input [ class "duration-input", value model.inputtedInterval, onInput InputInterval, type_ "number", Html.Attributes.min "1", disabled model.debugMode ] []
+                [ input [ class "duration-input", value model.inputtedInterval, onInput InputInterval, type_ "number", Html.Attributes.min "1" ] []
                 , select [ class "unit-label", name "unit", onInput InputIntervalUnit ]
                     [ option [ value "min", selected (model.intervalUnit == Model.Min) ] [ text "min" ]
                     , option [ value "sec", selected (model.intervalUnit == Model.Sec) ] [ text "sec" ]
@@ -306,12 +301,6 @@ timerPanel model =
                 , button
                     [ class "emoji-button", disabled (not (model |> isChangeableInterval)) ]
                     [ text "✔️" ]
-                ]
-            ]
-        , div [ class "debug-toggle" ]
-            [ label [ for "toggle_debug_mode" ]
-                [ input [ type_ "checkbox", id "toggle_debug_mode", checked model.debugMode, onCheck ToggleDubugMode ] []
-                , text "Debug (2 seconds)"
                 ]
             ]
         , div [ class "sound-toggle" ]

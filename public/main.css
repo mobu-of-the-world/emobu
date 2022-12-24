@@ -141,8 +141,6 @@ html {
   font-size: xx-large;
 }
 
-.debug-toggle {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1ch;
+.sound-toggle {
+  margin-top: 2ch;
 }
