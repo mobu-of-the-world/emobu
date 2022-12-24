@@ -53,7 +53,14 @@ html {
 
 #page input {
   border: none;
-  border-radius: 1.5ch;
+  border-radius: 1.2ch;
+  background-color: #d7c4bb;
+  text-align: center;
+}
+
+#page select {
+  border: none;
+  border-radius: 0.8ch;
   background-color: #d7c4bb;
   text-align: center;
 }
@@ -119,14 +126,14 @@ html {
   margin-right: 5px;
 }
 
-.timer-panel .minutes-input {
-  width: 7ch;
+.timer-panel .duration-input {
+  width: 10ch;
 }
 
 .newinterval-row {
   display: flex;
   justify-content: space-between;
-  width: 18ch;
+  width: 24ch;
   margin-left: 2ch;
 }
 
