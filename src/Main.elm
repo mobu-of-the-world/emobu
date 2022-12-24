@@ -1,4 +1,4 @@
-port module Main exposing (Msg(..), main)
+port module Main exposing (Msg(..), main, rotate)
 
 import Browser
 import Html exposing (Html, a, br, button, div, footer, form, header, img, input, label, li, span, text, ul)
@@ -120,7 +120,7 @@ update msg model =
                 newUsers : List User
                 newUsers =
                     if timeOver then
-                        drop 1 model.users ++ take 1 model.users
+                        rotate model.users
 
                     else
                         model.users
@@ -168,6 +168,11 @@ port setStorage : Json.Encode.Value -> Cmd msg
 
 
 port playSound : String -> Cmd msg
+
+
+rotate : List items -> List items
+rotate items =
+    drop 1 items ++ take 1 items
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
