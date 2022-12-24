@@ -111,7 +111,7 @@ update msg model =
         ResetTimer ->
             ( { model | mobbing = False, elapsedSeconds = 0 }, Cmd.none )
 
-        -- TODO: Consider to change calc with current time intead of incrementing seconds
+        -- TODO: Consider to change calc with current time intead of incrementing seconds. In react https://github.com/mobu-of-the-world/mobu/pull/486
         Tick _ ->
             let
                 newElapsedSeconds : Int
