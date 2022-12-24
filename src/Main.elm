@@ -65,7 +65,12 @@ update msg model =
                 username =
                     String.trim model.inputtedUsername
             in
-            ( { model | inputtedUsername = "", users = model.users ++ [ { username = username, avatarUrl = getGithubAvatarUrl username } ] }, Cmd.none )
+            ( { model
+                | inputtedUsername = ""
+                , users = model.users ++ [ { username = username, avatarUrl = getGithubAvatarUrl username } ]
+              }
+            , Cmd.none
+            )
 
         UpdateInterval ->
             let
@@ -186,6 +191,18 @@ updateWithStorage msg oldModel =
     )
 
 
+isAddableUser : Model -> Bool
+isAddableUser model =
+    let
+        normalizedUsername =
+            String.trim model.inputtedUsername
+    in
+    not
+        (String.isEmpty normalizedUsername
+            || List.member normalizedUsername (List.map (\user -> user.username) model.users)
+        )
+
+
 userPanel : Model -> Html Msg
 userPanel model =
     div [ class "users-panel" ]
@@ -196,7 +213,7 @@ userPanel model =
                             [ form [ onSubmit AddUser ]
                                 [ input [ class "add-input", value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
                                 , button
-                                    [ class "emoji-button", disabled (String.isEmpty (String.trim model.inputtedUsername) || List.member (String.trim model.inputtedUsername) (List.map (\user -> user.username) model.users)) ]
+                                    [ class "emoji-button", disabled (not (isAddableUser model)) ]
                                     [ text "➕" ]
                                 ]
                             ]
