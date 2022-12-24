@@ -18,12 +18,13 @@ type alias Model =
     , inputtedIntervalMinutes : String
     , mobbing : Bool
     , debugMode : Bool
+    , enabledSound : Bool
     , commitRef : String
     }
 
 
 type alias DecodedModel =
-    { users : List User, commitRef : String }
+    { users : List User, commitRef : Maybe String, enabledSound : Maybe Bool }
 
 
 defaultIntervalMinutes : Int
@@ -40,7 +41,8 @@ defaultValues =
     , inputtedIntervalMinutes = String.fromInt defaultIntervalMinutes
     , mobbing = False
     , debugMode = False
-    , commitRef = ""
+    , enabledSound = True
+    , commitRef = "unknown ref"
     }
 
 
@@ -52,7 +54,9 @@ userEncoder user =
 encode : Model -> Json.Encode.Value
 encode model =
     Json.Encode.object
-        [ ( "users", Json.Encode.list userEncoder model.users ), ( "commitRef", Json.Encode.string "" ) ]
+        [ ( "users", Json.Encode.list userEncoder model.users )
+        , ( "enabledSound", Json.Encode.bool model.enabledSound )
+        ]
 
 
 userDecoder : Json.Decode.Decoder User
@@ -64,6 +68,7 @@ userDecoder =
 
 decoder : Json.Decode.Decoder DecodedModel
 decoder =
-    Json.Decode.map2 DecodedModel
+    Json.Decode.map3 DecodedModel
         (Json.Decode.field "users" (Json.Decode.list userDecoder))
-        (Json.Decode.field "commitRef" Json.Decode.string)
+        (Json.Decode.maybe (Json.Decode.field "commitRef" Json.Decode.string))
+        (Json.Decode.maybe (Json.Decode.field "enabledSound" Json.Decode.bool))

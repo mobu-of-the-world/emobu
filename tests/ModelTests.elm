@@ -3,7 +3,7 @@ module ModelTests exposing (decoderTests, encoderTests)
 import Expect
 import Json.Decode
 import Json.Encode
-import Model exposing (decoder, defaultValues, encode)
+import Model exposing (DecodedModel, decoder, defaultValues, encode)
 import Test exposing (Test, test)
 
 
@@ -15,10 +15,10 @@ decoderTests =
                 input : String
                 input =
                     """
-                      {"users":[{"username":"pankona","avatarUrl":"https://github.com/pankona.png"},{"username":"kachick","avatarUrl":"https://github.com/kachick.png"},{"username":"does not exist","avatarUrl":"https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png"}],"commitRef":"27d1d7c"}
+                      {"users":[{"username":"pankona","avatarUrl":"https://github.com/pankona.png"},{"username":"kachick","avatarUrl":"https://github.com/kachick.png"},{"username":"does not exist","avatarUrl":"https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png"}],"commitRef":"27d1d7c","enabledSound":true}
                     """
 
-                decodedOutput : Result Json.Decode.Error { users : List Model.User, commitRef : String }
+                decodedOutput : Result Json.Decode.Error DecodedModel
                 decodedOutput =
                     Json.Decode.decodeString
                         decoder
@@ -31,7 +31,8 @@ decoderTests =
                         , { username = "kachick", avatarUrl = "https://github.com/kachick.png" }
                         , { username = "does not exist", avatarUrl = "https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png" }
                         ]
-                    , commitRef = "27d1d7c"
+                    , commitRef = Just "27d1d7c"
+                    , enabledSound = Just True
                     }
                 )
 
@@ -50,13 +51,14 @@ encoderTests =
                             , { username = "does not exist", avatarUrl = "https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png" }
                             ]
                         , commitRef = "27d1d7c"
+                        , enabledSound = True
                     }
 
                 encoodedOutput : String
                 encoodedOutput =
                     Json.Encode.encode 4 (encode model)
 
-                decodedAgain : Result Json.Decode.Error { users : List Model.User, commitRef : String }
+                decodedAgain : Result Json.Decode.Error DecodedModel
                 decodedAgain =
                     Json.Decode.decodeString decoder encoodedOutput
             in
@@ -67,6 +69,7 @@ encoderTests =
                         , { username = "kachick", avatarUrl = "https://github.com/kachick.png" }
                         , { username = "does not exist", avatarUrl = "https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png" }
                         ]
-                    , commitRef = ""
+                    , commitRef = Nothing
+                    , enabledSound = Just True
                     }
                 )

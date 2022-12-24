@@ -27,7 +27,11 @@ init : Json.Encode.Value -> ( Model, Cmd Msg )
 init flags =
     ( case Json.Decode.decodeValue decoder flags of
         Ok decodedModel ->
-            { defaultValues | users = decodedModel.users, commitRef = decodedModel.commitRef }
+            { defaultValues
+                | users = decodedModel.users
+                , commitRef = Maybe.withDefault "unknown ref" decodedModel.commitRef
+                , enabledSound = Maybe.withDefault True decodedModel.enabledSound
+            }
 
         Err _ ->
             defaultValues
@@ -48,6 +52,7 @@ type Msg
     | ResetTimer
     | FetchGithubAvatarError String
     | ToggleDubugMode Bool
+    | ToggleSoundMode Bool
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -95,6 +100,9 @@ update msg model =
 
         ToggleDubugMode enabled ->
             ( { model | debugMode = enabled, intervalSeconds = 2 }, Cmd.none )
+
+        ToggleSoundMode enabled ->
+            ( { model | enabledSound = enabled }, Cmd.none )
 
         ShuffleUsers ->
             ( model, Random.generate ReplaceUsers <| Random.List.shuffle model.users )
@@ -145,7 +153,7 @@ update msg model =
                     else
                         newElapsedSeconds
               }
-            , if timeOver then
+            , if timeOver && model.enabledSound then
                 playSound "/audio/meow.mp3"
 
               else
@@ -272,7 +280,13 @@ timerPanel model =
         , div [ class "debug-toggle" ]
             [ label [ for "toggle_debug_mode" ]
                 [ input [ type_ "checkbox", id "toggle_debug_mode", checked model.debugMode, onCheck ToggleDubugMode ] []
-                , text "Debug mode (2 seconds)"
+                , text "Debug (2 seconds)"
+                ]
+            ]
+        , div [ class "sound-toggle" ]
+            [ label [ class "switch", for "sound-toggle" ]
+                [ input [ type_ "checkbox", id "sound-toggle", checked model.enabledSound, onCheck ToggleSoundMode ] []
+                , span [ class "slider sound" ] []
                 ]
             ]
         ]
