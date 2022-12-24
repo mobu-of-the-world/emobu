@@ -214,7 +214,7 @@ userPanel model =
                             [ form [ onSubmit AddUser ]
                                 [ input [ class "add-input", value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
                                 , button
-                                    [ class "emoji-button", disabled (not (isAddableUser model)) ]
+                                    [ class "emoji-button", disabled (not (model |> isAddableUser)) ]
                                     [ text "➕" ]
                                 ]
                             ]
@@ -238,6 +238,11 @@ readableDuration seconds =
         ++ String.padLeft 2 '0' (String.fromInt (toSecond utc time))
 
 
+isChangeableInterval : Model -> Bool
+isChangeableInterval model =
+    not (model.mobbing || model.debugMode || (Maybe.withDefault 0 (String.toInt model.inputtedIntervalMinutes) * 60) == model.intervalSeconds)
+
+
 timerPanel : Model -> Html Msg
 timerPanel model =
     div [ class "timer-panel" ]
@@ -256,7 +261,7 @@ timerPanel model =
                 [ input [ class "minutes-input", value model.inputtedIntervalMinutes, onInput InputIntervalMinutes, type_ "number", Html.Attributes.min "1", disabled model.debugMode ] []
                 , span [ class "unit-label" ] [ text "min" ]
                 , button
-                    [ class "emoji-button", disabled (model.mobbing || model.debugMode || model.inputtedIntervalMinutes == String.fromInt (model.intervalSeconds // 60)) ]
+                    [ class "emoji-button", disabled (not (model |> isChangeableInterval)) ]
                     [ text "✔️" ]
                 ]
             ]
