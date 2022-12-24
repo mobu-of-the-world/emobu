@@ -204,22 +204,26 @@ isAddableUser model =
         )
 
 
+addUserInput : Model -> Html Msg
+addUserInput model =
+    div [ class "list-item" ]
+        [ li []
+            [ form [ onSubmit AddUser ]
+                [ input [ class "add-input", value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
+                , button
+                    [ class "emoji-button", disabled (not (model |> isAddableUser)) ]
+                    [ text "➕" ]
+                ]
+            ]
+        ]
+
+
 userPanel : Model -> Html Msg
 userPanel model =
     div [ class "users-panel" ]
         [ ol []
             (List.map userRow model.users
-                ++ [ div [ class "list-item" ]
-                        [ li []
-                            [ form [ onSubmit AddUser ]
-                                [ input [ class "add-input", value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
-                                , button
-                                    [ class "emoji-button", disabled (not (model |> isAddableUser)) ]
-                                    [ text "➕" ]
-                                ]
-                            ]
-                        ]
-                   ]
+                ++ [ addUserInput model ]
             )
         ]
 
