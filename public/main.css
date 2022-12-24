@@ -67,11 +67,11 @@ html {
   grid-area: users-panel;
 }
 
-.users-panel ul {
+.users-panel ol {
   list-style-type: none;
 }
 
-.users-panel ul > li {
+.users-panel ol > li {
   list-style-position: outside;
 }
 
@@ -86,14 +86,14 @@ html {
   width: 18ch;
 }
 
-.users-panel ul > li .user-image {
+.users-panel ol > li .user-image {
   margin-right: 2ch;
   width: 32px;
   border-radius: 50%;
   float: left;
 }
 
-.users-panel ul > li:nth-child(1) {
+.users-panel ol > li:nth-child(1) {
   list-style-type: '🚗';
 }
 

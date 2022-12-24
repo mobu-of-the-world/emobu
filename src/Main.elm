@@ -1,7 +1,7 @@
 port module Main exposing (Msg(..), main, rotate)
 
 import Browser
-import Html exposing (Html, a, br, button, div, footer, form, header, img, input, label, li, span, text, ul)
+import Html exposing (Html, a, br, button, div, footer, form, header, img, input, label, li, ol, span, text)
 import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, type_, value)
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
@@ -207,8 +207,8 @@ isAddableUser model =
 userPanel : Model -> Html Msg
 userPanel model =
     div [ class "users-panel" ]
-        [ ul []
-            (List.map viewUser model.users
+        [ ol []
+            (List.map userRow model.users
                 ++ [ div [ class "list-item" ]
                         [ li []
                             [ form [ onSubmit AddUser ]
@@ -298,8 +298,8 @@ view model =
         ]
 
 
-viewUser : User -> Html Msg
-viewUser user =
+userRow : User -> Html Msg
+userRow user =
     li []
         [ div [ class "list-item" ]
             [ img [ class "user-image", src user.avatarUrl, on "error" (Json.Decode.succeed (FetchGithubAvatarError user.username)) ] []
