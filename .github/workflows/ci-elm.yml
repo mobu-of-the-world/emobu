@@ -33,7 +33,7 @@ jobs:
       - name: Add local elm compiler to the PATH
         run: echo './node_modules/elm/bin/' >> $GITHUB_PATH
       - name: Load elm # Workaround to avoid `node_modules/elm/bin/elm: Text file busy`
-        run: npx elm --version
+        run: npx elm --version || true
       - name: Test
         run: npm run test
   lint:
