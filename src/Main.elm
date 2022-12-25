@@ -86,15 +86,18 @@ update msg model =
             ( { model | inputtedUsername = input }, Cmd.none )
 
         AddUser ->
-            let
-                username : String
-                username =
-                    String.trim model.inputtedUsername
-            in
-            ( { model
-                | inputtedUsername = ""
-                , users = model.users ++ [ { username = username, avatarUrl = getGithubAvatarUrl username } ]
-              }
+            ( if isAddableUser model then
+                let
+                    username =
+                        String.trim model.inputtedUsername
+                in
+                { model
+                    | inputtedUsername = ""
+                    , users = model.users ++ [ { username = username, avatarUrl = getGithubAvatarUrl username } ]
+                }
+
+              else
+                model
             , Cmd.none
             )
 
