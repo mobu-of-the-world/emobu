@@ -411,7 +411,7 @@ timerPanel model =
             [ emoji "⏯️" ]
         , button
             [ class "button major"
-            , disabled (not (isReadyMobbing model))
+            , disabled (model.mobbing || not (isReadyMobbing model))
             , onClick ShuffleUsers
             ]
             [ emoji "🔀" ]
