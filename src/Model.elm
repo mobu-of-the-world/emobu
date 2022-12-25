@@ -1,4 +1,4 @@
-module Model exposing (DecodedModel, Model, User, decoder, defaultValues, encode, intervalToSeconds, secondsToInterval)
+module Model exposing (DecodedModel, Model, User, decoder, defaultValues, encode)
 
 import Json.Decode
 import Json.Encode
@@ -18,8 +18,6 @@ type alias Model =
     , mobbing : Bool
     , enabledSound : Bool
     , commitRef : String
-
-    -- , intervalUnit : IntervalUnit
     }
 
 
@@ -30,40 +28,6 @@ type alias DecodedModel =
 defaultIntervalSeconds : Int
 defaultIntervalSeconds =
     30 * 60
-
-
-secondsToInterval : Int -> String
-secondsToInterval totalSeconds =
-    let
-        format : Int -> String
-        format val =
-            String.padLeft 2 '0' (String.fromInt val)
-
-        sec =
-            remainderBy 60 totalSeconds
-
-        hour =
-            totalSeconds // (60 * 60)
-
-        min =
-            (totalSeconds // 60) - (hour * 60)
-    in
-    format hour ++ ":" ++ format min ++ ":" ++ format sec
-
-
-intervalToSeconds : String -> Maybe Int
-intervalToSeconds interval =
-    case String.split ":" interval of
-        [ parsedHour, parsedMin, parsedSec ] ->
-            case ( String.toInt parsedHour, String.toInt parsedMin, String.toInt parsedSec ) of
-                ( Just hour, Just min, Just sec ) ->
-                    Just ((hour * (60 * 60)) + (min * 60) + sec)
-
-                _ ->
-                    Nothing
-
-        _ ->
-            Nothing
 
 
 defaultValues : Model

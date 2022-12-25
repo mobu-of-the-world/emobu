@@ -149,10 +149,8 @@ html {
 
 .timer-panel .interval-input {
   font-size: medium;
-}
-
-.timer-panel .interval-input .interval-input {
-  width: 16ch;
-  top: 0.6ch;
+  width: 20ch;
+  margin-left: 3ch;
+  top: 0.8ch;
   position: relative;
 }
