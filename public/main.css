@@ -163,7 +163,7 @@
 }
 
 .sound-toggle input:checked + label::after {
-  content: '😸';
+  content: '🐈';
 }
 
 .timer-row {
