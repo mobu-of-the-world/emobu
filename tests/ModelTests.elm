@@ -15,7 +15,7 @@ decoderTests =
                 input : String
                 input =
                     """
-                      {"users":[{"username":"pankona","avatarUrl":"https://github.com/pankona.png"},{"username":"kachick","avatarUrl":"https://github.com/kachick.png"},{"username":"does not exist","avatarUrl":"https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png"}],"commitRef":"27d1d7c","enabledSound":true}
+                      {"users":[{"username":"pankona","avatarUrl":"https://github.com/pankona.png"},{"username":"kachick","avatarUrl":"https://github.com/kachick.png"},{"username":"does not exist","avatarUrl":"https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png"}],"commitRef":"27d1d7c","enabledSound":true,"intervalSeconds":1850}
                     """
 
                 decodedOutput : Result Json.Decode.Error DecodedModel
@@ -33,6 +33,7 @@ decoderTests =
                         ]
                     , commitRef = Just "27d1d7c"
                     , enabledSound = Just True
+                    , intervalSeconds = Just 1850
                     }
                 )
 
@@ -52,6 +53,7 @@ encoderTests =
                             ]
                         , commitRef = "27d1d7c"
                         , enabledSound = True
+                        , intervalSeconds = 42
                     }
 
                 encoodedOutput : String
@@ -71,5 +73,6 @@ encoderTests =
                         ]
                     , commitRef = Nothing
                     , enabledSound = Just True
+                    , intervalSeconds = Just 42
                     }
                 )

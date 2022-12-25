@@ -31,6 +31,7 @@ init flags =
                 | users = decodedModel.users
                 , commitRef = Maybe.withDefault "unknown ref" decodedModel.commitRef
                 , enabledSound = Maybe.withDefault True decodedModel.enabledSound
+                , intervalSeconds = Maybe.withDefault defaultValues.intervalSeconds decodedModel.intervalSeconds
             }
 
         Err _ ->

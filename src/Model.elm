@@ -22,7 +22,7 @@ type alias Model =
 
 
 type alias DecodedModel =
-    { users : List User, commitRef : Maybe String, enabledSound : Maybe Bool }
+    { users : List User, commitRef : Maybe String, enabledSound : Maybe Bool, intervalSeconds : Maybe Int }
 
 
 defaultIntervalSeconds : Int
@@ -52,6 +52,7 @@ encode model =
     Json.Encode.object
         [ ( "users", Json.Encode.list userEncoder model.users )
         , ( "enabledSound", Json.Encode.bool model.enabledSound )
+        , ( "intervalSeconds", Json.Encode.int model.intervalSeconds )
         ]
 
 
@@ -64,7 +65,8 @@ userDecoder =
 
 decoder : Json.Decode.Decoder DecodedModel
 decoder =
-    Json.Decode.map3 DecodedModel
+    Json.Decode.map4 DecodedModel
         (Json.Decode.field "users" (Json.Decode.list userDecoder))
         (Json.Decode.maybe (Json.Decode.field "commitRef" Json.Decode.string))
         (Json.Decode.maybe (Json.Decode.field "enabledSound" Json.Decode.bool))
+        (Json.Decode.maybe (Json.Decode.field "intervalSeconds" Json.Decode.int))
