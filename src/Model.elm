@@ -1,4 +1,4 @@
-module Model exposing (DecodedModel, Model, User, decoder, defaultValues, encode, intervalToSeconds)
+module Model exposing (DecodedModel, Model, User, decoder, defaultValues, encode, intervalToSeconds, secondsToInterval)
 
 import Json.Decode
 import Json.Encode
@@ -15,7 +15,6 @@ type alias Model =
     , users : List User
     , elapsedSeconds : Int
     , intervalSeconds : Int
-    , inputtedInterval : String
     , mobbing : Bool
     , enabledSound : Bool
     , commitRef : String
@@ -73,7 +72,6 @@ defaultValues =
     , inputtedUsername = ""
     , elapsedSeconds = 0
     , intervalSeconds = defaultIntervalSeconds
-    , inputtedInterval = secondsToInterval defaultIntervalSeconds
     , mobbing = False
     , enabledSound = True
     , commitRef = "unknown ref"

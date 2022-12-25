@@ -7,10 +7,9 @@ import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
 import List exposing (drop, take)
-import Model exposing (Model, User, decoder, defaultValues, encode, intervalToSeconds)
+import Model exposing (Model, User, decoder, defaultValues, encode, intervalToSeconds, secondsToInterval)
 import Random
 import Random.List
-import Task
 import Time exposing (Posix, every, millisToPosix, toHour, toMinute, toSecond, utc)
 
 
@@ -47,8 +46,7 @@ type Msg
     | ReplaceUsers (List User)
     | DeleteUser String
     | Tick Posix
-    | InputInterval String
-    | UpdateInterval
+    | UpdateInterval String
     | ToggleMobbingState
     | ResetTimer
     | FetchGithubAvatarError String
@@ -60,9 +58,6 @@ update msg model =
     case msg of
         InputUsername input ->
             ( { model | inputtedUsername = input }, Cmd.none )
-
-        InputInterval input ->
-            ( { model | inputtedInterval = input }, Task.succeed UpdateInterval |> Task.perform identity )
 
         AddUser ->
             let
@@ -77,8 +72,8 @@ update msg model =
             , Cmd.none
             )
 
-        UpdateInterval ->
-            ( { model | intervalSeconds = Maybe.withDefault model.intervalSeconds (intervalToSeconds model.inputtedInterval) }, Cmd.none )
+        UpdateInterval input ->
+            ( { model | intervalSeconds = Maybe.withDefault model.intervalSeconds (intervalToSeconds input) }, Cmd.none )
 
         ToggleSoundMode enabled ->
             ( { model | enabledSound = enabled }, Cmd.none )
@@ -234,8 +229,8 @@ newIntervalFields model =
     div [ class "interval-input" ]
         [ input
             [ class "interval-input"
-            , value model.inputtedInterval
-            , onInput InputInterval
+            , value (secondsToInterval model.intervalSeconds)
+            , onInput UpdateInterval
             , type_ "time"
             , step "5"
             , Html.Attributes.min "00:00:00"
