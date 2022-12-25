@@ -4,17 +4,12 @@
 
 ### Setup
 
-Needs elm and nodejs for development.\
-Author is using [asdf](https://asdf-vm.com/) to install them.\
-This repository manage the language versions with [.tool-versions](.tool-versions). So you can install them as below.
-
-`asdf install`
-
-Then requires to install npm dependencies.
+Needs nodejs for first step.\
+Next step needs npm dependencies. It includes elm compiler.
 
 `npm install`
 
-If you use vscode, installing elm-test, elm-format and elm-review into global makes better experience.
+If you use vscode, installing elm-test, elm-format and elm-review into global might make better experience.
 
 ### `npm run dev`
 
