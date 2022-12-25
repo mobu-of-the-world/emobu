@@ -155,6 +155,7 @@
 .sound-toggle input[type='checkbox'] + label {
   cursor: pointer;
   font-size: xx-large;
+  font-family: 'Noto Color Emoji', sans-serif;
 }
 
 .sound-toggle input + label::after {
