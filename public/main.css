@@ -1,11 +1,8 @@
-html {
-  font-family: Inconsolata, monospace;
-  background-color: #6a8372;
-}
-
 #page {
   display: grid;
   height: 100vh;
+  font-family: Inconsolata, monospace;
+  background-color: #6a8372;
 }
 
 @media screen and (max-width: 799px) {
@@ -104,6 +101,10 @@ html {
   list-style-type: '🚗';
 }
 
+.users-panel ol > li::before {
+  font-family: 'Noto Color Emoji', sans-serif;
+}
+
 .timer-panel {
   grid-area: timer-panel;
   margin-top: 2ch;
@@ -111,14 +112,14 @@ html {
   margin-right: 2ch;
 }
 
-.emoji-button {
+.standardized-emoji {
+  font-family: 'Noto Color Emoji', sans-serif;
+}
+
+.button {
   background-color: transparent;
   border: none;
   cursor: pointer;
-}
-
-.emoji-button:enabled {
-  color: limegreen;
 }
 
 .timer-panel .unit-label {
@@ -153,4 +154,8 @@ html {
   margin-left: 3ch;
   top: 0.8ch;
   position: relative;
+}
+
+.chars-space {
+  margin-left: 1ch;
 }
