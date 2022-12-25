@@ -395,18 +395,23 @@ satisfiedMinMembers model =
     List.length model.users >= 2
 
 
+isReadyMobbing : Model -> Bool
+isReadyMobbing model =
+    satisfiedMinMembers model && (model.intervalSeconds > 0)
+
+
 timerPanel : Model -> Html Msg
 timerPanel model =
     div [ class "timer-panel" ]
         [ button
             [ class "button major"
-            , disabled (not (satisfiedMinMembers model))
+            , disabled (not (isReadyMobbing model))
             , onClick ToggleMobbingState
             ]
             [ emoji "⏯️" ]
         , button
             [ class "button major"
-            , disabled (not (satisfiedMinMembers model))
+            , disabled (not (isReadyMobbing model))
             , onClick ShuffleUsers
             ]
             [ emoji "🔀" ]
