@@ -243,8 +243,8 @@ addUserInput model =
             [ form [ onSubmit AddUser ]
                 [ input [ class "add-input", value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
                 , button
-                    [ class "emoji-button", disabled (not (model |> isAddableUser)) ]
-                    [ text "➕" ]
+                    [ class "button", disabled (not (model |> isAddableUser)) ]
+                    [ emoji "➕" ]
                 ]
             ]
         ]
@@ -297,7 +297,8 @@ formatDurationUnit val =
 newIntervalFields : Model -> Html Msg
 newIntervalFields model =
     div [ class "interval-input" ]
-        [ text "/ "
+        [ text "/"
+        , space
         , select
             [ class "value-select"
             , onInput (UpdateInterval Hour)
@@ -365,18 +366,35 @@ newIntervalFields model =
         ]
 
 
+emoji : String -> Html msg
+emoji str =
+    span [ class "standardized-emoji" ] [ text str ]
+
+
 timerPanel : Model -> Html Msg
 timerPanel model =
     div [ class "timer-panel" ]
         [ button
-            [ class "emoji-button major", disabled (List.length model.users < 2), onClick ToggleMobbingState ]
-            [ text "⏯️" ]
-        , button [ class "emoji-button major", disabled (List.length model.users < 2), onClick ShuffleUsers ] [ text "🔀" ]
+            [ class "button major"
+            , disabled (List.length model.users < 2)
+            , onClick ToggleMobbingState
+            ]
+            [ emoji "⏯️" ]
         , button
-            [ class "emoji-button major", onClick ResetTimer ]
-            [ text "↩️" ]
+            [ class "button major"
+            , disabled (List.length model.users < 2)
+            , onClick ShuffleUsers
+            ]
+            [ emoji "🔀" ]
+        , button
+            [ class "button major", onClick ResetTimer ]
+            [ emoji "↩️" ]
         , br [] []
-        , div [ class "timer-row" ] [ text ("⏲️ " ++ readableDuration model.elapsedSeconds) ]
+        , div [ class "timer-row" ]
+            [ emoji "⏲️"
+            , space
+            , text (readableDuration model.elapsedSeconds)
+            ]
         , newIntervalFields model
         , div [ class "sound-toggle" ]
             [ label [ class "switch", for "sound-toggle" ]
@@ -385,6 +403,11 @@ timerPanel model =
                 ]
             ]
         ]
+
+
+space : Html msg
+space =
+    span [ class "chars-space" ] []
 
 
 appHeader : Html msg
@@ -417,7 +440,7 @@ userRow user =
         [ div [ class "list-item" ]
             [ img [ class "user-image", src user.avatarUrl, on "error" (Json.Decode.succeed (FetchGithubAvatarError user.username)) ] []
             , text user.username
-            , button [ onClick (DeleteUser user.username), class "emoji-button" ] [ text "👋" ]
+            , button [ onClick (DeleteUser user.username), class "button" ] [ emoji "👋" ]
             ]
         ]
 
