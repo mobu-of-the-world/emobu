@@ -4,13 +4,10 @@
 
 ### Setup
 
-Needs elm and nodejs for development.\
-Author is using [asdf](https://asdf-vm.com/) to install them.\
-This repository manage the language versions with [.tool-versions](.tool-versions). So you can install them as below.
+Needs nodejs for first step.\
+Author is using [asdf](https://asdf-vm.com/) to manage the version as [.tool-versions](.tool-versions).
 
-`asdf install`
-
-Then requires to install npm dependencies.
+Next step needs npm dependencies. It includes elm compiler.
 
 `npm install`
 
