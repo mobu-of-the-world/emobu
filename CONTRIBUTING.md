@@ -5,13 +5,11 @@
 ### Setup
 
 Needs nodejs for first step.\
-Author is using [asdf](https://asdf-vm.com/) to manage the version as [.tool-versions](.tool-versions).
-
 Next step needs npm dependencies. It includes elm compiler.
 
 `npm install`
 
-If you use vscode, installing elm-test, elm-format and elm-review into global makes better experience.
+If you use vscode, installing elm-test, elm-format and elm-review into global might make better experience.
 
 ### `npm run dev`
 
