@@ -412,6 +412,10 @@ timerPanel model =
         , button
             [ class "button major", onClick ResetTimer ]
             [ emoji "↩️" ]
+        , div [ class "sound-toggle" ]
+            [ input [ type_ "checkbox", id "sound-toggle", checked model.enabledSound, onCheck ToggleSoundMode ] []
+            , label [ for "sound-toggle" ] []
+            ]
         , br [] []
         , div [ class "timer-row" ]
             [ emoji "⏲️"
@@ -419,12 +423,6 @@ timerPanel model =
             , text (readableDuration model.elapsedSeconds)
             ]
         , newIntervalFields model
-        , div [ class "sound-toggle" ]
-            [ label [ class "switch", for "sound-toggle" ]
-                [ input [ type_ "checkbox", id "sound-toggle", checked model.enabledSound, onCheck ToggleSoundMode ] []
-                , span [ class "slider sound" ] []
-                ]
-            ]
         ]
 
 
