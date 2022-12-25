@@ -1,7 +1,7 @@
 port module Main exposing (DurationForEachUnit, DurationUnit, Msg(..), main, rotate)
 
 import Browser
-import Html exposing (Html, a, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
+import Html exposing (Attribute, Html, a, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
 import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, type_, value)
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
@@ -236,6 +236,22 @@ isAddableUser model =
         )
 
 
+balloon : ( Bool, String, String ) -> List (Attribute msg)
+balloon ( visible, label, pos ) =
+    let
+        visibles =
+            if visible then
+                [ Html.Attributes.attribute "data-balloon-visible" "true" ]
+
+            else
+                []
+    in
+    visibles
+        ++ [ Html.Attributes.attribute "aria-label" label
+           , Html.Attributes.attribute "data-balloon-pos" pos
+           ]
+
+
 addUserInput : Model -> Html Msg
 addUserInput model =
     div [ class "list-item" ]
@@ -243,7 +259,9 @@ addUserInput model =
             [ form [ onSubmit AddUser ]
                 [ input [ class "add-input", value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
                 , button
-                    [ class "button", disabled (not (model |> isAddableUser)) ]
+                    (balloon ( not (satisfiedMinMembers model), "mob needs 2+ members!", "down" )
+                        ++ [ class "button", disabled (not (model |> isAddableUser)) ]
+                    )
                     [ emoji "➕" ]
                 ]
             ]
@@ -371,18 +389,23 @@ emoji str =
     span [ class "standardized-emoji" ] [ text str ]
 
 
+satisfiedMinMembers : Model -> Bool
+satisfiedMinMembers model =
+    List.length model.users >= 2
+
+
 timerPanel : Model -> Html Msg
 timerPanel model =
     div [ class "timer-panel" ]
         [ button
             [ class "button major"
-            , disabled (List.length model.users < 2)
+            , disabled (not (satisfiedMinMembers model))
             , onClick ToggleMobbingState
             ]
             [ emoji "⏯️" ]
         , button
             [ class "button major"
-            , disabled (List.length model.users < 2)
+            , disabled (not (satisfiedMinMembers model))
             , onClick ShuffleUsers
             ]
             [ emoji "🔀" ]
