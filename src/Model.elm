@@ -1,4 +1,4 @@
-module Model exposing (DecodedModel, IntervalUnit(..), Model, User, decoder, defaultValues, encode)
+module Model exposing (DecodedModel, Model, User, decoder, defaultValues, encode)
 
 import Json.Decode
 import Json.Encode
@@ -10,21 +10,14 @@ type alias User =
     }
 
 
-type IntervalUnit
-    = Min
-    | Sec
-
-
 type alias Model =
     { inputtedUsername : String
     , users : List User
     , elapsedSeconds : Int
     , intervalSeconds : Int
-    , inputtedInterval : String
     , mobbing : Bool
     , enabledSound : Bool
     , commitRef : String
-    , intervalUnit : IntervalUnit
     }
 
 
@@ -32,9 +25,9 @@ type alias DecodedModel =
     { users : List User, commitRef : Maybe String, enabledSound : Maybe Bool }
 
 
-defaultIntervalMinutes : Int
-defaultIntervalMinutes =
-    30
+defaultIntervalSeconds : Int
+defaultIntervalSeconds =
+    30 * 60
 
 
 defaultValues : Model
@@ -42,12 +35,10 @@ defaultValues =
     { users = []
     , inputtedUsername = ""
     , elapsedSeconds = 0
-    , intervalSeconds = defaultIntervalMinutes * 60
-    , inputtedInterval = String.fromInt defaultIntervalMinutes
+    , intervalSeconds = defaultIntervalSeconds
     , mobbing = False
     , enabledSound = True
     , commitRef = "unknown ref"
-    , intervalUnit = Min
     }
 
 
