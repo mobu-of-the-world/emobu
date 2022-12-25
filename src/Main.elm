@@ -239,20 +239,12 @@ isAddableUser model =
         )
 
 
-balloon : ( Bool, String, String ) -> List (Attribute msg)
-balloon ( visible, label, pos ) =
-    let
-        visibles =
-            if visible then
-                [ Html.Attributes.attribute "data-balloon-visible" "true" ]
-
-            else
-                []
-    in
-    visibles
-        ++ [ Html.Attributes.attribute "aria-label" label
-           , Html.Attributes.attribute "data-balloon-pos" pos
-           ]
+balloon : ( String, String ) -> List (Attribute msg)
+balloon ( label, pos ) =
+    [ Html.Attributes.attribute "data-balloon-visible" "true"
+    , Html.Attributes.attribute "aria-label" label
+    , Html.Attributes.attribute "data-balloon-pos" pos
+    ]
 
 
 addUserInput : Model -> Html Msg
@@ -262,7 +254,12 @@ addUserInput model =
             [ form [ onSubmit AddUser ]
                 [ input [ class "add-input", value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
                 , button
-                    (balloon ( not (satisfiedMinMembers model), "mob needs 2+ members!", "down" )
+                    ((if satisfiedMinMembers model then
+                        []
+
+                      else
+                        balloon ( "mob needs 2+ members!", "down" )
+                     )
                         ++ [ class "button", disabled (not (model |> isAddableUser)) ]
                     )
                     [ emoji "➕" ]
