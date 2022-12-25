@@ -1,3 +1,8 @@
+.html {
+  font-family: Inconsolata, monospace;
+  background-color: #6a8372;
+}
+
 #page {
   display: grid;
   height: 100vh;
