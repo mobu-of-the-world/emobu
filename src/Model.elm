@@ -1,4 +1,4 @@
-module Model exposing (DecodedModel, InputtedInterval, Model, User, decoder, defaultValues, encode, intervalsToSeconds)
+module Model exposing (DecodedModel, Model, User, decoder, defaultValues, encode, intervalToSeconds)
 
 import Json.Decode
 import Json.Encode
@@ -10,25 +10,12 @@ type alias User =
     }
 
 
-
--- type IntervalUnit
---     = Min
---     | Sec
-
-
-type alias InputtedInterval =
-    { seconds : String
-    , minutes : String
-    , hours : String
-    }
-
-
 type alias Model =
     { inputtedUsername : String
     , users : List User
     , elapsedSeconds : Int
     , intervalSeconds : Int
-    , inputtedInterval : InputtedInterval
+    , inputtedInterval : String
     , mobbing : Bool
     , enabledSound : Bool
     , commitRef : String
@@ -46,8 +33,8 @@ defaultIntervalSeconds =
     30 * 60
 
 
-secondsToIntervals : Int -> InputtedInterval
-secondsToIntervals totalSeconds =
+secondsToInterval : Int -> String
+secondsToInterval totalSeconds =
     let
         format : Int -> String
         format val =
@@ -62,31 +49,22 @@ secondsToIntervals totalSeconds =
         min =
             (totalSeconds // 60) - (hour * 60)
     in
-    InputtedInterval (format sec) (format min) (format hour)
+    format hour ++ ":" ++ format min ++ ":" ++ format sec
 
 
-intervalsToSeconds : InputtedInterval -> Maybe Int
-intervalsToSeconds intervals =
-    let
-        maybeHour =
-            String.toInt intervals.hours
+intervalToSeconds : String -> Maybe Int
+intervalToSeconds interval =
+    case String.split ":" interval of
+        [ parsedHour, parsedMin, parsedSec ] ->
+            case ( String.toInt parsedHour, String.toInt parsedMin, String.toInt parsedSec ) of
+                ( Just hour, Just min, Just sec ) ->
+                    Just ((hour * (60 * 60)) + (min * 60) + sec)
 
-        maybeMinutes =
-            String.toInt intervals.minutes
-
-        maybeSeconds =
-            String.toInt intervals.seconds
-    in
-    case ( maybeHour, maybeMinutes, maybeSeconds ) of
-        ( Just hour, Just min, Just sec ) ->
-            Just ((hour * (60 * 60)) + (min * 60) + sec)
+                _ ->
+                    Nothing
 
         _ ->
             Nothing
-
-
-
--- (Maybe.withDefault 0 (String.toInt intervals.hours) * (60 * 60)) + (Maybe.withDefault 0 (String.toInt intervals.minutes) * 60) + Maybe.withDefault 0 (String.toInt intervals.seconds)
 
 
 defaultValues : Model
@@ -95,12 +73,10 @@ defaultValues =
     , inputtedUsername = ""
     , elapsedSeconds = 0
     , intervalSeconds = defaultIntervalSeconds
-    , inputtedInterval = secondsToIntervals defaultIntervalSeconds
+    , inputtedInterval = secondsToInterval defaultIntervalSeconds
     , mobbing = False
     , enabledSound = True
     , commitRef = "unknown ref"
-
-    -- , intervalUnit = Min
     }
 
 

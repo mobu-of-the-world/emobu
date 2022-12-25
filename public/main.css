@@ -151,8 +151,8 @@ html {
   font-size: medium;
 }
 
-.timer-panel .interval-input .each-unit {
-  width: 6ch;
+.timer-panel .interval-input .interval-input {
+  width: 16ch;
   top: 0.6ch;
   position: relative;
 }

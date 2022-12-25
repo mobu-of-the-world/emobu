@@ -1,13 +1,13 @@
-port module Main exposing (DurationUnit, Msg(..), main, rotate)
+port module Main exposing (Msg(..), main, rotate)
 
 import Browser
 import Html exposing (Html, a, br, button, div, footer, form, header, img, input, label, li, ol, span, text)
-import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, type_, value)
+import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, step, type_, value)
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
 import List exposing (drop, take)
-import Model exposing (Model, User, decoder, defaultValues, encode, intervalsToSeconds)
+import Model exposing (Model, User, decoder, defaultValues, encode, intervalToSeconds)
 import Random
 import Random.List
 import Task
@@ -40,12 +40,6 @@ init flags =
     )
 
 
-type DurationUnit
-    = Sec
-    | Min
-    | Hour
-
-
 type Msg
     = InputUsername String
     | AddUser
@@ -53,22 +47,12 @@ type Msg
     | ReplaceUsers (List User)
     | DeleteUser String
     | Tick Posix
-    | InputInterval DurationUnit String
+    | InputInterval String
     | UpdateInterval
     | ToggleMobbingState
     | ResetTimer
     | FetchGithubAvatarError String
     | ToggleSoundMode Bool
-
-
-
--- radixToSeconds : IntervalUnit -> Int
--- radixToSeconds unit =
---     case unit of
---         Model.Min ->
---             60
---         Model.Sec ->
---             1
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -77,30 +61,9 @@ update msg model =
         InputUsername input ->
             ( { model | inputtedUsername = input }, Cmd.none )
 
-        InputInterval unit input ->
-            let
-                inputtedInterval : Model.InputtedInterval
-                inputtedInterval =
-                    model.inputtedInterval
-            in
-            case unit of
-                Sec ->
-                    ( { model | inputtedInterval = { inputtedInterval | seconds = input } }, Task.succeed UpdateInterval |> Task.perform identity )
+        InputInterval input ->
+            ( { model | inputtedInterval = input }, Task.succeed UpdateInterval |> Task.perform identity )
 
-                Min ->
-                    ( { model | inputtedInterval = { inputtedInterval | minutes = input } }, Task.succeed UpdateInterval |> Task.perform identity )
-
-                Hour ->
-                    ( { model | inputtedInterval = { inputtedInterval | hours = input } }, Task.succeed UpdateInterval |> Task.perform identity )
-
-        -- InputIntervalUnit input ->
-        --     case input of
-        --         "min" ->
-        --             ( { model | intervalUnit = Model.Min }, Cmd.none )
-        --         "sec" ->
-        --             ( { model | intervalUnit = Model.Sec }, Cmd.none )
-        --         _ ->
-        --             ( model, Cmd.none )
         AddUser ->
             let
                 username : String
@@ -115,25 +78,8 @@ update msg model =
             )
 
         UpdateInterval ->
-            ( { model | intervalSeconds = Maybe.withDefault model.intervalSeconds (intervalsToSeconds model.inputtedInterval) }, Cmd.none )
+            ( { model | intervalSeconds = Maybe.withDefault model.intervalSeconds (intervalToSeconds model.inputtedInterval) }, Cmd.none )
 
-        -- UpdateInterval ->
-        --     let
-        --         newIntervalValue : Maybe Int
-        --         newIntervalValue =
-        --             String.toInt model.inputtedInterval
-        --         newIntervalSeconds : Int
-        --         newIntervalSeconds =
-        --             case newIntervalValue of
-        --                 Nothing ->
-        --                     model.intervalSeconds
-        --                 Just value ->
-        --                     if value > 0 then
-        --                         value * radixToSeconds model.intervalUnit
-        --                     else
-        --                         model.intervalSeconds
-        --     in
-        --     ( { model | intervalSeconds = newIntervalSeconds }, Cmd.none )
         ToggleSoundMode enabled ->
             ( { model | enabledSound = enabled }, Cmd.none )
 
@@ -283,23 +229,22 @@ readableDuration seconds =
         ++ String.padLeft 2 '0' (String.fromInt (toSecond utc time))
 
 
-
--- isChangeableInterval : Model -> Bool
--- isChangeableInterval model =
---     not
---         (model.mobbing
---             || ((Maybe.withDefault 0 (String.toInt model.inputtedInterval) * radixToSeconds model.intervalUnit)
---                     == model.intervalSeconds
---                )
---         )
-
-
 newIntervalFields : Model -> Html Msg
 newIntervalFields model =
     div [ class "interval-input" ]
-        [ input [ class "each-unit", value model.inputtedInterval.hours, onInput (InputInterval Hour), type_ "number", Html.Attributes.step "1", Html.Attributes.min "0", Html.Attributes.max "99" ] []
-        , input [ class "each-unit", value model.inputtedInterval.minutes, onInput (InputInterval Min), type_ "number", Html.Attributes.step "1", Html.Attributes.min "0", Html.Attributes.max "59" ] []
-        , input [ class "each-unit", value model.inputtedInterval.seconds, onInput (InputInterval Sec), type_ "number", Html.Attributes.step "1", Html.Attributes.min "0", Html.Attributes.max "59" ] []
+        [ input
+            [ class "interval-input"
+            , value model.inputtedInterval
+            , onInput InputInterval
+            , type_ "time"
+            , step "5"
+            , Html.Attributes.min "00:00:00"
+            , Html.Attributes.max "02:00:00"
+
+            -- TODO: Show tooltips for disabled reasons
+            , disabled model.mobbing
+            ]
+            []
         ]
 
 
@@ -315,20 +260,6 @@ timerPanel model =
             [ text "↩️" ]
         , br [] []
         , div [ class "timer-row" ] [ text ("⏲️ " ++ readableDuration model.elapsedSeconds ++ "/"), newIntervalFields model ]
-
-        -- , div [ class "newinterval-row" ]
-        --     [ span [] [ text "➡" ]
-        --     , Html.form [ onSubmit UpdateInterval ]
-        --         [ input [ class "duration-input", value model.inputtedInterval.seconds, onInput (InputInterval Model.Sec), type_ "number", Html.Attributes.min "1" ] []
-        --         , select [ class "unit-label", name "unit", onInput InputIntervalUnit ]
-        --             [ option [ value "min", selected (model.intervalUnit == Model.Min) ] [ text "min" ]
-        --             , option [ value "sec", selected (model.intervalUnit == Model.Sec) ] [ text "sec" ]
-        --             ]
-        --         , button
-        --             [ class "emoji-button", disabled (not (model |> isChangeableInterval)) ]
-        --             [ text "✔️" ]
-        --         ]
-        --     ]
         , div [ class "sound-toggle" ]
             [ label [ class "switch", for "sound-toggle" ]
                 [ input [ type_ "checkbox", id "sound-toggle", checked model.enabledSound, onCheck ToggleSoundMode ] []
