@@ -1,6 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig, loadEnv } from 'vite';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import elmPlugin from 'vite-plugin-elm';
 import { execSync } from 'child_process';
 
