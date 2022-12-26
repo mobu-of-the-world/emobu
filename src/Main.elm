@@ -7,7 +7,7 @@ import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
 import List exposing (drop, take)
-import Model exposing (Model, User, decoder, defaultValues, encode)
+import Model exposing (Model, PersistedModel, User, decoder, defaultValues, encode)
 import Random
 import Random.List
 import Time exposing (Posix, every, millisToPosix, toHour, toMinute, toSecond, utc)
@@ -23,15 +23,26 @@ main =
         }
 
 
+type alias InitializerFlags =
+    { persisted : PersistedModel, gitRef : String }
+
+
+appDecoder : Json.Decode.Decoder InitializerFlags
+appDecoder =
+    Json.Decode.map2 InitializerFlags
+        (Json.Decode.field "persisted" decoder)
+        (Json.Decode.field "gitRef" Json.Decode.string)
+
+
 init : Json.Encode.Value -> ( Model, Cmd Msg )
 init flags =
-    ( case Json.Decode.decodeValue decoder flags of
-        Ok decodedModel ->
+    ( case Json.Decode.decodeValue appDecoder flags of
+        Ok decoded ->
             { defaultValues
-                | users = decodedModel.users
-                , commitRef = Maybe.withDefault "unknown ref" decodedModel.commitRef
-                , enabledSound = Maybe.withDefault True decodedModel.enabledSound
-                , intervalSeconds = Maybe.withDefault defaultValues.intervalSeconds decodedModel.intervalSeconds
+                | users = decoded.persisted.users
+                , enabledSound = decoded.persisted.enabledSound
+                , intervalSeconds = decoded.persisted.intervalSeconds
+                , gitRef = decoded.gitRef
             }
 
         Err _ ->
@@ -448,7 +459,7 @@ appHeader =
 appFooter : Model -> Html msg
 appFooter model =
     footer [ class "footer" ]
-        [ text "rev - ", a [ class "revision-link", href ("https://github.com/mobu-of-the-world/emobu/tree/" ++ model.commitRef) ] [ text model.commitRef ] ]
+        [ text "rev - ", a [ class "revision-link", href ("https://github.com/mobu-of-the-world/emobu/tree/" ++ model.gitRef) ] [ text model.gitRef ] ]
 
 
 view : Model -> Html Msg
