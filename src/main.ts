@@ -3,10 +3,9 @@ import { Elm } from './Main.elm';
 declare const APP_COMMIT_REF: string;
 
 const storedData = localStorage.getItem('mobu-model');
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const flags = storedData
-  ? { ...JSON.parse(storedData), commitRef: APP_COMMIT_REF }
-  : { users: [], commitRef: APP_COMMIT_REF };
+const flags =
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  { persisted: storedData ? JSON.parse(storedData) : {}, gitRef: APP_COMMIT_REF };
 const mobuNode = document.getElementById('mobu');
 if (!mobuNode) {
   throw Error('Not found node');

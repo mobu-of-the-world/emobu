@@ -1,4 +1,4 @@
-module Model exposing (DecodedModel, Model, User, decoder, defaultValues, encode)
+module Model exposing (Model, PersistedModel, User, decoder, defaultValues, encode)
 
 import Json.Decode
 import Json.Encode
@@ -17,12 +17,13 @@ type alias Model =
     , intervalSeconds : Int
     , mobbing : Bool
     , enabledSound : Bool
-    , commitRef : String
+    , gitRef : String
     }
 
 
-type alias DecodedModel =
-    { users : List User, commitRef : Maybe String, enabledSound : Maybe Bool, intervalSeconds : Maybe Int }
+type alias PersistedModel =
+    -- TODO: Consider to versioning config structure with `andThen`
+    { users : List User, enabledSound : Bool, intervalSeconds : Int }
 
 
 defaultIntervalSeconds : Int
@@ -38,7 +39,7 @@ defaultValues =
     , intervalSeconds = defaultIntervalSeconds
     , mobbing = False
     , enabledSound = True
-    , commitRef = "unknown ref"
+    , gitRef = "unknown ref"
     }
 
 
@@ -63,10 +64,9 @@ userDecoder =
         (Json.Decode.field "avatarUrl" Json.Decode.string)
 
 
-decoder : Json.Decode.Decoder DecodedModel
+decoder : Json.Decode.Decoder PersistedModel
 decoder =
-    Json.Decode.map4 DecodedModel
+    Json.Decode.map3 PersistedModel
         (Json.Decode.field "users" (Json.Decode.list userDecoder))
-        (Json.Decode.maybe (Json.Decode.field "commitRef" Json.Decode.string))
-        (Json.Decode.maybe (Json.Decode.field "enabledSound" Json.Decode.bool))
-        (Json.Decode.maybe (Json.Decode.field "intervalSeconds" Json.Decode.int))
+        (Json.Decode.field "enabledSound" Json.Decode.bool)
+        (Json.Decode.field "intervalSeconds" Json.Decode.int)

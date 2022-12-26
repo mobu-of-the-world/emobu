@@ -10,7 +10,8 @@ export namespace Elm {
     }
 
     interface Flags {
-      initialValue: string;
+      persisted: unknown;
+      gitRef: string;
     }
 
     interface Ports {
