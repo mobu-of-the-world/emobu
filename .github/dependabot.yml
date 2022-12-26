@@ -4,20 +4,15 @@ updates:
     directory: '/'
     schedule:
       interval: 'daily'
-      time: '08:00'
-      timezone: 'Asia/Tokyo'
   - package-ecosystem: 'elm'
     directory: '/'
     schedule:
       interval: 'daily'
-      time: '08:00'
-      timezone: 'Asia/Tokyo'
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
       interval: 'daily'
-      time: '08:00'
-      timezone: 'Asia/Tokyo'
     ignore:
+      # https://github.com/hmsk/vite-plugin-elm/issues/386#issuecomment-1356815310
       - dependency-name: 'vite'
         update-types: ['version-update:semver-major']
