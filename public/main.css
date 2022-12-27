@@ -5,7 +5,7 @@
 
 #page {
   display: grid;
-  height: 100vh;
+  height: 100dvh;
   font-family: Inconsolata, monospace;
   background-color: #6a8372;
   caret-color: transparent;
@@ -14,10 +14,10 @@
 @media screen and (max-width: 799px) {
   #page {
     grid-template:
-      'head' minmax(20px, 5vh)
-      'timer-panel' min(30vh)
-      'users-panel' min(60vh)
-      'foot' minmax(20px, 5vh) / 1fr;
+      'head' minmax(20px, 5dvh)
+      'timer-panel' min(30dvh)
+      'users-panel' min(60dvh)
+      'foot' minmax(20px, 5dvh) / 1fr;
   }
 
   .users-panel {
@@ -28,9 +28,9 @@
 @media screen and (min-width: 800px) {
   #page {
     grid-template:
-      'head head' minmax(20px, 5vh)
-      'users-panel timer-panel' min(90vh)
-      'foot foot' minmax(20px, 5vh) / 1fr 1fr;
+      'head head' minmax(20px, 5dvh)
+      'users-panel timer-panel' min(90dvh)
+      'foot foot' minmax(20px, 5dvh) / 1fr 1fr;
   }
 }
 
