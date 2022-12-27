@@ -86,13 +86,12 @@ type Msg
     = InputUsername String
     | AddUser
     | ShuffleUsers
-    | ReplaceUsers (List User)
-    | DeleteUser String
+    | UpdateUsers (List User)
     | Tick Posix
     | UpdateInterval DurationUnit String
-    | ToggleMobbingState
+    | UpdateMobbing Bool
     | ResetTimer
-    | FetchGithubAvatarError String
+    | FallbackAvatar String
     | ToggleSoundMode Bool
 
 
@@ -154,16 +153,13 @@ update msg model =
             ( { model | enabledSound = enabled }, Cmd.none )
 
         ShuffleUsers ->
-            ( model, Random.generate ReplaceUsers <| Random.List.shuffle model.users )
+            ( model, Random.generate UpdateUsers <| Random.List.shuffle model.users )
 
-        ReplaceUsers newUsers ->
+        UpdateUsers newUsers ->
             ( { model | users = newUsers }, Cmd.none )
 
-        DeleteUser username ->
-            ( { model | users = List.filter (\element -> not (element.username == username)) model.users }, Cmd.none )
-
-        ToggleMobbingState ->
-            ( { model | mobbing = not model.mobbing }, Cmd.none )
+        UpdateMobbing mobbing ->
+            ( { model | mobbing = mobbing }, Cmd.none )
 
         ResetTimer ->
             ( { model | mobbing = False, elapsedSeconds = 0 }, Cmd.none )
@@ -209,7 +205,7 @@ update msg model =
                 Cmd.none
             )
 
-        FetchGithubAvatarError username ->
+        FallbackAvatar username ->
             let
                 setFallbackAvatar : Model.User -> Model.User
                 setFallbackAvatar user =
@@ -295,11 +291,38 @@ addUserInput model =
         ]
 
 
+deleteUser : User -> List User -> List User
+deleteUser leaver users =
+    users |> List.filter (\user -> not (user.username == leaver.username))
+
+
 userPanel : Model -> Html Msg
 userPanel model =
     div [ class "users-panel" ]
         [ ol []
-            (List.map userRow model.users
+            ((model.users
+                |> List.map
+                    (\user ->
+                        li []
+                            [ div [ class "list-item" ]
+                                [ img
+                                    ([ class "user-image"
+                                     , src user.avatarUrl
+                                     ]
+                                        ++ (if user.avatarUrl == fallbackAvatarUrl then
+                                                []
+
+                                            else
+                                                [ onError (FallbackAvatar user.username) ]
+                                           )
+                                    )
+                                    []
+                                , text user.username
+                                , button [ onClick (UpdateUsers (model.users |> deleteUser user)), class "button" ] [ emoji "👋" ]
+                                ]
+                            ]
+                    )
+             )
                 ++ [ addUserInput model ]
             )
         ]
@@ -432,7 +455,7 @@ timerPanel model =
         [ button
             [ class "button major"
             , disabled (not (isReadyMobbing model))
-            , onClick ToggleMobbingState
+            , onClick (UpdateMobbing (not model.mobbing))
             ]
             [ emoji "⏯️" ]
         , button
@@ -490,28 +513,6 @@ view model =
 onError : msg -> Attribute msg
 onError msg =
     on "error" (Json.Decode.succeed msg)
-
-
-userRow : User -> Html Msg
-userRow user =
-    li []
-        [ div [ class "list-item" ]
-            [ img
-                ([ class "user-image"
-                 , src user.avatarUrl
-                 ]
-                    ++ (if user.avatarUrl == fallbackAvatarUrl then
-                            []
-
-                        else
-                            [ onError (FetchGithubAvatarError user.username) ]
-                       )
-                )
-                []
-            , text user.username
-            , button [ onClick (DeleteUser user.username), class "button" ] [ emoji "👋" ]
-            ]
-        ]
 
 
 getGithubAvatarUrl : String -> String
