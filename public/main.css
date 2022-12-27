@@ -8,6 +8,7 @@
   height: 100vh;
   font-family: Inconsolata, monospace;
   background-color: #6a8372;
+  caret-color: transparent;
 }
 
 @media screen and (max-width: 799px) {
@@ -58,6 +59,7 @@
   border-radius: 1.2ch;
   background-color: #d7c4bb;
   text-align: center;
+  caret-color: green;
 }
 
 #page select {
