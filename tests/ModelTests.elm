@@ -21,7 +21,9 @@ decoderTests =
                             {"username":"kachick"},
                             {"username":"does not exist"}
                         ],
-                        "enabledSound":true,"intervalSeconds":1850
+                        "enabledSound":true,
+                        "enabledNotification":true,
+                        "intervalSeconds":1850
                       }
                     """
 
@@ -39,6 +41,7 @@ decoderTests =
                         , { username = "does not exist" }
                         ]
                     , enabledSound = True
+                    , enabledNotification = True
                     , intervalSeconds = 1850
                     }
                 )
@@ -59,6 +62,7 @@ encoderTests =
                             ]
                         , gitRef = "27d1d7c"
                         , enabledSound = True
+                        , enabledNotification = False
                         , intervalSeconds = 42
                     }
 
@@ -78,6 +82,7 @@ encoderTests =
                         , { username = "does not exist" }
                         ]
                     , enabledSound = True
+                    , enabledNotification = False
                     , intervalSeconds = 42
                     }
                 )

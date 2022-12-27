@@ -17,7 +17,7 @@ export namespace Elm {
     interface Ports {
       setStorage: Subscribe<object>;
       playSound: Subscribe<string>;
-      // sendMessageToElm: Send<string>;
+      notify: Subscribe<string>;
     }
 
     interface Subscribe<T> {
