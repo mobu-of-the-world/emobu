@@ -1,4 +1,4 @@
-module Model exposing (Model, PersistedModel, PersistedUser, User, decoder, defaultValues, encode)
+module Model exposing (Model, PersistedModel, PersistedUser, User, decoder, defaultPersistedValues, defaultValues, encode)
 
 import Json.Decode
 import Json.Encode
@@ -45,6 +45,14 @@ defaultValues =
     , mobbing = False
     , enabledSound = True
     , gitRef = "unknown ref"
+    }
+
+
+defaultPersistedValues : PersistedModel
+defaultPersistedValues =
+    { users = defaultValues.users |> List.map (\user -> { username = user.username })
+    , enabledSound = defaultValues.enabledSound
+    , intervalSeconds = defaultValues.intervalSeconds
     }
 
 

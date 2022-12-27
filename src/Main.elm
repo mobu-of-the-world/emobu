@@ -7,7 +7,7 @@ import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
 import List exposing (drop, take)
-import Model exposing (Model, PersistedModel, User, decoder, defaultValues, encode)
+import Model exposing (Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
 import Random
 import Random.List
 import Time exposing (Posix, every, millisToPosix, toHour, toMinute, toSecond, utc)
@@ -24,13 +24,13 @@ main =
 
 
 type alias InitializerFlags =
-    { persisted : PersistedModel, gitRef : String }
+    { persisted : Maybe PersistedModel, gitRef : String }
 
 
 appDecoder : Json.Decode.Decoder InitializerFlags
 appDecoder =
     Json.Decode.map2 InitializerFlags
-        (Json.Decode.field "persisted" decoder)
+        (Json.Decode.maybe (Json.Decode.field "persisted" decoder))
         (Json.Decode.field "gitRef" Json.Decode.string)
 
 
@@ -38,12 +38,16 @@ init : Json.Encode.Value -> ( Model, Cmd Msg )
 init flags =
     ( case Json.Decode.decodeValue appDecoder flags of
         Ok decoded ->
+            let
+                persisted =
+                    Maybe.withDefault defaultPersistedValues decoded.persisted
+            in
             { defaultValues
                 | users =
-                    decoded.persisted.users
+                    persisted.users
                         |> List.map (\persistedUser -> { username = persistedUser.username, avatarUrl = getGithubAvatarUrl persistedUser.username })
-                , enabledSound = decoded.persisted.enabledSound
-                , intervalSeconds = decoded.persisted.intervalSeconds
+                , enabledSound = persisted.enabledSound
+                , intervalSeconds = persisted.intervalSeconds
                 , gitRef = decoded.gitRef
             }
 
