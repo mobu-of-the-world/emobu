@@ -54,6 +54,7 @@
   grid-area: foot;
   text-align: center;
   width: 100vw;
+  font-size: x-small;
 }
 
 #page input {
