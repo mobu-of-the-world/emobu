@@ -96,6 +96,11 @@ type Msg
     | ToggleSoundMode Bool
 
 
+fallbackAvatarUrl : String
+fallbackAvatarUrl =
+    "https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png"
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -209,7 +214,7 @@ update msg model =
                 setFallbackAvatar : Model.User -> Model.User
                 setFallbackAvatar user =
                     if user.username == username then
-                        { user | avatarUrl = "https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png" }
+                        { user | avatarUrl = fallbackAvatarUrl }
 
                     else
                         user
@@ -482,11 +487,27 @@ view model =
         ]
 
 
+onError : msg -> Attribute msg
+onError msg =
+    on "error" (Json.Decode.succeed msg)
+
+
 userRow : User -> Html Msg
 userRow user =
     li []
         [ div [ class "list-item" ]
-            [ img [ class "user-image", src user.avatarUrl, on "error" (Json.Decode.succeed (FetchGithubAvatarError user.username)) ] []
+            [ img
+                ([ class "user-image"
+                 , src user.avatarUrl
+                 ]
+                    ++ (if user.avatarUrl == fallbackAvatarUrl then
+                            []
+
+                        else
+                            [ onError (FetchGithubAvatarError user.username) ]
+                       )
+                )
+                []
             , text user.username
             , button [ onClick (DeleteUser user.username), class "button" ] [ emoji "👋" ]
             ]
