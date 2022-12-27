@@ -21,7 +21,8 @@ decoderTests =
                             {"username":"kachick"},
                             {"username":"does not exist"}
                         ],
-                        "enabledSound":true,"intervalSeconds":1850
+                        "enabledSound":true,
+                        "intervalSeconds":1850
                       }
                     """
 
@@ -59,6 +60,7 @@ encoderTests =
                             ]
                         , gitRef = "27d1d7c"
                         , enabledSound = True
+                        , enabledNotification = False
                         , intervalSeconds = 42
                     }
 

@@ -154,16 +154,16 @@
   font-size: xx-large;
 }
 
-.sound-toggle {
+.feature-toggle {
   display: inline-block;
   margin-top: 2ch;
 }
 
-.sound-toggle input[type='checkbox'] {
+.feature-toggle input[type='checkbox'] {
   display: none;
 }
 
-.sound-toggle input[type='checkbox'] + label {
+.feature-toggle input[type='checkbox'] + label {
   cursor: pointer;
   font-size: xx-large;
   font-family: 'Noto Color Emoji', sans-serif;
@@ -173,8 +173,16 @@
   content: '🙉';
 }
 
+.notification-toggle input + label::after {
+  content: '🙈 ';
+}
+
 .sound-toggle input:checked + label::after {
   content: '🐈';
+}
+
+.notification-toggle input:checked + label::after {
+  content: '📡';
 }
 
 .timer-row {

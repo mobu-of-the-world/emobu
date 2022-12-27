@@ -22,12 +22,14 @@ type alias Model =
     , intervalSeconds : Int
     , mobbing : Bool
     , enabledSound : Bool
+    , enabledNotification : Bool
     , gitRef : String
     }
 
 
 type alias PersistedModel =
     -- TODO: Consider to versioning config structure with `andThen`
+    -- enabledNotification Ccn't be persisted because users can change the permission without local storage
     { users : List PersistedUser, enabledSound : Bool, intervalSeconds : Int }
 
 
@@ -44,6 +46,7 @@ defaultValues =
     , intervalSeconds = defaultIntervalSeconds
     , mobbing = False
     , enabledSound = True
+    , enabledNotification = False
     , gitRef = "unknown ref"
     }
 

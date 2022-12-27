@@ -2,7 +2,7 @@ port module Main exposing (DurationForEachUnit, DurationUnit, Msg(..), main, rot
 
 import Browser
 import Html exposing (Attribute, Html, a, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
-import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, type_, value)
+import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, title, type_, value)
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
@@ -23,14 +23,15 @@ main =
 
 
 type alias InitializerFlags =
-    { persisted : Maybe PersistedModel, gitRef : String }
+    { persisted : Maybe PersistedModel, gitRef : String, enabledNotification : Bool }
 
 
 appDecoder : Json.Decode.Decoder InitializerFlags
 appDecoder =
-    Json.Decode.map2 InitializerFlags
+    Json.Decode.map3 InitializerFlags
         (Json.Decode.maybe (Json.Decode.field "persisted" decoder))
         (Json.Decode.field "gitRef" Json.Decode.string)
+        (Json.Decode.field "enabledNotification" Json.Decode.bool)
 
 
 init : Json.Encode.Value -> ( Model, Cmd Msg )
@@ -46,6 +47,7 @@ init flags =
                     persisted.users
                         |> List.map (\persistedUser -> { username = persistedUser.username, avatarUrl = getGithubAvatarUrl persistedUser.username })
                 , enabledSound = persisted.enabledSound
+                , enabledNotification = decoded.enabledNotification
                 , intervalSeconds = persisted.intervalSeconds
                 , gitRef = decoded.gitRef
             }
@@ -93,6 +95,7 @@ type Msg
     | ResetTimer
     | FallbackAvatar String
     | UpdateSoundMode Bool
+    | UpdateNotificationMode Bool
 
 
 fallbackAvatarUrl : String
@@ -152,6 +155,15 @@ update msg model =
         UpdateSoundMode enabled ->
             ( { model | enabledSound = enabled }, Cmd.none )
 
+        UpdateNotificationMode enabled ->
+            ( { model | enabledNotification = enabled }
+            , if enabled then
+                requestNotificationPermission ()
+
+              else
+                Cmd.none
+            )
+
         ShuffleUsers ->
             ( model, Random.generate UpdateUsers <| Random.List.shuffle model.users )
 
@@ -198,8 +210,19 @@ update msg model =
                     else
                         newElapsedSeconds
               }
-            , if timeOver && model.enabledSound then
-                playSound "/audio/meow.mp3"
+            , if timeOver then
+                Cmd.batch
+                    [ if model.enabledSound then
+                        playSound "/audio/meow.mp3"
+
+                      else
+                        Cmd.none
+                    , if model.enabledNotification then
+                        notify "🚗 Change the driver! 🚗"
+
+                      else
+                        Cmd.none
+                    ]
 
               else
                 Cmd.none
@@ -226,6 +249,12 @@ port setStorage : Json.Encode.Value -> Cmd msg
 
 
 port playSound : String -> Cmd msg
+
+
+port notify : String -> Cmd msg
+
+
+port requestNotificationPermission : () -> Cmd msg
 
 
 rotate : List items -> List items
@@ -453,23 +482,66 @@ timerPanel : Model -> Html Msg
 timerPanel model =
     div [ class "timer-panel" ]
         [ button
-            [ class "button major"
+            [ title
+                (if model.mobbing then
+                    "Pause"
+
+                 else
+                    "Start"
+                )
+            , class "button major"
             , disabled (not (isReadyMobbing model))
             , onClick (UpdateMobbing (not model.mobbing))
             ]
             [ emoji "⏯️" ]
         , button
-            [ class "button major"
+            [ title "Shuffle"
+            , class "button major"
             , disabled (model.mobbing || not (satisfiedMinMembers model))
             , onClick ShuffleUsers
             ]
             [ emoji "🔀" ]
         , button
-            [ class "button major", onClick ResetTimer ]
+            [ title "Reset", class "button major", onClick ResetTimer ]
             [ emoji "↩️" ]
-        , div [ class "sound-toggle" ]
-            [ input [ type_ "checkbox", id "sound-toggle", checked model.enabledSound, onCheck UpdateSoundMode ] []
+        , div
+            [ title
+                (if model.enabledSound then
+                    "Mute"
+
+                 else
+                    "Enable sound"
+                )
+            , class "feature-toggle sound-toggle"
+            ]
+            [ input
+                [ type_ "checkbox"
+                , id "sound-toggle"
+                , checked model.enabledSound
+                , onCheck UpdateSoundMode
+                ]
+                []
             , label [ for "sound-toggle" ] []
+            ]
+        , div
+            [ title
+                (if model.enabledNotification then
+                    "Disabling notifications is browser feature, emobu can't do it."
+
+                 else
+                    "Enable notification"
+                )
+            , class "feature-toggle notification-toggle"
+            ]
+            [ input
+                [ type_ "checkbox"
+                , id "notification-toggle"
+                , checked model.enabledNotification
+                , onCheck UpdateNotificationMode
+                , disabled model.enabledNotification
+                ]
+                []
+            , label [ for "notification-toggle" ] []
             ]
         , br [] []
         , div [ class "timer-row" ]
