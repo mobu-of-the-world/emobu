@@ -92,7 +92,7 @@ type Msg
     | UpdateMobbing Bool
     | ResetTimer
     | FallbackAvatar String
-    | ToggleSoundMode Bool
+    | UpdateSoundMode Bool
 
 
 fallbackAvatarUrl : String
@@ -149,7 +149,7 @@ update msg model =
             in
             ( { model | intervalSeconds = model.intervalSeconds + (diff * radix) }, Cmd.none )
 
-        ToggleSoundMode enabled ->
+        UpdateSoundMode enabled ->
             ( { model | enabledSound = enabled }, Cmd.none )
 
         ShuffleUsers ->
@@ -468,7 +468,7 @@ timerPanel model =
             [ class "button major", onClick ResetTimer ]
             [ emoji "↩️" ]
         , div [ class "sound-toggle" ]
-            [ input [ type_ "checkbox", id "sound-toggle", checked model.enabledSound, onCheck ToggleSoundMode ] []
+            [ input [ type_ "checkbox", id "sound-toggle", checked model.enabledSound, onCheck UpdateSoundMode ] []
             , label [ for "sound-toggle" ] []
             ]
         , br [] []
