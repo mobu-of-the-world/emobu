@@ -1,4 +1,4 @@
-module Model exposing (Model, PersistedModel, User, decoder, defaultValues, encode)
+module Model exposing (Model, PersistedModel, PersistedUser, User, decoder, defaultValues, encode)
 
 import Json.Decode
 import Json.Encode
@@ -8,6 +8,11 @@ type alias User =
     { username : String
     , avatarUrl : String
     }
+
+
+type alias PersistedUser =
+    -- Keep record style for easier extending even if actually one field exists
+    { username : String }
 
 
 type alias Model =
@@ -23,7 +28,7 @@ type alias Model =
 
 type alias PersistedModel =
     -- TODO: Consider to versioning config structure with `andThen`
-    { users : List User, enabledSound : Bool, intervalSeconds : Int }
+    { users : List PersistedUser, enabledSound : Bool, intervalSeconds : Int }
 
 
 defaultIntervalSeconds : Int
@@ -45,7 +50,7 @@ defaultValues =
 
 userEncoder : User -> Json.Encode.Value
 userEncoder user =
-    Json.Encode.object [ ( "username", Json.Encode.string user.username ), ( "avatarUrl", Json.Encode.string user.avatarUrl ) ]
+    Json.Encode.object [ ( "username", Json.Encode.string user.username ) ]
 
 
 encode : Model -> Json.Encode.Value
@@ -57,11 +62,10 @@ encode model =
         ]
 
 
-userDecoder : Json.Decode.Decoder User
+userDecoder : Json.Decode.Decoder PersistedUser
 userDecoder =
-    Json.Decode.map2 User
+    Json.Decode.map PersistedUser
         (Json.Decode.field "username" Json.Decode.string)
-        (Json.Decode.field "avatarUrl" Json.Decode.string)
 
 
 decoder : Json.Decode.Decoder PersistedModel
