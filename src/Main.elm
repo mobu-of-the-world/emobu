@@ -39,7 +39,9 @@ init flags =
     ( case Json.Decode.decodeValue appDecoder flags of
         Ok decoded ->
             { defaultValues
-                | users = decoded.persisted.users
+                | users =
+                    decoded.persisted.users
+                        |> List.map (\persistedUser -> { username = persistedUser.username, avatarUrl = getGithubAvatarUrl persistedUser.username })
                 , enabledSound = decoded.persisted.enabledSound
                 , intervalSeconds = decoded.persisted.intervalSeconds
                 , gitRef = decoded.gitRef

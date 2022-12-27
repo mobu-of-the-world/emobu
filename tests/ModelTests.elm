@@ -15,7 +15,14 @@ decoderTests =
                 input : String
                 input =
                     """
-                      {"users":[{"username":"pankona","avatarUrl":"https://github.com/pankona.png"},{"username":"kachick","avatarUrl":"https://github.com/kachick.png"},{"username":"does not exist","avatarUrl":"https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png"}],"enabledSound":true,"intervalSeconds":1850}
+                      {
+                        "users":[
+                            {"username":"pankona"},
+                            {"username":"kachick"},
+                            {"username":"does not exist"}
+                        ],
+                        "enabledSound":true,"intervalSeconds":1850
+                      }
                     """
 
                 decodedOutput : Result Json.Decode.Error PersistedModel
@@ -27,9 +34,9 @@ decoderTests =
             Expect.equal decodedOutput
                 (Ok
                     { users =
-                        [ { username = "pankona", avatarUrl = "https://github.com/pankona.png" }
-                        , { username = "kachick", avatarUrl = "https://github.com/kachick.png" }
-                        , { username = "does not exist", avatarUrl = "https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png" }
+                        [ { username = "pankona" }
+                        , { username = "kachick" }
+                        , { username = "does not exist" }
                         ]
                     , enabledSound = True
                     , intervalSeconds = 1850
@@ -66,9 +73,9 @@ encoderTests =
             Expect.equal decodedAgain
                 (Ok
                     { users =
-                        [ { username = "pankona", avatarUrl = "https://github.com/pankona.png" }
-                        , { username = "kachick", avatarUrl = "https://github.com/kachick.png" }
-                        , { username = "does not exist", avatarUrl = "https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png" }
+                        [ { username = "pankona" }
+                        , { username = "kachick" }
+                        , { username = "does not exist" }
                         ]
                     , enabledSound = True
                     , intervalSeconds = 42
