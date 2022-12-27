@@ -155,9 +155,7 @@ update msg model =
             ( { model | enabledSound = enabled }, Cmd.none )
 
         UpdateNotificationMode enabled ->
-            ( { model | enabledNotification = enabled }
-            , Cmd.none
-            )
+            ( { model | enabledNotification = enabled }, Cmd.none )
 
         ShuffleUsers ->
             ( model, Random.generate UpdateUsers <| Random.List.shuffle model.users )
