@@ -6,7 +6,6 @@ import Html.Attributes exposing (checked, class, disabled, for, href, id, placeh
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
-import List exposing (drop, take)
 import Model exposing (Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
 import Random
 import Random.List
@@ -230,7 +229,12 @@ port playSound : String -> Cmd msg
 
 rotate : List items -> List items
 rotate items =
-    drop 1 items ++ take 1 items
+    case items of
+        head :: rest ->
+            rest ++ [ head ]
+
+        _ ->
+            items
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
