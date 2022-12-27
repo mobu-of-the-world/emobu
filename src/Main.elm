@@ -497,7 +497,15 @@ appHeader =
 appFooter : Model -> Html msg
 appFooter model =
     footer [ class "footer" ]
-        [ text "rev - ", a [ class "revision-link", href ("https://github.com/mobu-of-the-world/emobu/tree/" ++ model.gitRef) ] [ text model.gitRef ] ]
+        [ div [ class "footer-body" ]
+            [ text "rev - "
+            , a
+                [ class "revision-link"
+                , href ("https://github.com/mobu-of-the-world/emobu/tree/" ++ model.gitRef)
+                ]
+                [ text model.gitRef ]
+            ]
+        ]
 
 
 view : Model -> Html Msg

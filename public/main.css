@@ -57,6 +57,12 @@
   font-size: x-small;
 }
 
+.footer .footer-body {
+  position: sticky;
+  top: 100%;
+  padding-bottom: 0.6ch;
+}
+
 #page input {
   border: none;
   border-radius: 1.2ch;
