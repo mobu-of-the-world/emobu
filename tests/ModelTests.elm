@@ -55,7 +55,7 @@ encoderTests =
                         | users =
                             [ { username = "pankona", avatarUrl = "https://github.com/pankona.png" }
                             , { username = "kachick", avatarUrl = "https://github.com/kachick.png" }
-                            , { username = "does not exist", avatarUrl = "https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png" }
+                            , { username = "does not exist", avatarUrl = "/images/default-profile-icon.png" }
                             ]
                         , gitRef = "27d1d7c"
                         , enabledSound = True

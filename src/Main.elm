@@ -98,7 +98,7 @@ type Msg
 
 fallbackAvatarUrl : String
 fallbackAvatarUrl =
-    "https://raw.githubusercontent.com/mobu-of-the-world/mobu/main/public/images/default-profile-icon.png"
+    "/images/default-profile-icon.png"
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
