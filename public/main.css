@@ -42,6 +42,7 @@
   background-color: #43676b;
   align-items: center;
   padding: 0 2ch;
+  width: 100vw;
 }
 
 #page > .header .github-logo {
@@ -52,6 +53,7 @@
 #page > .footer {
   grid-area: foot;
   text-align: center;
+  width: 100vw;
 }
 
 #page input {
