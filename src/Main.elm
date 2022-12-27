@@ -6,10 +6,15 @@ import Html.Attributes exposing (checked, class, disabled, for, href, id, placeh
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
-import Model exposing (Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
+import Model exposing (EventType(..), Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
 import Random
 import Random.List
+import Task
 import Time exposing (Posix, every, millisToPosix, toHour, toMinute, toSecond, utc)
+
+
+
+-- type alias Events = List Time.Posix
 
 
 main : Program Json.Encode.Value Model Msg
@@ -95,6 +100,7 @@ type Msg
     | FallbackAvatar String
     | UpdateSoundMode Bool
     | UpdateNotificationMode Bool
+    | RecordEvent EventType Posix
 
 
 fallbackAvatarUrl : String
@@ -124,6 +130,7 @@ update msg model =
             , Cmd.none
             )
 
+        -- NewTime moment ->
         UpdateInterval unit input ->
             let
                 currentInterval =
@@ -164,7 +171,26 @@ update msg model =
             ( { model | users = newUsers }, Cmd.none )
 
         UpdateMobbing mobbing ->
-            ( { model | mobbing = mobbing }, Cmd.none )
+            ( { model | mobbing = mobbing }
+            , Task.perform
+                (RecordEvent
+                    (if mobbing then
+                        Start
+
+                     else
+                        Stop
+                    )
+                )
+                Time.now
+            )
+
+        RecordEvent eventType moment ->
+            ( { model
+                | events =
+                    { eventType = eventType, startedAt = moment } :: model.events
+              }
+            , Cmd.none
+            )
 
         ResetTimer ->
             ( { model | mobbing = False, elapsedSeconds = 0 }, Cmd.none )

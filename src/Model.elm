@@ -1,7 +1,8 @@
-module Model exposing (Model, PersistedModel, PersistedUser, User, decoder, defaultPersistedValues, defaultValues, encode)
+module Model exposing (Event, EventType(..), Model, PersistedModel, PersistedUser, User, decoder, defaultPersistedValues, defaultValues, encode)
 
 import Json.Decode
 import Json.Encode
+import Time
 
 
 type alias User =
@@ -15,6 +16,15 @@ type alias PersistedUser =
     { username : String }
 
 
+type EventType
+    = Start
+    | Stop
+
+
+type alias Event =
+    { eventType : EventType, startedAt : Time.Posix }
+
+
 type alias Model =
     { inputtedUsername : String
     , users : List User
@@ -24,6 +34,7 @@ type alias Model =
     , enabledSound : Bool
     , enabledNotification : Bool
     , gitRef : String
+    , events : List Event
     }
 
 
@@ -48,6 +59,7 @@ defaultValues =
     , enabledSound = True
     , enabledNotification = False
     , gitRef = "unknown ref"
+    , events = []
     }
 
 
