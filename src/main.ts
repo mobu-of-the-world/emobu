@@ -2,12 +2,14 @@ import { Elm } from './Main.elm';
 
 declare const APP_COMMIT_REF: string;
 
+const isSupportedNotification = 'Notification' in window;
+
 const storedData = localStorage.getItem('mobu-model');
 const flags = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   persisted: storedData ? JSON.parse(storedData) : {},
   gitRef: APP_COMMIT_REF,
-  enabledNotification: Notification.permission === 'granted',
+  enabledNotification: isSupportedNotification && (Notification.permission === 'granted'),
 };
 const mobuNode = document.getElementById('mobu');
 if (!mobuNode) {
@@ -29,10 +31,14 @@ app.ports.playSound.subscribe((url: string) => {
 });
 
 app.ports.notify.subscribe((message: string) => {
-  new Notification(message);
+  if (isSupportedNotification) {
+    new Notification(message);
+  }
 });
 
 app.ports.requestNotificationPermission.subscribe((_) => {
-  // This style might not work in safari...
-  void Notification.requestPermission();
+  if (isSupportedNotification) {
+    // This style might not work in safari...
+    void Notification.requestPermission();
+  }
 });
