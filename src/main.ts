@@ -9,7 +9,6 @@ const flags = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   persisted: storedData ? JSON.parse(storedData) : {},
   gitRef: APP_COMMIT_REF,
-  enabledNotification: isSupportedNotification && (Notification.permission === 'granted'),
 };
 const mobuNode = document.getElementById('mobu');
 if (!mobuNode) {
@@ -31,14 +30,22 @@ app.ports.playSound.subscribe((url: string) => {
 });
 
 app.ports.notify.subscribe((message: string) => {
-  if (isSupportedNotification) {
-    new Notification(message);
+  if (!isSupportedNotification) {
+    return;
   }
-});
 
-app.ports.requestNotificationPermission.subscribe((_) => {
-  if (isSupportedNotification) {
-    // This style might not work in safari...
-    void Notification.requestPermission();
+  switch (Notification.permission) {
+    case 'denied':
+      break;
+    case 'granted':
+      new Notification(message);
+      break;
+    default:
+      void Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          new Notification(message);
+        }
+      });
+      break;
   }
 });

@@ -12,14 +12,12 @@ export namespace Elm {
     interface Flags {
       persisted: unknown;
       gitRef: string;
-      enabledNotification: boolean;
     }
 
     interface Ports {
       setStorage: Subscribe<object>;
       playSound: Subscribe<string>;
       notify: Subscribe<string>;
-      requestNotificationPermission: Subscribe<unknown>;
     }
 
     interface Subscribe<T> {

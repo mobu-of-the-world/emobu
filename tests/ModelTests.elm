@@ -22,6 +22,7 @@ decoderTests =
                             {"username":"does not exist"}
                         ],
                         "enabledSound":true,
+                        "enabledNotification":true,
                         "intervalSeconds":1850
                       }
                     """
@@ -40,6 +41,7 @@ decoderTests =
                         , { username = "does not exist" }
                         ]
                     , enabledSound = True
+                    , enabledNotification = True
                     , intervalSeconds = 1850
                     }
                 )
@@ -80,6 +82,7 @@ encoderTests =
                         , { username = "does not exist" }
                         ]
                     , enabledSound = True
+                    , enabledNotification = False
                     , intervalSeconds = 42
                     }
                 )

@@ -29,8 +29,8 @@ type alias Model =
 
 type alias PersistedModel =
     -- TODO: Consider to versioning config structure with `andThen`
-    -- enabledNotification Ccn't be persisted because users can change the permission without local storage
-    { users : List PersistedUser, enabledSound : Bool, intervalSeconds : Int }
+    -- enabledNotification does not mean to be notified, because users can change the permission without app layer. This mean to try.
+    { users : List PersistedUser, enabledSound : Bool, enabledNotification : Bool, intervalSeconds : Int }
 
 
 defaultIntervalSeconds : Int
@@ -55,6 +55,7 @@ defaultPersistedValues : PersistedModel
 defaultPersistedValues =
     { users = defaultValues.users |> List.map (\user -> { username = user.username })
     , enabledSound = defaultValues.enabledSound
+    , enabledNotification = defaultValues.enabledNotification
     , intervalSeconds = defaultValues.intervalSeconds
     }
 
@@ -69,6 +70,7 @@ encode model =
     Json.Encode.object
         [ ( "users", Json.Encode.list userEncoder model.users )
         , ( "enabledSound", Json.Encode.bool model.enabledSound )
+        , ( "enabledNotification", Json.Encode.bool model.enabledNotification )
         , ( "intervalSeconds", Json.Encode.int model.intervalSeconds )
         ]
 
@@ -81,7 +83,8 @@ userDecoder =
 
 decoder : Json.Decode.Decoder PersistedModel
 decoder =
-    Json.Decode.map3 PersistedModel
+    Json.Decode.map4 PersistedModel
         (Json.Decode.field "users" (Json.Decode.list userDecoder))
         (Json.Decode.field "enabledSound" Json.Decode.bool)
+        (Json.Decode.field "enabledNotification" Json.Decode.bool)
         (Json.Decode.field "intervalSeconds" Json.Decode.int)

@@ -23,15 +23,14 @@ main =
 
 
 type alias InitializerFlags =
-    { persisted : Maybe PersistedModel, gitRef : String, enabledNotification : Bool }
+    { persisted : Maybe PersistedModel, gitRef : String }
 
 
 appDecoder : Json.Decode.Decoder InitializerFlags
 appDecoder =
-    Json.Decode.map3 InitializerFlags
+    Json.Decode.map2 InitializerFlags
         (Json.Decode.maybe (Json.Decode.field "persisted" decoder))
         (Json.Decode.field "gitRef" Json.Decode.string)
-        (Json.Decode.field "enabledNotification" Json.Decode.bool)
 
 
 init : Json.Encode.Value -> ( Model, Cmd Msg )
@@ -47,7 +46,7 @@ init flags =
                     persisted.users
                         |> List.map (\persistedUser -> { username = persistedUser.username, avatarUrl = getGithubAvatarUrl persistedUser.username })
                 , enabledSound = persisted.enabledSound
-                , enabledNotification = decoded.enabledNotification
+                , enabledNotification = persisted.enabledNotification
                 , intervalSeconds = persisted.intervalSeconds
                 , gitRef = decoded.gitRef
             }
@@ -157,11 +156,7 @@ update msg model =
 
         UpdateNotificationMode enabled ->
             ( { model | enabledNotification = enabled }
-            , if enabled then
-                requestNotificationPermission ()
-
-              else
-                Cmd.none
+            , Cmd.none
             )
 
         ShuffleUsers ->
@@ -252,9 +247,6 @@ port playSound : String -> Cmd msg
 
 
 port notify : String -> Cmd msg
-
-
-port requestNotificationPermission : () -> Cmd msg
 
 
 rotate : List items -> List items
@@ -526,10 +518,10 @@ timerPanel model =
         , div
             [ title
                 (if model.enabledNotification then
-                    "Disabling notifications is browser feature, emobu can't do it."
+                    "Disable notifications"
 
                  else
-                    "Enable notification"
+                    "Enable notification (if you approve)"
                 )
             , class "feature-toggle notification-toggle"
             ]
@@ -538,7 +530,6 @@ timerPanel model =
                 , id "notification-toggle"
                 , checked model.enabledNotification
                 , onCheck UpdateNotificationMode
-                , disabled model.enabledNotification
                 ]
                 []
             , label [ for "notification-toggle" ] []
