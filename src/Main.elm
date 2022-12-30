@@ -204,14 +204,13 @@ update msg model =
                                         latest :: rest ->
                                             ( latest, rest )
 
-                                        -- Should not reach here within view logic... :<
                                         [] ->
-                                            ( ( millisToPosix 0, millisToPosix 0 ), [] )
+                                            ( ( moment, moment ), [] )
                             in
                             ( begin, moment ) :: befores
               }
             , if event == Stay then
-                --   https://medium.com/elm-shorts/how-to-turn-a-msg-into-a-cmd-msg-in-elm-5dd095175d84
+                -- https://medium.com/elm-shorts/how-to-turn-a-msg-into-a-cmd-msg-in-elm-5dd095175d84
                 Task.succeed CheckTimeup |> Task.perform identity
 
               else
