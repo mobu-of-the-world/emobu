@@ -44,7 +44,7 @@ config =
     , NoImportingEverything.rule []
     , NoMissingTypeAnnotation.rule
     -- , NoMissingTypeAnnotationInLetIn.rule
-    , NoMissingTypeExpose.rule
+    -- , NoMissingTypeExpose.rule
     , NoSimpleLetBody.rule
     , NoPrematureLetComputation.rule
     , NoUnused.CustomTypeConstructors.rule []
