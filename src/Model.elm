@@ -1,5 +1,6 @@
-module Model exposing (Duration, Model, PersistedModel, PersistedUser, User, decoder, defaultPersistedValues, defaultValues, encode)
+module Model exposing (Model, PersistedModel, PersistedUser, User, decoder, defaultPersistedValues, defaultValues, encode)
 
+import Duration exposing (Duration)
 import Json.Decode
 import Json.Encode
 import Time exposing (Posix, millisToPosix)
@@ -14,10 +15,6 @@ type alias User =
 type alias PersistedUser =
     -- Keep record style for easier extending even if actually one field exists
     { username : String }
-
-
-type alias Duration =
-    ( Posix, Posix )
 
 
 type alias Model =

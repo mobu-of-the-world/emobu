@@ -1,9 +1,8 @@
-module MainTests exposing (durationsToElapsedSecondsTests, rotateTests)
+module MainTests exposing (rotateTests)
 
 import Expect
-import Main exposing (durationsToElapsedSeconds, rotate)
+import Main exposing (rotate)
 import Test exposing (Test, describe, test)
-import Time exposing (millisToPosix)
 
 
 rotateTests : Test
@@ -29,25 +28,4 @@ rotateTests =
                 []
                     |> rotate
                     |> Expect.equal []
-        ]
-
-
-durationsToElapsedSecondsTests : Test
-durationsToElapsedSecondsTests =
-    describe "durationsToElapsedSeconds"
-        [ test "truncates msec" <|
-            \() ->
-                [ ( millisToPosix 1672399207825, millisToPosix 1672399215616 ) ]
-                    |> durationsToElapsedSeconds
-                    |> Expect.equal 7
-        , test "truncates msec after sum" <|
-            \() ->
-                [ ( millisToPosix 1672399502101, millisToPosix 1672399554056 ), ( millisToPosix 1672399207825, millisToPosix 1672399215616 ) ]
-                    |> durationsToElapsedSeconds
-                    |> Expect.equal 59
-        , test "returns 0 for empty" <|
-            \() ->
-                []
-                    |> durationsToElapsedSeconds
-                    |> Expect.equal 0
         ]

@@ -1,16 +1,17 @@
-port module Main exposing (DlapsedUnit, ElapsedForEachUnit, Event, Msg(..), durationsToElapsedSeconds, main, rotate)
+port module Main exposing (DlapsedUnit, ElapsedForEachUnit, Event, Msg(..), main, rotate)
 
 import Browser
+import Duration
 import Html exposing (Attribute, Html, a, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
 import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, title, type_, value)
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
-import Model exposing (Duration, Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
+import Model exposing (Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
 import Random
 import Random.List
 import Task
-import Time exposing (Posix, every, millisToPosix, posixToMillis, toHour, toMinute, toSecond, utc)
+import Time exposing (Posix, every, millisToPosix, toHour, toMinute, toSecond, utc)
 
 
 main : Program Json.Encode.Value Model Msg
@@ -198,16 +199,7 @@ update msg model =
                             ( moment, moment ) :: model.durations
 
                         _ ->
-                            let
-                                ( ( begin, _ ), befores ) =
-                                    case model.durations of
-                                        latest :: rest ->
-                                            ( latest, rest )
-
-                                        [] ->
-                                            ( ( moment, moment ), [] )
-                            in
-                            ( begin, moment ) :: befores
+                            Duration.updateLatest moment model.durations
               }
             , if event == Stay then
                 -- https://medium.com/elm-shorts/how-to-turn-a-msg-into-a-cmd-msg-in-elm-5dd095175d84
@@ -223,7 +215,7 @@ update msg model =
         CheckTimeup ->
             let
                 timeOver =
-                    durationsToElapsedSeconds model.durations >= model.intervalSeconds
+                    Duration.elapsedSecondsFromDurations model.durations >= model.intervalSeconds
             in
             ( { model
                 | mobbing =
@@ -294,20 +286,6 @@ port playSound : String -> Cmd msg
 
 
 port notify : String -> Cmd msg
-
-
-durationToMillis : Duration -> Int
-durationToMillis ( begin, end ) =
-    posixToMillis end - posixToMillis begin
-
-
-durationsToElapsedSeconds : List Duration -> Int
-durationsToElapsedSeconds durations =
-    (durations
-        |> List.map durationToMillis
-        |> List.foldl (+) 0
-    )
-        // 1000
 
 
 rotate : List items -> List items
@@ -599,7 +577,7 @@ timerPanel model =
         , div [ class "timer-row" ]
             [ emoji "⏲️"
             , space
-            , text (readableElapsed (durationsToElapsedSeconds model.durations))
+            , text (readableElapsed (Duration.elapsedSecondsFromDurations model.durations))
             ]
         , newIntervalFields model
         ]
