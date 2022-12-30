@@ -79,7 +79,7 @@ type Msg
     | UpdateSoundMode Bool
     | UpdateNotificationMode Bool
     | UpdateDurations Event Posix
-    | CheckTimeup
+    | CheckMobSession
 
 
 fallbackAvatarUrl : String
@@ -164,7 +164,7 @@ update msg model =
               }
             , if event == Stay then
                 -- https://medium.com/elm-shorts/how-to-turn-a-msg-into-a-cmd-msg-in-elm-5dd095175d84
-                Task.succeed CheckTimeup |> Task.perform identity
+                Task.succeed CheckMobSession |> Task.perform identity
 
               else
                 Cmd.none
@@ -173,32 +173,32 @@ update msg model =
         ResetTimer ->
             ( { model | mobbing = False, durations = [] }, Cmd.none )
 
-        CheckTimeup ->
+        CheckMobSession ->
             let
-                timeOver =
+                isEnded =
                     Duration.elapsedSecondsFromDurations model.durations >= model.intervalSeconds
             in
             ( { model
                 | mobbing =
-                    if timeOver then
+                    if isEnded then
                         False
 
                     else
                         model.mobbing
                 , users =
-                    if timeOver then
+                    if isEnded then
                         rotate model.users
 
                     else
                         model.users
                 , durations =
-                    if timeOver then
+                    if isEnded then
                         []
 
                     else
                         model.durations
               }
-            , if timeOver then
+            , if isEnded then
                 Cmd.batch
                     [ if model.enabledSound then
                         playSound "/audio/meow.mp3"
