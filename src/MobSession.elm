@@ -1,4 +1,4 @@
-module Session exposing (ForEachUnit, IntervalUnit(..), newIntervalOptions, readableElapsed, updateIntervalSeconds)
+module MobSession exposing (ForEachUnit, IntervalUnit(..), newIntervalOptions, readableElapsed, updateIntervalSeconds)
 
 import Time exposing (Posix, millisToPosix, toHour, toMinute, toSecond, utc)
 

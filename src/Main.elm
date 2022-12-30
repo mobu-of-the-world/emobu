@@ -7,10 +7,10 @@ import Html.Attributes exposing (checked, class, disabled, for, href, id, placeh
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
+import MobSession
 import Model exposing (Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
 import Random
 import Random.List
-import Session
 import Task
 import Time exposing (Posix, every)
 
@@ -72,7 +72,7 @@ type Msg
     | ShuffleUsers
     | UpdateUsers (List User)
     | Tick Posix
-    | UpdateInterval Session.IntervalUnit String
+    | UpdateInterval MobSession.IntervalUnit String
     | UpdateMobbing Bool
     | ResetTimer
     | FallbackAvatar String
@@ -114,7 +114,7 @@ update msg model =
                 | intervalSeconds =
                     case String.toInt input of
                         Just int ->
-                            Session.updateIntervalSeconds int unit model.intervalSeconds
+                            MobSession.updateIntervalSeconds int unit model.intervalSeconds
 
                         _ ->
                             model.intervalSeconds
@@ -353,7 +353,7 @@ newIntervalFields : Model -> Html Msg
 newIntervalFields model =
     let
         ( hoursOptions, minutesOptions, secondsOptions ) =
-            Session.newIntervalOptions model.intervalSeconds
+            MobSession.newIntervalOptions model.intervalSeconds
 
         optionsFormatter =
             List.map
@@ -364,21 +364,21 @@ newIntervalFields model =
         , space
         , select
             [ class "value-select"
-            , onInput (UpdateInterval Session.Hour)
+            , onInput (UpdateInterval MobSession.Hour)
             , disabled model.mobbing
             ]
             (hoursOptions |> optionsFormatter)
         , text ":"
         , select
             [ class "value-select"
-            , onInput (UpdateInterval Session.Min)
+            , onInput (UpdateInterval MobSession.Min)
             , disabled model.mobbing
             ]
             (minutesOptions |> optionsFormatter)
         , text ":"
         , select
             [ class "value-select"
-            , onInput (UpdateInterval Session.Sec)
+            , onInput (UpdateInterval MobSession.Sec)
             , disabled model.mobbing
             ]
             (secondsOptions |> optionsFormatter)
@@ -468,7 +468,7 @@ timerPanel model =
         , div [ class "timer-row" ]
             [ emoji "⏲️"
             , space
-            , text (Session.readableElapsed (Duration.elapsedSecondsFromDurations model.durations))
+            , text (MobSession.readableElapsed (Duration.elapsedSecondsFromDurations model.durations))
             ]
         , newIntervalFields model
         ]
