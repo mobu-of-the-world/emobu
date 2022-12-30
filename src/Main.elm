@@ -1,4 +1,4 @@
-port module Main exposing (Event, Msg(..), main, rotate)
+port module Main exposing (Event, Msg(..), main)
 
 import Browser
 import Browser.Dom as Dom
@@ -179,7 +179,7 @@ update msg model =
             if Duration.elapsedSecondsFromDurations model.durations >= model.intervalSeconds then
                 ( { model
                     | mobbing = False
-                    , users = rotate model.users
+                    , users = MobSession.rotate model.users
                     , durations = []
                   }
                 , Cmd.batch
@@ -233,16 +233,6 @@ port playSound : String -> Cmd msg
 
 
 port notify : String -> Cmd msg
-
-
-rotate : List items -> List items
-rotate items =
-    case items of
-        head :: rest ->
-            rest ++ [ head ]
-
-        _ ->
-            items
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )

@@ -1,7 +1,7 @@
-module MainTests exposing (rotateTests)
+module MobSessionTests exposing (rotateTests)
 
 import Expect
-import Main exposing (rotate)
+import MobSession exposing (rotate)
 import Test exposing (Test, describe, test)
 
 

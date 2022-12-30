@@ -1,4 +1,4 @@
-module MobSession exposing (ForEachUnit, IntervalUnit(..), newIntervalOptions, readableElapsed, updateIntervalSeconds)
+module MobSession exposing (ForEachUnit, IntervalUnit(..), newIntervalOptions, readableElapsed, rotate, updateIntervalSeconds)
 
 import Time exposing (Posix, millisToPosix, toHour, toMinute, toSecond, utc)
 
@@ -14,6 +14,16 @@ type IntervalUnit
     = Hour
     | Min
     | Sec
+
+
+rotate : List items -> List items
+rotate items =
+    case items of
+        head :: rest ->
+            rest ++ [ head ]
+
+        _ ->
+            items
 
 
 readableElapsed : Int -> String
