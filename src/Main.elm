@@ -4,8 +4,8 @@ import Browser
 import Browser.Dom as Dom
 import Duration
 import Html exposing (Attribute, Html, a, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
-import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, title, type_, value)
-import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
+import Html.Attributes as Attr
+import Html.Events exposing (onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
 import MobSession
@@ -13,7 +13,7 @@ import Model exposing (Model, PersistedModel, User, decoder, defaultPersistedVal
 import Random
 import Random.List
 import Task
-import Time exposing (Posix, every)
+import Time
 
 
 main : Program Json.Encode.Value Model Msg
@@ -72,14 +72,14 @@ type Msg
     | AddUser
     | ShuffleUsers
     | UpdateUsers (List User)
-    | Tick Posix
+    | Tick Time.Posix
     | UpdateInterval MobSession.IntervalUnit String
     | UpdateMobbing Bool
     | ResetTimer
     | FallbackAvatar String
     | UpdateSoundMode Bool
     | UpdateNotificationMode Bool
-    | UpdateDurations Event Posix
+    | UpdateDurations Event Time.Posix
     | CheckMobSession
     | NoOp
 
@@ -261,18 +261,18 @@ isAddableUser model =
 
 balloon : ( String, String ) -> List (Attribute msg)
 balloon ( label, pos ) =
-    [ Html.Attributes.attribute "data-balloon-visible" "true"
-    , Html.Attributes.attribute "aria-label" label
-    , Html.Attributes.attribute "data-balloon-pos" pos
+    [ Attr.attribute "data-balloon-visible" "true"
+    , Attr.attribute "aria-label" label
+    , Attr.attribute "data-balloon-pos" pos
     ]
 
 
 addUserInput : Model -> Html Msg
 addUserInput model =
-    div [ class "list-item" ]
+    div [ Attr.class "list-item" ]
         [ li []
             [ form [ onSubmit AddUser ]
-                [ input [ id "username-input", value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
+                [ input [ Attr.id "username-input", Attr.value model.inputtedUsername, onInput InputUsername, Attr.placeholder "Username", Attr.type_ "text" ] []
                 , button
                     ((if satisfiedMinMembers model then
                         []
@@ -280,7 +280,7 @@ addUserInput model =
                       else
                         balloon ( "mob needs 2+ members!", "down" )
                      )
-                        ++ [ class "button", disabled (not (model |> isAddableUser)) ]
+                        ++ [ Attr.class "button", Attr.disabled (not (model |> isAddableUser)) ]
                     )
                     [ emoji "➕" ]
                 ]
@@ -295,16 +295,16 @@ deleteUser leaver users =
 
 userPanel : Model -> Html Msg
 userPanel model =
-    div [ class "users-panel" ]
+    div [ Attr.class "users-panel" ]
         [ ol []
             ((model.users
                 |> List.map
                     (\user ->
                         li []
-                            [ div [ class "list-item" ]
+                            [ div [ Attr.class "list-item" ]
                                 [ img
-                                    ([ class "user-image"
-                                     , src user.avatarUrl
+                                    ([ Attr.class "user-image"
+                                     , Attr.src user.avatarUrl
                                      ]
                                         ++ (if user.avatarUrl == fallbackAvatarUrl then
                                                 []
@@ -315,7 +315,7 @@ userPanel model =
                                     )
                                     []
                                 , text user.username
-                                , button [ onClick (UpdateUsers (model.users |> deleteUser user)), class "button" ] [ emoji "👋" ]
+                                , button [ onClick (UpdateUsers (model.users |> deleteUser user)), Attr.class "button" ] [ emoji "👋" ]
                                 ]
                             ]
                     )
@@ -333,29 +333,29 @@ newIntervalFields model =
 
         optionsFormatter =
             List.map
-                (\( val, selected ) -> option [ value val, Html.Attributes.selected selected ] [ text val ])
+                (\( val, selected ) -> option [ Attr.value val, Attr.selected selected ] [ text val ])
     in
-    div [ class "interval-input" ]
+    div [ Attr.class "interval-input" ]
         [ text "/"
         , space
         , select
-            [ class "value-select"
+            [ Attr.class "value-select"
             , onInput (UpdateInterval MobSession.Hour)
-            , disabled model.mobbing
+            , Attr.disabled model.mobbing
             ]
             (hoursOptions |> optionsFormatter)
         , text ":"
         , select
-            [ class "value-select"
+            [ Attr.class "value-select"
             , onInput (UpdateInterval MobSession.Min)
-            , disabled model.mobbing
+            , Attr.disabled model.mobbing
             ]
             (minutesOptions |> optionsFormatter)
         , text ":"
         , select
-            [ class "value-select"
+            [ Attr.class "value-select"
             , onInput (UpdateInterval MobSession.Sec)
-            , disabled model.mobbing
+            , Attr.disabled model.mobbing
             ]
             (secondsOptions |> optionsFormatter)
         ]
@@ -363,7 +363,7 @@ newIntervalFields model =
 
 emoji : String -> Html msg
 emoji str =
-    span [ class "standardized-emoji" ] [ text str ]
+    span [ Attr.class "standardized-emoji" ] [ text str ]
 
 
 satisfiedMinMembers : Model -> Bool
@@ -378,70 +378,70 @@ isReadyMobbing model =
 
 timerPanel : Model -> Html Msg
 timerPanel model =
-    div [ class "timer-panel" ]
+    div [ Attr.class "timer-panel" ]
         [ button
-            [ title
+            [ Attr.title
                 (if model.mobbing then
                     "Pause"
 
                  else
                     "Start"
                 )
-            , class "button major"
-            , disabled (not (isReadyMobbing model))
+            , Attr.class "button major"
+            , Attr.disabled (not (isReadyMobbing model))
             , onClick (UpdateMobbing (not model.mobbing))
             ]
             [ emoji "⏯️" ]
         , button
-            [ title "Shuffle"
-            , class "button major"
-            , disabled (model.mobbing || not (satisfiedMinMembers model))
+            [ Attr.title "Shuffle"
+            , Attr.class "button major"
+            , Attr.disabled (model.mobbing || not (satisfiedMinMembers model))
             , onClick ShuffleUsers
             ]
             [ emoji "🔀" ]
         , button
-            [ title "Reset", class "button major", onClick ResetTimer ]
+            [ Attr.title "Reset", Attr.class "button major", onClick ResetTimer ]
             [ emoji "↩️" ]
         , div
-            [ title
+            [ Attr.title
                 (if model.enabledSound then
                     "Mute"
 
                  else
                     "Enable sound"
                 )
-            , class "feature-toggle sound-toggle"
+            , Attr.class "feature-toggle sound-toggle"
             ]
             [ input
-                [ type_ "checkbox"
-                , id "sound-toggle"
-                , checked model.enabledSound
+                [ Attr.type_ "checkbox"
+                , Attr.id "sound-toggle"
+                , Attr.checked model.enabledSound
                 , onCheck UpdateSoundMode
                 ]
                 []
-            , label [ for "sound-toggle" ] []
+            , label [ Attr.for "sound-toggle" ] []
             ]
         , div
-            [ title
+            [ Attr.title
                 (if model.enabledNotification then
                     "Disable notifications"
 
                  else
                     "Enable notification (if you approve)"
                 )
-            , class "feature-toggle notification-toggle"
+            , Attr.class "feature-toggle notification-toggle"
             ]
             [ input
-                [ type_ "checkbox"
-                , id "notification-toggle"
-                , checked model.enabledNotification
+                [ Attr.type_ "checkbox"
+                , Attr.id "notification-toggle"
+                , Attr.checked model.enabledNotification
                 , onCheck UpdateNotificationMode
                 ]
                 []
-            , label [ for "notification-toggle" ] []
+            , label [ Attr.for "notification-toggle" ] []
             ]
         , br [] []
-        , div [ class "timer-row" ]
+        , div [ Attr.class "timer-row" ]
             [ emoji "⏲️"
             , space
             , text (MobSession.readableElapsed (Duration.elapsedSecondsFromDurations model.durations))
@@ -452,25 +452,25 @@ timerPanel model =
 
 space : Html msg
 space =
-    span [ class "chars-space" ] []
+    span [ Attr.class "chars-space" ] []
 
 
 appHeader : Html msg
 appHeader =
-    header [ class "header" ]
+    header [ Attr.class "header" ]
         [ text "emobu"
-        , a [ href "https://github.com/mobu-of-the-world/emobu/" ] [ img [ class "github-logo", src "/images/github-mark.svg" ] [] ]
+        , a [ Attr.href "https://github.com/mobu-of-the-world/emobu/" ] [ img [ Attr.class "github-logo", Attr.src "/images/github-mark.svg" ] [] ]
         ]
 
 
 appFooter : Model -> Html msg
 appFooter model =
-    footer [ class "footer" ]
-        [ div [ class "footer-body" ]
+    footer [ Attr.class "footer" ]
+        [ div [ Attr.class "footer-body" ]
             [ text "rev - "
             , a
-                [ class "revision-link"
-                , href ("https://github.com/mobu-of-the-world/emobu/tree/" ++ model.gitRef)
+                [ Attr.class "revision-link"
+                , Attr.href ("https://github.com/mobu-of-the-world/emobu/tree/" ++ model.gitRef)
                 ]
                 [ text model.gitRef ]
             ]
@@ -479,7 +479,7 @@ appFooter model =
 
 view : Model -> Html Msg
 view model =
-    div [ id "page" ]
+    div [ Attr.id "page" ]
         [ appHeader
         , userPanel model
         , timerPanel model
@@ -489,7 +489,7 @@ view model =
 
 onError : msg -> Attribute msg
 onError msg =
-    on "error" (Json.Decode.succeed msg)
+    Html.Events.on "error" (Json.Decode.succeed msg)
 
 
 getGithubAvatarUrl : String -> String
@@ -501,7 +501,7 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     if model.mobbing then
         -- Should be less than 1 sec. No actual interval. Ref: https://github.com/mobu-of-the-world/mobu/pull/486
-        every 500 Tick
+        Time.every 500 Tick
 
     else
         Sub.none
