@@ -176,32 +176,13 @@ update msg model =
             ( { model | mobbing = False, durations = [] }, Cmd.none )
 
         CheckMobSession ->
-            let
-                isEnded =
-                    Duration.elapsedSecondsFromDurations model.durations >= model.intervalSeconds
-            in
-            ( { model
-                | mobbing =
-                    if isEnded then
-                        False
-
-                    else
-                        model.mobbing
-                , users =
-                    if isEnded then
-                        rotate model.users
-
-                    else
-                        model.users
-                , durations =
-                    if isEnded then
-                        []
-
-                    else
-                        model.durations
-              }
-            , if isEnded then
-                Cmd.batch
+            if Duration.elapsedSecondsFromDurations model.durations >= model.intervalSeconds then
+                ( { model
+                    | mobbing = False
+                    , users = rotate model.users
+                    , durations = []
+                  }
+                , Cmd.batch
                     [ if model.enabledSound then
                         playSound "/audio/meow.mp3"
 
@@ -213,10 +194,10 @@ update msg model =
                       else
                         Cmd.none
                     ]
+                )
 
-              else
-                Cmd.none
-            )
+            else
+                ( model, Cmd.none )
 
         Tick _ ->
             ( model
