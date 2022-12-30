@@ -1,7 +1,9 @@
 module Model exposing (Model, PersistedModel, PersistedUser, User, decoder, defaultPersistedValues, defaultValues, encode)
 
+import Duration exposing (Duration)
 import Json.Decode
 import Json.Encode
+import Time exposing (Posix, millisToPosix)
 
 
 type alias User =
@@ -18,12 +20,13 @@ type alias PersistedUser =
 type alias Model =
     { inputtedUsername : String
     , users : List User
-    , elapsedSeconds : Int
     , intervalSeconds : Int
     , mobbing : Bool
     , enabledSound : Bool
     , enabledNotification : Bool
     , gitRef : String
+    , durations : List Duration
+    , moment : Posix
     }
 
 
@@ -42,12 +45,13 @@ defaultValues : Model
 defaultValues =
     { users = []
     , inputtedUsername = ""
-    , elapsedSeconds = 0
     , intervalSeconds = defaultIntervalSeconds
     , mobbing = False
     , enabledSound = True
     , enabledNotification = False
     , gitRef = "unknown ref"
+    , durations = []
+    , moment = millisToPosix 0
     }
 
 

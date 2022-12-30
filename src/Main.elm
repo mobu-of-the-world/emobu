@@ -1,15 +1,18 @@
-port module Main exposing (DurationForEachUnit, DurationUnit, Msg(..), main, rotate)
+port module Main exposing (Event, Msg(..), main, rotate)
 
 import Browser
+import Duration
 import Html exposing (Attribute, Html, a, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
 import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, title, type_, value)
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
+import MobSession
 import Model exposing (Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
 import Random
 import Random.List
-import Time exposing (Posix, every, millisToPosix, toHour, toMinute, toSecond, utc)
+import Task
+import Time exposing (Posix, every)
 
 
 main : Program Json.Encode.Value Model Msg
@@ -57,30 +60,10 @@ init flags =
     )
 
 
-type alias DurationForEachUnit =
-    { hour : Int
-    , min : Int
-    , sec : Int
-    }
-
-
-type DurationUnit
-    = Hour
-    | Min
-    | Sec
-
-
-radixToSeconds : DurationUnit -> Int
-radixToSeconds unit =
-    case unit of
-        Hour ->
-            60 * 60
-
-        Min ->
-            60
-
-        Sec ->
-            1
+type Event
+    = Start
+    | Stop
+    | Stay
 
 
 type Msg
@@ -89,12 +72,14 @@ type Msg
     | ShuffleUsers
     | UpdateUsers (List User)
     | Tick Posix
-    | UpdateInterval DurationUnit String
+    | UpdateInterval MobSession.IntervalUnit String
     | UpdateMobbing Bool
     | ResetTimer
     | FallbackAvatar String
     | UpdateSoundMode Bool
     | UpdateNotificationMode Bool
+    | UpdateDurations Event Posix
+    | CheckMobSession
 
 
 fallbackAvatarUrl : String
@@ -125,31 +110,17 @@ update msg model =
             )
 
         UpdateInterval unit input ->
-            let
-                currentInterval =
-                    secondsToInterval model.intervalSeconds
+            ( { model
+                | intervalSeconds =
+                    case String.toInt input of
+                        Just int ->
+                            MobSession.updateIntervalSeconds int unit model.intervalSeconds
 
-                currentInUnit =
-                    case unit of
-                        Hour ->
-                            currentInterval.hour
-
-                        Min ->
-                            currentInterval.min
-
-                        Sec ->
-                            currentInterval.sec
-
-                newInUnit =
-                    Maybe.withDefault currentInUnit (String.toInt input)
-
-                diff =
-                    newInUnit - currentInUnit
-
-                radix =
-                    radixToSeconds unit
-            in
-            ( { model | intervalSeconds = model.intervalSeconds + (diff * radix) }, Cmd.none )
+                        _ ->
+                            model.intervalSeconds
+              }
+            , Cmd.none
+            )
 
         UpdateSoundMode enabled ->
             ( { model | enabledSound = enabled }, Cmd.none )
@@ -164,46 +135,70 @@ update msg model =
             ( { model | users = newUsers }, Cmd.none )
 
         UpdateMobbing mobbing ->
-            ( { model | mobbing = mobbing }, Cmd.none )
+            ( { model | mobbing = mobbing }
+            , Task.perform
+                (UpdateDurations
+                    (if model.mobbing == mobbing then
+                        Stay
+
+                     else if mobbing then
+                        Start
+
+                     else
+                        Stop
+                    )
+                )
+                Time.now
+            )
+
+        UpdateDurations event moment ->
+            ( { model
+                | moment = moment
+                , durations =
+                    case event of
+                        Start ->
+                            ( moment, moment ) :: model.durations
+
+                        _ ->
+                            Duration.updateLatest moment model.durations
+              }
+            , if event == Stay then
+                -- https://medium.com/elm-shorts/how-to-turn-a-msg-into-a-cmd-msg-in-elm-5dd095175d84
+                Task.succeed CheckMobSession |> Task.perform identity
+
+              else
+                Cmd.none
+            )
 
         ResetTimer ->
-            ( { model | mobbing = False, elapsedSeconds = 0 }, Cmd.none )
+            ( { model | mobbing = False, durations = [] }, Cmd.none )
 
-        -- TODO: Consider to change calc with current time intead of incrementing seconds. In react https://github.com/mobu-of-the-world/mobu/pull/486
-        Tick _ ->
+        CheckMobSession ->
             let
-                newElapsedSeconds : Int
-                newElapsedSeconds =
-                    model.elapsedSeconds + 1
-
-                timeOver : Bool
-                timeOver =
-                    newElapsedSeconds >= model.intervalSeconds
-
-                newUsers : List User
-                newUsers =
-                    if timeOver then
-                        rotate model.users
-
-                    else
-                        model.users
+                isEnded =
+                    Duration.elapsedSecondsFromDurations model.durations >= model.intervalSeconds
             in
             ( { model
                 | mobbing =
-                    if timeOver then
+                    if isEnded then
                         False
 
                     else
                         model.mobbing
-                , users = newUsers
-                , elapsedSeconds =
-                    if timeOver then
-                        0
+                , users =
+                    if isEnded then
+                        rotate model.users
 
                     else
-                        newElapsedSeconds
+                        model.users
+                , durations =
+                    if isEnded then
+                        []
+
+                    else
+                        model.durations
               }
-            , if timeOver then
+            , if isEnded then
                 Cmd.batch
                     [ if model.enabledSound then
                         playSound "/audio/meow.mp3"
@@ -219,6 +214,13 @@ update msg model =
 
               else
                 Cmd.none
+            )
+
+        Tick _ ->
+            ( model
+            , Task.perform
+                (UpdateDurations Stay)
+                Time.now
             )
 
         FallbackAvatar username ->
@@ -347,109 +349,39 @@ userPanel model =
         ]
 
 
-readableDuration : Int -> String
-readableDuration seconds =
-    let
-        time : Posix
-        time =
-            millisToPosix (seconds * 1000)
-    in
-    String.padLeft 2 '0' (String.fromInt (toHour utc time))
-        ++ ":"
-        ++ String.padLeft 2 '0' (String.fromInt (toMinute utc time))
-        ++ ":"
-        ++ String.padLeft 2 '0' (String.fromInt (toSecond utc time))
-
-
-secondsToInterval : Int -> DurationForEachUnit
-secondsToInterval totalSeconds =
-    let
-        sec =
-            remainderBy 60 totalSeconds
-
-        hour =
-            totalSeconds // (60 * 60)
-
-        min =
-            (totalSeconds // 60) - (hour * 60)
-    in
-    DurationForEachUnit hour min sec
-
-
-formatDurationUnit : Int -> String
-formatDurationUnit val =
-    String.padLeft 2 '0' (String.fromInt val)
-
-
 newIntervalFields : Model -> Html Msg
 newIntervalFields model =
+    let
+        ( hoursOptions, minutesOptions, secondsOptions ) =
+            MobSession.newIntervalOptions model.intervalSeconds
+
+        optionsFormatter =
+            List.map
+                (\( val, selected ) -> option [ value val, Html.Attributes.selected selected ] [ text val ])
+    in
     div [ class "interval-input" ]
         [ text "/"
         , space
         , select
             [ class "value-select"
-            , onInput (UpdateInterval Hour)
+            , onInput (UpdateInterval MobSession.Hour)
             , disabled model.mobbing
             ]
-            (List.range
-                0
-                2
-                |> List.map
-                    (\int ->
-                        let
-                            padStr =
-                                formatDurationUnit int
-
-                            current =
-                                (secondsToInterval model.intervalSeconds).hour == int
-                        in
-                        option [ value padStr, Html.Attributes.selected current ] [ text padStr ]
-                    )
-            )
+            (hoursOptions |> optionsFormatter)
         , text ":"
         , select
             [ class "value-select"
-            , onInput (UpdateInterval Min)
+            , onInput (UpdateInterval MobSession.Min)
             , disabled model.mobbing
             ]
-            (List.range
-                0
-                59
-                |> List.filter (\item -> (item |> remainderBy 5) == 0)
-                |> List.map
-                    (\int ->
-                        let
-                            padStr =
-                                formatDurationUnit int
-
-                            current =
-                                (secondsToInterval model.intervalSeconds).min == int
-                        in
-                        option [ value padStr, Html.Attributes.selected current ] [ text padStr ]
-                    )
-            )
+            (minutesOptions |> optionsFormatter)
         , text ":"
         , select
             [ class "value-select"
-            , onInput (UpdateInterval Sec)
+            , onInput (UpdateInterval MobSession.Sec)
             , disabled model.mobbing
             ]
-            (List.range
-                0
-                59
-                |> List.filter (\item -> (item |> remainderBy 5) == 0)
-                |> List.map
-                    (\int ->
-                        let
-                            padStr =
-                                formatDurationUnit int
-
-                            current =
-                                (secondsToInterval model.intervalSeconds).sec == int
-                        in
-                        option [ value padStr, Html.Attributes.selected current ] [ text padStr ]
-                    )
-            )
+            (secondsOptions |> optionsFormatter)
         ]
 
 
@@ -536,7 +468,7 @@ timerPanel model =
         , div [ class "timer-row" ]
             [ emoji "⏲️"
             , space
-            , text (readableDuration model.elapsedSeconds)
+            , text (MobSession.readableElapsed (Duration.elapsedSecondsFromDurations model.durations))
             ]
         , newIntervalFields model
         ]
@@ -592,7 +524,8 @@ getGithubAvatarUrl username =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     if model.mobbing then
-        every 1000 Tick
+        -- Should be less than 1 sec. No actual interval. Ref: https://github.com/mobu-of-the-world/mobu/pull/486
+        every 500 Tick
 
     else
         Sub.none
