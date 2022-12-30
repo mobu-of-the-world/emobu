@@ -1,6 +1,7 @@
 port module Main exposing (Event, Msg(..), main, rotate)
 
 import Browser
+import Browser.Dom as Dom
 import Duration
 import Html exposing (Attribute, Html, a, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
 import Html.Attributes exposing (checked, class, disabled, for, href, id, placeholder, src, title, type_, value)
@@ -80,6 +81,7 @@ type Msg
     | UpdateNotificationMode Bool
     | UpdateDurations Event Posix
     | CheckMobSession
+    | NoOp
 
 
 fallbackAvatarUrl : String
@@ -106,7 +108,7 @@ update msg model =
 
               else
                 model
-            , Cmd.none
+            , Task.attempt (\_ -> NoOp) (Dom.focus "username-input")
             )
 
         UpdateInterval unit input ->
@@ -239,6 +241,9 @@ update msg model =
             in
             ( { model | users = newUsers }, Cmd.none )
 
+        NoOp ->
+            ( model, Cmd.none )
+
 
 port setStorage : Json.Encode.Value -> Cmd msg
 
@@ -296,7 +301,7 @@ addUserInput model =
     div [ class "list-item" ]
         [ li []
             [ form [ onSubmit AddUser ]
-                [ input [ class "add-input", value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
+                [ input [ id "username-input", value model.inputtedUsername, onInput InputUsername, placeholder "Username", type_ "text" ] []
                 , button
                     ((if satisfiedMinMembers model then
                         []
