@@ -1,11 +1,12 @@
 port module Main exposing (Event, Model, Msg(..), PersistedModel, User, defaultModel, main, modelDecoder, modelEncoder)
 
+import Array exposing (Array)
 import Browser
 import Browser.Dom as Dom
 import Duration
-import Html exposing (Attribute, Html, a, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
+import Html exposing (Attribute, Html, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
 import Html.Attributes as Attr
-import Html.Events exposing (onCheck, onClick, onInput, onSubmit)
+import Html.Events exposing (onCheck, onClick, onInput, onSubmit, preventDefaultOn)
 import Json.Decode
 import Json.Encode
 import MobSession
@@ -66,6 +67,26 @@ type Event
     | Stay
 
 
+
+-- type DragAndDropEvent
+--     = DndUserDragStart User
+--     | DnDUserDragEnd User
+--     | DnDUserDrop User
+--     | DnDUserDragOver User
+-- type alias UserDragAndDropUninitialized =
+--     { dragged : Never
+--     , dropped : Never
+--     , state : DragAndDropEvent
+--     }
+-- type alias UserDragAndDropState =
+--     { target : User
+--     , state : DragAndDropEvent
+--     }
+-- type UserDragAndDrop
+--     = UserDragAndDropUninitialized
+--     | UserDragAndDropState
+
+
 type Msg
     = InputUsername String
     | AddUser
@@ -81,6 +102,10 @@ type Msg
     | UpdateDurations Event Time.Posix
     | CheckMobSession
     | NoOp
+    | DndUserDragStart User
+    | DnDUserDragEnd User
+    | DnDUserDrop User
+    | DnDUserDragOver User
 
 
 type alias User =
@@ -104,6 +129,7 @@ type alias Model =
     , gitRef : String
     , durations : List Duration.Duration
     , moment : Time.Posix
+    , draggedUser : Maybe User
     }
 
 
@@ -124,6 +150,7 @@ defaultModel =
     , gitRef = "unknown ref"
     , durations = []
     , moment = Time.millisToPosix 0
+    , draggedUser = Nothing
     }
 
 
@@ -171,6 +198,27 @@ fallbackAvatarUrl =
     "/images/default-profile-icon.png"
 
 
+moveUser : User -> User -> List User -> List User
+moveUser mover newPos users =
+    let
+        -- usersWithIndex =
+        --     users |> List.indexedMap Tuple.pair
+        -- newPosIndex =
+        --     usersWithIndex
+        --         |> List.filter (\( _, u ) -> u == newPos)
+        --         |> List.head
+        --         |> (case iu of
+        --                 Just Tuple ->
+        --                     Tuple.first
+        --                 Nothing ->
+        --                     0
+        --            )
+        userArray =
+            Array.fromList users
+    in
+    [ mover, newPos ] ++ users
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -192,6 +240,18 @@ update msg model =
                 model
             , Task.attempt (\_ -> NoOp) (Dom.focus "username-input")
             )
+
+        DndUserDragStart user ->
+            ( Debug.log (Debug.toString ( msg, user )) { model | draggedUser = Just user }, Cmd.none )
+
+        DnDUserDragEnd user ->
+            ( Debug.log (Debug.toString ( msg, user )) { model | draggedUser = Nothing }, Cmd.none )
+
+        DnDUserDrop newPos ->
+            ( Debug.log (Debug.toString ( msg, newPos )) { model | draggedUser = Nothing, users = moveUser (Maybe.withDefault newPos model.draggedUser) newPos model.users }, Cmd.none )
+
+        DnDUserDragOver user ->
+            ( Debug.log (Debug.toString ( msg, user )) model, Cmd.none )
 
         UpdateInterval unit input ->
             ( { model
@@ -318,6 +378,11 @@ port playSound : String -> Cmd msg
 port notify : String -> Cmd msg
 
 
+
+-- port dragstart : { effectAllowed : String, event : Json.Decode.Value } -> Cmd msg
+-- port dragover : { dropEffect : String, event : Json.Decode.Value } -> Cmd msg
+
+
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
 updateWithStorage msg oldModel =
     let
@@ -383,11 +448,22 @@ userPanel model =
             ((model.users
                 |> List.map
                     (\user ->
-                        li []
-                            [ div [ Attr.class "list-item" ]
+                        li
+                            [ -- https://github.com/elm/html/blob/94c079007f8a7ed282d5b53f4a49101dd0b6cf99/src/Html/Attributes.elm#L262-L265
+                              Attr.draggable "true"
+                            , onDrop (DnDUserDrop user)
+                            , onDragStart (DndUserDragStart user)
+                            , onDragEnd (DnDUserDragEnd user)
+                            , onDragOver (DnDUserDragOver user)
+                            ]
+                            [ div
+                                [ Attr.class "list-item"
+                                , onDrop (DnDUserDrop user)
+                                ]
                                 [ img
                                     ([ Attr.class "user-image"
                                      , Attr.src user.avatarUrl
+                                     , Attr.draggable "false"
                                      ]
                                         ++ (if user.avatarUrl == fallbackAvatarUrl then
                                                 []
@@ -542,7 +618,8 @@ appHeader : Html msg
 appHeader =
     header [ Attr.class "header" ]
         [ text "emobu"
-        , a [ Attr.href "https://github.com/mobu-of-the-world/emobu/" ] [ img [ Attr.class "github-logo", Attr.src "/images/github-mark.svg" ] [] ]
+        , Html.a [ Attr.href "https://github.com/mobu-of-the-world/emobu/", Attr.draggable "false" ]
+            [ img [ Attr.class "github-logo", Attr.src "/images/github-mark.svg", Attr.draggable "false" ] [] ]
         ]
 
 
@@ -551,9 +628,10 @@ appFooter model =
     footer [ Attr.class "footer" ]
         [ div [ Attr.class "footer-body" ]
             [ text "rev - "
-            , a
+            , Html.a
                 [ Attr.class "revision-link"
                 , Attr.href ("https://github.com/mobu-of-the-world/emobu/tree/" ++ model.gitRef)
+                , Attr.draggable "false"
                 ]
                 [ text model.gitRef ]
             ]
@@ -573,6 +651,26 @@ view model =
 onError : msg -> Attribute msg
 onError msg =
     Html.Events.on "error" (Json.Decode.succeed msg)
+
+
+onDragStart : msg -> Attribute msg
+onDragStart msg =
+    Html.Events.on "dragstart" (Json.Decode.succeed msg)
+
+
+onDragEnd : msg -> Attribute msg
+onDragEnd msg =
+    Html.Events.on "dragend" (Json.Decode.succeed msg)
+
+
+onDrop : msg -> Attribute msg
+onDrop msg =
+    Html.Events.on "drop" (Json.Decode.succeed msg)
+
+
+onDragOver : msg -> Attribute msg
+onDragOver msg =
+    preventDefaultOn "dragover" <| Json.Decode.map (\x -> ( x, True )) <| Json.Decode.succeed msg
 
 
 getGithubAvatarUrl : String -> String

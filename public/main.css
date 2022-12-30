@@ -93,6 +93,15 @@
 
 .users-panel ol > li {
   list-style-position: outside;
+  cursor: grab;
+}
+
+.users-panel ol > li:active {
+  cursor: grabbing;
+}
+
+.users-dragover {
+  cursor: move;
 }
 
 .users-panel .list-item {
