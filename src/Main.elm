@@ -1,4 +1,4 @@
-port module Main exposing (DurationForEachUnit, DurationUnit, Msg(..), main, rotate)
+port module Main exposing (DurationForEachUnit, DurationUnit, Event, Msg(..), main, rotate, termsToElapsedSeconds)
 
 import Browser
 import Html exposing (Attribute, Html, a, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
@@ -6,15 +6,11 @@ import Html.Attributes exposing (checked, class, disabled, for, href, id, placeh
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
-import Model exposing (EventType(..), Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
+import Model exposing (Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
 import Random
 import Random.List
 import Task
-import Time exposing (Posix, every, millisToPosix, toHour, toMinute, toSecond, utc)
-
-
-
--- type alias Events = List Time.Posix
+import Time exposing (Posix, every, millisToPosix, posixToMillis, toHour, toMinute, toSecond, utc)
 
 
 main : Program Json.Encode.Value Model Msg
@@ -88,6 +84,12 @@ radixToSeconds unit =
             1
 
 
+type Event
+    = Start
+    | Stop
+    | Stay
+
+
 type Msg
     = InputUsername String
     | AddUser
@@ -100,7 +102,8 @@ type Msg
     | FallbackAvatar String
     | UpdateSoundMode Bool
     | UpdateNotificationMode Bool
-    | RecordEvent EventType Posix
+    | UpdateTerms Event Posix
+    | CheckTimeup
 
 
 fallbackAvatarUrl : String
@@ -130,7 +133,6 @@ update msg model =
             , Cmd.none
             )
 
-        -- NewTime moment ->
         UpdateInterval unit input ->
             let
                 currentInterval =
@@ -173,8 +175,11 @@ update msg model =
         UpdateMobbing mobbing ->
             ( { model | mobbing = mobbing }
             , Task.perform
-                (RecordEvent
-                    (if mobbing then
+                (UpdateTerms
+                    (if model.mobbing == mobbing then
+                        Stay
+
+                     else if mobbing then
                         Start
 
                      else
@@ -184,35 +189,42 @@ update msg model =
                 Time.now
             )
 
-        RecordEvent eventType moment ->
+        UpdateTerms event moment ->
             ( { model
-                | events =
-                    { eventType = eventType, startedAt = moment } :: model.events
+                | moment = moment
+                , terms =
+                    case event of
+                        Start ->
+                            ( moment, moment ) :: model.terms
+
+                        _ ->
+                            let
+                                ( ( begin, _ ), befores ) =
+                                    case model.terms of
+                                        latest :: rest ->
+                                            ( latest, rest )
+
+                                        -- Should not reach here within view logic... :<
+                                        [] ->
+                                            ( ( millisToPosix 0, millisToPosix 0 ), [] )
+                            in
+                            ( begin, moment ) :: befores
               }
-            , Cmd.none
+            , if event == Stay then
+                --   https://medium.com/elm-shorts/how-to-turn-a-msg-into-a-cmd-msg-in-elm-5dd095175d84
+                Task.succeed CheckTimeup |> Task.perform identity
+
+              else
+                Cmd.none
             )
 
         ResetTimer ->
-            ( { model | mobbing = False, elapsedSeconds = 0 }, Cmd.none )
+            ( { model | mobbing = False, terms = [] }, Cmd.none )
 
-        -- TODO: Consider to change calc with current time intead of incrementing seconds. In react https://github.com/mobu-of-the-world/mobu/pull/486
-        Tick _ ->
+        CheckTimeup ->
             let
-                newElapsedSeconds : Int
-                newElapsedSeconds =
-                    model.elapsedSeconds + 1
-
-                timeOver : Bool
                 timeOver =
-                    newElapsedSeconds >= model.intervalSeconds
-
-                newUsers : List User
-                newUsers =
-                    if timeOver then
-                        rotate model.users
-
-                    else
-                        model.users
+                    termsToElapsedSeconds model.terms >= model.intervalSeconds
             in
             ( { model
                 | mobbing =
@@ -221,13 +233,18 @@ update msg model =
 
                     else
                         model.mobbing
-                , users = newUsers
-                , elapsedSeconds =
+                , users =
                     if timeOver then
-                        0
+                        rotate model.users
 
                     else
-                        newElapsedSeconds
+                        model.users
+                , terms =
+                    if timeOver then
+                        []
+
+                    else
+                        model.terms
               }
             , if timeOver then
                 Cmd.batch
@@ -245,6 +262,13 @@ update msg model =
 
               else
                 Cmd.none
+            )
+
+        Tick _ ->
+            ( model
+            , Task.perform
+                (UpdateTerms Stay)
+                Time.now
             )
 
         FallbackAvatar username ->
@@ -271,6 +295,20 @@ port playSound : String -> Cmd msg
 
 
 port notify : String -> Cmd msg
+
+
+termToMillis : Model.Term -> Int
+termToMillis ( begin, end ) =
+    posixToMillis end - posixToMillis begin
+
+
+termsToElapsedSeconds : List Model.Term -> Int
+termsToElapsedSeconds terms =
+    (terms
+        |> List.map termToMillis
+        |> List.foldl (+) 0
+    )
+        // 1000
 
 
 rotate : List items -> List items
@@ -562,7 +600,7 @@ timerPanel model =
         , div [ class "timer-row" ]
             [ emoji "⏲️"
             , space
-            , text (readableDuration model.elapsedSeconds)
+            , text (readableDuration (termsToElapsedSeconds model.terms))
             ]
         , newIntervalFields model
         ]
@@ -618,7 +656,8 @@ getGithubAvatarUrl username =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     if model.mobbing then
-        every 1000 Tick
+        -- Should be less than 1 sec. No actual interval. Ref: https://github.com/mobu-of-the-world/mobu/pull/486
+        every 500 Tick
 
     else
         Sub.none
