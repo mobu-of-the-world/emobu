@@ -1,4 +1,4 @@
-port module Main exposing (DlapsedUnit, ElapsedForEachUnit, Event, Msg(..), main, rotate)
+port module Main exposing (Event, Msg(..), main, rotate)
 
 import Browser
 import Duration
@@ -10,8 +10,9 @@ import Json.Encode
 import Model exposing (Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
 import Random
 import Random.List
+import Session
 import Task
-import Time exposing (Posix, every, millisToPosix, toHour, toMinute, toSecond, utc)
+import Time exposing (Posix, every)
 
 
 main : Program Json.Encode.Value Model Msg
@@ -59,32 +60,6 @@ init flags =
     )
 
 
-type alias ElapsedForEachUnit =
-    { hour : Int
-    , min : Int
-    , sec : Int
-    }
-
-
-type DlapsedUnit
-    = Hour
-    | Min
-    | Sec
-
-
-radixToSeconds : DlapsedUnit -> Int
-radixToSeconds unit =
-    case unit of
-        Hour ->
-            60 * 60
-
-        Min ->
-            60
-
-        Sec ->
-            1
-
-
 type Event
     = Start
     | Stop
@@ -97,7 +72,7 @@ type Msg
     | ShuffleUsers
     | UpdateUsers (List User)
     | Tick Posix
-    | UpdateInterval DlapsedUnit String
+    | UpdateInterval Session.IntervalUnit String
     | UpdateMobbing Bool
     | ResetTimer
     | FallbackAvatar String
@@ -135,31 +110,17 @@ update msg model =
             )
 
         UpdateInterval unit input ->
-            let
-                currentInterval =
-                    secondsToInterval model.intervalSeconds
+            ( { model
+                | intervalSeconds =
+                    case String.toInt input of
+                        Just int ->
+                            Session.updateIntervalSeconds int unit model.intervalSeconds
 
-                currentInUnit =
-                    case unit of
-                        Hour ->
-                            currentInterval.hour
-
-                        Min ->
-                            currentInterval.min
-
-                        Sec ->
-                            currentInterval.sec
-
-                newInUnit =
-                    Maybe.withDefault currentInUnit (String.toInt input)
-
-                diff =
-                    newInUnit - currentInUnit
-
-                radix =
-                    radixToSeconds unit
-            in
-            ( { model | intervalSeconds = model.intervalSeconds + (diff * radix) }, Cmd.none )
+                        _ ->
+                            model.intervalSeconds
+              }
+            , Cmd.none
+            )
 
         UpdateSoundMode enabled ->
             ( { model | enabledSound = enabled }, Cmd.none )
@@ -388,109 +349,39 @@ userPanel model =
         ]
 
 
-readableElapsed : Int -> String
-readableElapsed seconds =
-    let
-        time : Posix
-        time =
-            millisToPosix (seconds * 1000)
-    in
-    String.padLeft 2 '0' (String.fromInt (toHour utc time))
-        ++ ":"
-        ++ String.padLeft 2 '0' (String.fromInt (toMinute utc time))
-        ++ ":"
-        ++ String.padLeft 2 '0' (String.fromInt (toSecond utc time))
-
-
-secondsToInterval : Int -> ElapsedForEachUnit
-secondsToInterval totalSeconds =
-    let
-        sec =
-            remainderBy 60 totalSeconds
-
-        hour =
-            totalSeconds // (60 * 60)
-
-        min =
-            (totalSeconds // 60) - (hour * 60)
-    in
-    ElapsedForEachUnit hour min sec
-
-
-formatElapsedUnit : Int -> String
-formatElapsedUnit val =
-    String.padLeft 2 '0' (String.fromInt val)
-
-
 newIntervalFields : Model -> Html Msg
 newIntervalFields model =
+    let
+        ( hoursOptions, minutesOptions, secondsOptions ) =
+            Session.newIntervalOptions model.intervalSeconds
+
+        optionsFormatter =
+            List.map
+                (\( val, selected ) -> option [ value val, Html.Attributes.selected selected ] [ text val ])
+    in
     div [ class "interval-input" ]
         [ text "/"
         , space
         , select
             [ class "value-select"
-            , onInput (UpdateInterval Hour)
+            , onInput (UpdateInterval Session.Hour)
             , disabled model.mobbing
             ]
-            (List.range
-                0
-                2
-                |> List.map
-                    (\int ->
-                        let
-                            padStr =
-                                formatElapsedUnit int
-
-                            current =
-                                (secondsToInterval model.intervalSeconds).hour == int
-                        in
-                        option [ value padStr, Html.Attributes.selected current ] [ text padStr ]
-                    )
-            )
+            (hoursOptions |> optionsFormatter)
         , text ":"
         , select
             [ class "value-select"
-            , onInput (UpdateInterval Min)
+            , onInput (UpdateInterval Session.Min)
             , disabled model.mobbing
             ]
-            (List.range
-                0
-                59
-                |> List.filter (\item -> (item |> remainderBy 5) == 0)
-                |> List.map
-                    (\int ->
-                        let
-                            padStr =
-                                formatElapsedUnit int
-
-                            current =
-                                (secondsToInterval model.intervalSeconds).min == int
-                        in
-                        option [ value padStr, Html.Attributes.selected current ] [ text padStr ]
-                    )
-            )
+            (minutesOptions |> optionsFormatter)
         , text ":"
         , select
             [ class "value-select"
-            , onInput (UpdateInterval Sec)
+            , onInput (UpdateInterval Session.Sec)
             , disabled model.mobbing
             ]
-            (List.range
-                0
-                59
-                |> List.filter (\item -> (item |> remainderBy 5) == 0)
-                |> List.map
-                    (\int ->
-                        let
-                            padStr =
-                                formatElapsedUnit int
-
-                            current =
-                                (secondsToInterval model.intervalSeconds).sec == int
-                        in
-                        option [ value padStr, Html.Attributes.selected current ] [ text padStr ]
-                    )
-            )
+            (secondsOptions |> optionsFormatter)
         ]
 
 
@@ -577,7 +468,7 @@ timerPanel model =
         , div [ class "timer-row" ]
             [ emoji "⏲️"
             , space
-            , text (readableElapsed (Duration.elapsedSecondsFromDurations model.durations))
+            , text (Session.readableElapsed (Duration.elapsedSecondsFromDurations model.durations))
             ]
         , newIntervalFields model
         ]
