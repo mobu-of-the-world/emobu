@@ -222,14 +222,15 @@ update msg model =
             ( { model | mobbing = mobbing }
             , Task.perform
                 (UpdateDurations
-                    (if model.mobbing == mobbing then
-                        Stay
+                    (case ( model.mobbing == mobbing, mobbing ) of
+                        ( True, _ ) ->
+                            Stay
 
-                     else if mobbing then
-                        Start
+                        ( False, True ) ->
+                            Start
 
-                     else
-                        Stop
+                        ( False, False ) ->
+                            Stop
                     )
                 )
                 Time.now
