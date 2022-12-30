@@ -208,19 +208,19 @@ update msg model =
 
         FallbackAvatar username ->
             let
-                setFallbackAvatar : Model.User -> Model.User
                 setFallbackAvatar user =
-                    if user.username == username then
-                        { user | avatarUrl = fallbackAvatarUrl }
+                    { user
+                        | avatarUrl =
+                            if user.username == username then
+                                fallbackAvatarUrl
 
-                    else
-                        user
-
-                newUsers : List Model.User
-                newUsers =
-                    List.map setFallbackAvatar model.users
+                            else
+                                user.avatarUrl
+                    }
             in
-            ( { model | users = newUsers }, Cmd.none )
+            ( { model | users = model.users |> List.map setFallbackAvatar }
+            , Cmd.none
+            )
 
         NoOp ->
             ( model, Cmd.none )
