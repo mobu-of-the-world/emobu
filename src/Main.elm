@@ -1,4 +1,4 @@
-port module Main exposing (Event, Msg(..), main)
+port module Main exposing (Event, Model, Msg(..), PersistedModel, User, defaultModel, main, modelDecoder, modelEncoder)
 
 import Browser
 import Browser.Dom as Dom
@@ -9,7 +9,6 @@ import Html.Events exposing (onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
 import MobSession
-import Model exposing (Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
 import Random
 import Random.List
 import Task
@@ -33,7 +32,7 @@ type alias InitializerFlags =
 appDecoder : Json.Decode.Decoder InitializerFlags
 appDecoder =
     Json.Decode.map2 InitializerFlags
-        (Json.Decode.maybe (Json.Decode.field "persisted" decoder))
+        (Json.Decode.maybe (Json.Decode.field "persisted" modelDecoder))
         (Json.Decode.field "gitRef" Json.Decode.string)
 
 
@@ -43,9 +42,9 @@ init flags =
         Ok decoded ->
             let
                 persisted =
-                    Maybe.withDefault defaultPersistedValues decoded.persisted
+                    Maybe.withDefault defaultPersistedModel decoded.persisted
             in
-            { defaultValues
+            { defaultModel
                 | users =
                     persisted.users
                         |> List.map (\persistedUser -> { username = persistedUser.username, avatarUrl = getGithubAvatarUrl persistedUser.username })
@@ -56,7 +55,7 @@ init flags =
             }
 
         Err _ ->
-            defaultValues
+            defaultModel
     , Cmd.none
     )
 
@@ -82,6 +81,89 @@ type Msg
     | UpdateDurations Event Time.Posix
     | CheckMobSession
     | NoOp
+
+
+type alias User =
+    { username : String
+    , avatarUrl : String
+    }
+
+
+type alias PersistedUser =
+    -- Keep record style for easier extending even if actually one field exists
+    { username : String }
+
+
+type alias Model =
+    { inputtedUsername : String
+    , users : List User
+    , intervalSeconds : Int
+    , mobbing : Bool
+    , enabledSound : Bool
+    , enabledNotification : Bool
+    , gitRef : String
+    , durations : List Duration.Duration
+    , moment : Time.Posix
+    }
+
+
+type alias PersistedModel =
+    -- TODO: Consider to versioning config structure with `andThen`
+    -- enabledNotification does not mean to be notified, because users can change the permission without app layer. This mean to try.
+    { users : List PersistedUser, enabledSound : Bool, enabledNotification : Bool, intervalSeconds : Int }
+
+
+defaultModel : Model
+defaultModel =
+    { users = []
+    , inputtedUsername = ""
+    , intervalSeconds = 30 * 60
+    , mobbing = False
+    , enabledSound = True
+    , enabledNotification = False
+    , gitRef = "unknown ref"
+    , durations = []
+    , moment = Time.millisToPosix 0
+    }
+
+
+defaultPersistedModel : PersistedModel
+defaultPersistedModel =
+    { users = defaultModel.users |> List.map (\user -> { username = user.username })
+    , enabledSound = defaultModel.enabledSound
+    , enabledNotification = defaultModel.enabledNotification
+    , intervalSeconds = defaultModel.intervalSeconds
+    }
+
+
+userEncoder : User -> Json.Encode.Value
+userEncoder user =
+    Json.Encode.object [ ( "username", Json.Encode.string user.username ) ]
+
+
+modelEncoder : Model -> Json.Encode.Value
+modelEncoder model =
+    Json.Encode.object
+        [ ( "users", Json.Encode.list userEncoder model.users )
+        , ( "enabledSound", Json.Encode.bool model.enabledSound )
+        , ( "enabledNotification", Json.Encode.bool model.enabledNotification )
+        , ( "intervalSeconds", Json.Encode.int model.intervalSeconds )
+        ]
+
+
+userDecoder : Json.Decode.Decoder PersistedUser
+userDecoder =
+    Json.Decode.map PersistedUser
+        (Json.Decode.field "username" Json.Decode.string)
+
+
+modelDecoder : Json.Decode.Decoder PersistedModel
+modelDecoder =
+    Json.Decode.map4 PersistedModel
+        (Json.Decode.field "users" (Json.Decode.list userDecoder))
+        (Json.Decode.field "enabledSound" Json.Decode.bool)
+        (Json.Decode.field "enabledNotification" Json.Decode.bool)
+        (Json.Decode.field "intervalSeconds" Json.Decode.int)
 
 
 fallbackAvatarUrl : String
@@ -242,7 +324,7 @@ updateWithStorage msg oldModel =
             update msg oldModel
     in
     ( newModel
-    , Cmd.batch [ setStorage (encode newModel), cmds ]
+    , Cmd.batch [ setStorage (modelEncoder newModel), cmds ]
     )
 
 

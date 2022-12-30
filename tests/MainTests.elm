@@ -1,9 +1,9 @@
-module ModelTests exposing (decoderTests, encoderTests)
+module MainTests exposing (decoderTests, encoderTests)
 
 import Expect
 import Json.Decode
 import Json.Encode
-import Model exposing (PersistedModel, decoder, defaultValues, encode)
+import Main exposing (PersistedModel, defaultModel, modelDecoder, modelEncoder)
 import Test exposing (Test, test)
 
 
@@ -30,7 +30,7 @@ decoderTests =
                 decodedOutput : Result Json.Decode.Error PersistedModel
                 decodedOutput =
                     Json.Decode.decodeString
-                        decoder
+                        modelDecoder
                         input
             in
             Expect.equal decodedOutput
@@ -52,9 +52,9 @@ encoderTests =
     test "Encode a model to json" <|
         \() ->
             let
-                model : Model.Model
+                model : Main.Model
                 model =
-                    { defaultValues
+                    { defaultModel
                         | users =
                             [ { username = "pankona", avatarUrl = "https://github.com/pankona.png" }
                             , { username = "kachick", avatarUrl = "https://github.com/kachick.png" }
@@ -68,11 +68,11 @@ encoderTests =
 
                 encoodedOutput : String
                 encoodedOutput =
-                    Json.Encode.encode 4 (encode model)
+                    Json.Encode.encode 4 (modelEncoder model)
 
                 decodedAgain : Result Json.Decode.Error PersistedModel
                 decodedAgain =
-                    Json.Decode.decodeString decoder encoodedOutput
+                    Json.Decode.decodeString modelDecoder encoodedOutput
             in
             Expect.equal decodedAgain
                 (Ok
