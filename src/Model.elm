@@ -1,4 +1,4 @@
-module Model exposing (Model, PersistedModel, PersistedUser, Term, User, decoder, defaultPersistedValues, defaultValues, encode)
+module Model exposing (Duration, Model, PersistedModel, PersistedUser, User, decoder, defaultPersistedValues, defaultValues, encode)
 
 import Json.Decode
 import Json.Encode
@@ -16,7 +16,7 @@ type alias PersistedUser =
     { username : String }
 
 
-type alias Term =
+type alias Duration =
     ( Posix, Posix )
 
 
@@ -28,7 +28,7 @@ type alias Model =
     , enabledSound : Bool
     , enabledNotification : Bool
     , gitRef : String
-    , terms : List Term
+    , durations : List Duration
     , moment : Posix
     }
 
@@ -53,7 +53,7 @@ defaultValues =
     , enabledSound = True
     , enabledNotification = False
     , gitRef = "unknown ref"
-    , terms = []
+    , durations = []
     , moment = millisToPosix 0
     }
 

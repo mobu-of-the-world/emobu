@@ -1,4 +1,4 @@
-port module Main exposing (DurationForEachUnit, DurationUnit, Event, Msg(..), main, rotate, termsToElapsedSeconds)
+port module Main exposing (DlapsedUnit, ElapsedForEachUnit, Event, Msg(..), durationsToElapsedSeconds, main, rotate)
 
 import Browser
 import Html exposing (Attribute, Html, a, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
@@ -6,7 +6,7 @@ import Html.Attributes exposing (checked, class, disabled, for, href, id, placeh
 import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import Json.Encode
-import Model exposing (Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
+import Model exposing (Duration, Model, PersistedModel, User, decoder, defaultPersistedValues, defaultValues, encode)
 import Random
 import Random.List
 import Task
@@ -58,20 +58,20 @@ init flags =
     )
 
 
-type alias DurationForEachUnit =
+type alias ElapsedForEachUnit =
     { hour : Int
     , min : Int
     , sec : Int
     }
 
 
-type DurationUnit
+type DlapsedUnit
     = Hour
     | Min
     | Sec
 
 
-radixToSeconds : DurationUnit -> Int
+radixToSeconds : DlapsedUnit -> Int
 radixToSeconds unit =
     case unit of
         Hour ->
@@ -96,13 +96,13 @@ type Msg
     | ShuffleUsers
     | UpdateUsers (List User)
     | Tick Posix
-    | UpdateInterval DurationUnit String
+    | UpdateInterval DlapsedUnit String
     | UpdateMobbing Bool
     | ResetTimer
     | FallbackAvatar String
     | UpdateSoundMode Bool
     | UpdateNotificationMode Bool
-    | UpdateTerms Event Posix
+    | UpdateDurations Event Posix
     | CheckTimeup
 
 
@@ -175,7 +175,7 @@ update msg model =
         UpdateMobbing mobbing ->
             ( { model | mobbing = mobbing }
             , Task.perform
-                (UpdateTerms
+                (UpdateDurations
                     (if model.mobbing == mobbing then
                         Stay
 
@@ -189,18 +189,18 @@ update msg model =
                 Time.now
             )
 
-        UpdateTerms event moment ->
+        UpdateDurations event moment ->
             ( { model
                 | moment = moment
-                , terms =
+                , durations =
                     case event of
                         Start ->
-                            ( moment, moment ) :: model.terms
+                            ( moment, moment ) :: model.durations
 
                         _ ->
                             let
                                 ( ( begin, _ ), befores ) =
-                                    case model.terms of
+                                    case model.durations of
                                         latest :: rest ->
                                             ( latest, rest )
 
@@ -218,12 +218,12 @@ update msg model =
             )
 
         ResetTimer ->
-            ( { model | mobbing = False, terms = [] }, Cmd.none )
+            ( { model | mobbing = False, durations = [] }, Cmd.none )
 
         CheckTimeup ->
             let
                 timeOver =
-                    termsToElapsedSeconds model.terms >= model.intervalSeconds
+                    durationsToElapsedSeconds model.durations >= model.intervalSeconds
             in
             ( { model
                 | mobbing =
@@ -238,12 +238,12 @@ update msg model =
 
                     else
                         model.users
-                , terms =
+                , durations =
                     if timeOver then
                         []
 
                     else
-                        model.terms
+                        model.durations
               }
             , if timeOver then
                 Cmd.batch
@@ -266,7 +266,7 @@ update msg model =
         Tick _ ->
             ( model
             , Task.perform
-                (UpdateTerms Stay)
+                (UpdateDurations Stay)
                 Time.now
             )
 
@@ -296,15 +296,15 @@ port playSound : String -> Cmd msg
 port notify : String -> Cmd msg
 
 
-termToMillis : Model.Term -> Int
-termToMillis ( begin, end ) =
+durationToMillis : Duration -> Int
+durationToMillis ( begin, end ) =
     posixToMillis end - posixToMillis begin
 
 
-termsToElapsedSeconds : List Model.Term -> Int
-termsToElapsedSeconds terms =
-    (terms
-        |> List.map termToMillis
+durationsToElapsedSeconds : List Duration -> Int
+durationsToElapsedSeconds durations =
+    (durations
+        |> List.map durationToMillis
         |> List.foldl (+) 0
     )
         // 1000
@@ -410,8 +410,8 @@ userPanel model =
         ]
 
 
-readableDuration : Int -> String
-readableDuration seconds =
+readableElapsed : Int -> String
+readableElapsed seconds =
     let
         time : Posix
         time =
@@ -424,7 +424,7 @@ readableDuration seconds =
         ++ String.padLeft 2 '0' (String.fromInt (toSecond utc time))
 
 
-secondsToInterval : Int -> DurationForEachUnit
+secondsToInterval : Int -> ElapsedForEachUnit
 secondsToInterval totalSeconds =
     let
         sec =
@@ -436,11 +436,11 @@ secondsToInterval totalSeconds =
         min =
             (totalSeconds // 60) - (hour * 60)
     in
-    DurationForEachUnit hour min sec
+    ElapsedForEachUnit hour min sec
 
 
-formatDurationUnit : Int -> String
-formatDurationUnit val =
+formatElapsedUnit : Int -> String
+formatElapsedUnit val =
     String.padLeft 2 '0' (String.fromInt val)
 
 
@@ -461,7 +461,7 @@ newIntervalFields model =
                     (\int ->
                         let
                             padStr =
-                                formatDurationUnit int
+                                formatElapsedUnit int
 
                             current =
                                 (secondsToInterval model.intervalSeconds).hour == int
@@ -483,7 +483,7 @@ newIntervalFields model =
                     (\int ->
                         let
                             padStr =
-                                formatDurationUnit int
+                                formatElapsedUnit int
 
                             current =
                                 (secondsToInterval model.intervalSeconds).min == int
@@ -505,7 +505,7 @@ newIntervalFields model =
                     (\int ->
                         let
                             padStr =
-                                formatDurationUnit int
+                                formatElapsedUnit int
 
                             current =
                                 (secondsToInterval model.intervalSeconds).sec == int
@@ -599,7 +599,7 @@ timerPanel model =
         , div [ class "timer-row" ]
             [ emoji "⏲️"
             , space
-            , text (readableDuration (termsToElapsedSeconds model.terms))
+            , text (readableElapsed (durationsToElapsedSeconds model.durations))
             ]
         , newIntervalFields model
         ]
