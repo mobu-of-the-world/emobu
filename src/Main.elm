@@ -248,7 +248,7 @@ update msg model =
                             Duration.updateLatest moment model.durations
               }
             , if event == Stay then
-                -- https://medium.com/elm-shorts/how-to-turn-a-msg-into-a-cmd-msg-in-elm-5dd095175d84
+                -- Calling update recursively makes infinite loop at here. See https://faq.elm-community.org/#how-do-i-generate-a-new-message-as-a-command
                 Task.succeed CheckMobSession |> Task.perform identity
 
               else
