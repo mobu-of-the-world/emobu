@@ -35,12 +35,12 @@ rotateTests =
 termsToElapsedSecondsTests : Test
 termsToElapsedSecondsTests =
     describe "termsToElapsedSeconds"
-        [ test "trancates msec" <|
+        [ test "truncates msec" <|
             \() ->
                 [ ( millisToPosix 1672399207825, millisToPosix 1672399215616 ) ]
                     |> termsToElapsedSeconds
                     |> Expect.equal 7
-        , test "trancates msec after sum" <|
+        , test "truncates msec after sum" <|
             \() ->
                 [ ( millisToPosix 1672399502101, millisToPosix 1672399554056 ), ( millisToPosix 1672399207825, millisToPosix 1672399215616 ) ]
                     |> termsToElapsedSeconds
