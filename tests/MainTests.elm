@@ -99,6 +99,9 @@ moveUserTests =
 
         user3 =
             User "3" "url3"
+
+        user4 =
+            User "4" "url4"
     in
     describe "moveUser"
         [ test "head to tail" <|
@@ -161,4 +164,14 @@ moveUserTests =
                 []
                     |> moveUser user1 user1
                     |> Expect.equal []
+        , test "middle to tail on more elements" <|
+            \() ->
+                [ user1, user2, user3, user4 ]
+                    |> moveUser user2 user4
+                    |> Expect.equal [ user1, user3, user4, user2 ]
+        , test "middle to head on more elements" <|
+            \() ->
+                [ user1, user2, user3, user4 ]
+                    |> moveUser user3 user1
+                    |> Expect.equal [ user3, user1, user2, user4 ]
         ]
