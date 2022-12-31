@@ -14,16 +14,6 @@ export namespace Elm {
       gitRef: string;
     }
 
-    interface DragStartData {
-      effectAllowed: 'none' | 'copy' | 'copyLink' | 'copyMove' | 'link' | 'linkMove' | 'move' | 'all' | 'uninitialized';
-      event: DragEvent;
-    }
-
-    interface DragOverData {
-      dropEffect: 'none' | 'copy' | 'link' | 'move';
-      event: DragEvent;
-    }
-
     interface Ports {
       setStorage: Subscribe<object>;
       playSound: Subscribe<string>;
