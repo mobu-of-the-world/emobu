@@ -447,7 +447,15 @@ addUserInput model =
     div [ Attr.class "list-item" ]
         [ li []
             [ form [ onSubmit AddUser ]
-                [ input [ Attr.id "username-input", Attr.value model.inputtedUsername, onInput InputUsername, Attr.placeholder "Username", Attr.type_ "text" ] []
+                [ input
+                    [ Attr.id "username-input"
+                    , Attr.value model.inputtedUsername
+                    , onInput InputUsername
+                    , Attr.placeholder "Username"
+                    , Attr.type_ "text"
+                    , Attr.autocomplete False
+                    ]
+                    []
                 , button
                     ((if satisfiedMinMembers model then
                         []
