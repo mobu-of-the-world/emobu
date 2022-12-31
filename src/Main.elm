@@ -67,26 +67,6 @@ type Event
     | Stay
 
 
-
--- type DragAndDropEvent
---     = DndUserDragStart User
---     | DnDUserDragEnd User
---     | DnDUserDrop User
---     | DnDUserDragOver User
--- type alias UserDragAndDropUninitialized =
---     { dragged : Never
---     , dropped : Never
---     , state : DragAndDropEvent
---     }
--- type alias UserDragAndDropState =
---     { target : User
---     , state : DragAndDropEvent
---     }
--- type UserDragAndDrop
---     = UserDragAndDropUninitialized
---     | UserDragAndDropState
-
-
 type Msg
     = InputUsername String
     | AddUser
@@ -282,28 +262,27 @@ update msg model =
             )
 
         DndUserDragStart user ->
-            ( Debug.log (Debug.toString ( msg, user )) { model | draggedUser = Just user }, Cmd.none )
+            ( { model | draggedUser = Just user }, Cmd.none )
 
-        DnDUserDragEnd user ->
-            ( Debug.log (Debug.toString ( msg, user )) { model | draggedUser = Nothing }, Cmd.none )
+        DnDUserDragEnd _ ->
+            ( { model | draggedUser = Nothing }, Cmd.none )
 
         DnDUserDrop moveTo ->
-            ( Debug.log (Debug.toString ( msg, moveTo ))
-                { model
-                    | draggedUser = Nothing
-                    , users =
-                        case model.draggedUser of
-                            Just mover ->
-                                model.users |> moveUser mover moveTo
+            ( { model
+                | draggedUser = Nothing
+                , users =
+                    case model.draggedUser of
+                        Just mover ->
+                            model.users |> moveUser mover moveTo
 
-                            Nothing ->
-                                model.users
-                }
+                        Nothing ->
+                            model.users
+              }
             , Cmd.none
             )
 
-        DnDUserDragOver user ->
-            ( Debug.log (Debug.toString ( msg, user )) model, Cmd.none )
+        DnDUserDragOver _ ->
+            ( model, Cmd.none )
 
         UpdateInterval unit input ->
             ( { model
@@ -430,11 +409,6 @@ port playSound : String -> Cmd msg
 port notify : String -> Cmd msg
 
 
-
--- port dragstart : { effectAllowed : String, event : Json.Decode.Value } -> Cmd msg
--- port dragover : { dropEffect : String, event : Json.Decode.Value } -> Cmd msg
-
-
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
 updateWithStorage msg oldModel =
     let
@@ -509,8 +483,7 @@ userPanel model =
                             , onDragOver (DnDUserDragOver user)
                             ]
                             [ div
-                                [ Attr.class "list-item"
-                                ]
+                                [ Attr.class "list-item" ]
                                 [ img
                                     ([ Attr.class "user-image"
                                      , Attr.src user.avatarUrl

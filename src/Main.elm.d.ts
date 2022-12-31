@@ -28,8 +28,6 @@ export namespace Elm {
       setStorage: Subscribe<object>;
       playSound: Subscribe<string>;
       notify: Subscribe<string>;
-      dragstart: Subscribe<DragStartData>;
-      dragover: Subscribe<DragOverData>;
     }
 
     interface Subscribe<T> {

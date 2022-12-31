@@ -100,10 +100,6 @@
   cursor: grabbing;
 }
 
-.users-dragover {
-  cursor: move;
-}
-
 .users-panel .list-item {
   display: inline-block;
   margin: 1ch 0;
