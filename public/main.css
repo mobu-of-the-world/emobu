@@ -93,6 +93,12 @@
 
 .users-panel ol > li {
   list-style-position: outside;
+  cursor: grab;
+}
+
+.users-panel ol > li:active {
+  /* Appling to drag overred elements will not work. So chrome basically shows "cursor: copy */
+  cursor: grabbing;
 }
 
 .users-panel .list-item {

@@ -1,13 +1,14 @@
-port module Main exposing (Event, Model, Msg(..), PersistedModel, User, defaultModel, main, modelDecoder, modelEncoder)
+port module Main exposing (Event, Model, Msg(..), PersistedModel, User, defaultModel, main, modelDecoder, modelEncoder, moveUser)
 
 import Browser
 import Browser.Dom as Dom
 import Duration
-import Html exposing (Attribute, Html, a, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
+import Html exposing (Attribute, Html, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
 import Html.Attributes as Attr
-import Html.Events exposing (onCheck, onClick, onInput, onSubmit)
+import Html.Events exposing (onCheck, onClick, onInput, onSubmit, preventDefaultOn)
 import Json.Decode
 import Json.Encode
+import List.Extra
 import MobSession
 import Random
 import Random.List
@@ -81,6 +82,10 @@ type Msg
     | UpdateDurations Event Time.Posix
     | CheckMobSession
     | NoOp
+    | DndUserDragStart User
+    | DnDUserDragEnd User
+    | DnDUserDrop User
+    | DnDUserDragOver User
 
 
 type alias User =
@@ -104,6 +109,7 @@ type alias Model =
     , gitRef : String
     , durations : List Duration.Duration
     , moment : Time.Posix
+    , draggedUser : Maybe User
     }
 
 
@@ -124,6 +130,7 @@ defaultModel =
     , gitRef = "unknown ref"
     , durations = []
     , moment = Time.millisToPosix 0
+    , draggedUser = Nothing
     }
 
 
@@ -171,6 +178,67 @@ fallbackAvatarUrl =
     "/images/default-profile-icon.png"
 
 
+moveUser : User -> User -> List User -> List User
+moveUser mover moveTo users =
+    let
+        usersWithIndex =
+            users |> List.indexedMap Tuple.pair
+
+        maybeMoverPair =
+            usersWithIndex |> List.Extra.find (\( _, u ) -> u == mover)
+
+        maybeMoveToPair =
+            usersWithIndex |> List.Extra.find (\( _, u ) -> u == moveTo)
+
+        newPosition : Int -> Int -> Int -> Int
+        newPosition moverFrom moverTo me =
+            let
+                isStay =
+                    moverFrom == moverTo
+
+                isMover =
+                    me == moverFrom
+
+                isPointOfArraival =
+                    me == moverTo
+
+                isJumpedOver =
+                    (moverFrom < me && me < moverTo) || (me < moverFrom && moverTo < me)
+
+                isRequiredToSlied =
+                    isPointOfArraival || isJumpedOver
+            in
+            case ( isStay, isMover, isRequiredToSlied ) of
+                ( True, _, _ ) ->
+                    me
+
+                ( False, True, _ ) ->
+                    moverTo
+
+                ( False, False, False ) ->
+                    me
+
+                ( False, False, True ) ->
+                    let
+                        isPointingDown =
+                            moverFrom < moverTo
+                    in
+                    if isPointingDown then
+                        me - 1
+
+                    else
+                        me + 1
+    in
+    case ( maybeMoverPair, maybeMoveToPair ) of
+        ( Just ( moverIndex, _ ), Just ( moveToIndex, _ ) ) ->
+            usersWithIndex
+                |> List.sortBy (\( current, _ ) -> newPosition moverIndex moveToIndex current)
+                |> List.map (\( _, user ) -> user)
+
+        _ ->
+            users
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -192,6 +260,30 @@ update msg model =
                 model
             , Task.attempt (\_ -> NoOp) (Dom.focus "username-input")
             )
+
+        DndUserDragStart user ->
+            ( { model | draggedUser = Just user }, Cmd.none )
+
+        DnDUserDragEnd _ ->
+            ( { model | draggedUser = Nothing }, Cmd.none )
+
+        DnDUserDrop moveTo ->
+            ( { model
+                | draggedUser = Nothing
+                , users =
+                    case model.draggedUser of
+                        Just mover ->
+                            model.users |> moveUser mover moveTo
+
+                        Nothing ->
+                            model.users
+              }
+            , Cmd.none
+            )
+
+        DnDUserDragOver _ ->
+            -- Do nothing. However needed to hook this events... :<
+            ( model, Cmd.none )
 
         UpdateInterval unit input ->
             ( { model
@@ -383,11 +475,20 @@ userPanel model =
             ((model.users
                 |> List.map
                     (\user ->
-                        li []
-                            [ div [ Attr.class "list-item" ]
+                        li
+                            [ -- https://github.com/elm/html/blob/94c079007f8a7ed282d5b53f4a49101dd0b6cf99/src/Html/Attributes.elm#L262-L265
+                              Attr.draggable "true"
+                            , onDrop (DnDUserDrop user)
+                            , onDragStart (DndUserDragStart user)
+                            , onDragEnd (DnDUserDragEnd user)
+                            , onDragOver (DnDUserDragOver user)
+                            ]
+                            [ div
+                                [ Attr.class "list-item" ]
                                 [ img
                                     ([ Attr.class "user-image"
                                      , Attr.src user.avatarUrl
+                                     , Attr.draggable "false"
                                      ]
                                         ++ (if user.avatarUrl == fallbackAvatarUrl then
                                                 []
@@ -542,7 +643,8 @@ appHeader : Html msg
 appHeader =
     header [ Attr.class "header" ]
         [ text "emobu"
-        , a [ Attr.href "https://github.com/mobu-of-the-world/emobu/" ] [ img [ Attr.class "github-logo", Attr.src "/images/github-mark.svg" ] [] ]
+        , Html.a [ Attr.href "https://github.com/mobu-of-the-world/emobu/", Attr.draggable "false" ]
+            [ img [ Attr.class "github-logo", Attr.src "/images/github-mark.svg", Attr.draggable "false" ] [] ]
         ]
 
 
@@ -551,9 +653,10 @@ appFooter model =
     footer [ Attr.class "footer" ]
         [ div [ Attr.class "footer-body" ]
             [ text "rev - "
-            , a
+            , Html.a
                 [ Attr.class "revision-link"
                 , Attr.href ("https://github.com/mobu-of-the-world/emobu/tree/" ++ model.gitRef)
+                , Attr.draggable "false"
                 ]
                 [ text model.gitRef ]
             ]
@@ -573,6 +676,26 @@ view model =
 onError : msg -> Attribute msg
 onError msg =
     Html.Events.on "error" (Json.Decode.succeed msg)
+
+
+onDragStart : msg -> Attribute msg
+onDragStart msg =
+    Html.Events.on "dragstart" (Json.Decode.succeed msg)
+
+
+onDragEnd : msg -> Attribute msg
+onDragEnd msg =
+    Html.Events.on "dragend" (Json.Decode.succeed msg)
+
+
+onDrop : msg -> Attribute msg
+onDrop msg =
+    Html.Events.on "drop" (Json.Decode.succeed msg)
+
+
+onDragOver : msg -> Attribute msg
+onDragOver msg =
+    preventDefaultOn "dragover" <| Json.Decode.map (\x -> ( x, True )) <| Json.Decode.succeed msg
 
 
 getGithubAvatarUrl : String -> String
