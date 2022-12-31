@@ -210,53 +210,44 @@ moveUser mover moveTo users =
         maybeMoveToPair =
             usersWithIndex |> List.Extra.find (\( _, u ) -> u == moveTo)
 
-        --   const newIndex = (index: number): number => {
-        --     if (index > to && index <= from) {
-        --       return index - 1;
-        --     } else if (index === to) {
-        --       return from;
-        --     } else if (index < to && index >= from) {
-        --       return index + 1;
-        --     }
-        --     return index;
-        --   };
-        -- newPosition : Int -> Int -> Int -> Int
-        -- newPosition moverFrom moverTo current =
-        --     if current == moverFrom then
-        --         moverTo
-        --     else if current > moverTo && current <= moverFrom then
-        --         current - 1
-        --     else if current == moverTo then
-        --         if moverFrom < current then
-        --             current - 1
-        --         else
-        --             current
-        --         -- Debug.log "branch #2" moverFrom
-        --     else if current < moverTo && current >= moverFrom then
-        --         current + 1
-        --     else
-        --         current
         newPosition : Int -> Int -> Int -> Int
-        newPosition moverFrom moverTo current =
-            case ( current == moverFrom, current == moverTo, current > moverFrom && current < moverTo ) of
+        newPosition moverFrom moverTo me =
+            let
+                isStay =
+                    moverFrom == moverTo
+
+                isMover =
+                    me == moverFrom
+
+                isPointOfArraival =
+                    me == moverTo
+
+                isJumpedOver =
+                    (moverFrom < me && me < moverTo) || (me < moverFrom && moverTo < me)
+
+                isRequiredToSlied =
+                    isPointOfArraival || isJumpedOver
+            in
+            case ( isStay, isMover, isRequiredToSlied ) of
                 ( True, _, _ ) ->
-                    moverTo
+                    me
 
                 ( False, True, _ ) ->
-                    if moverFrom < current then
-                        current - 1
-
-                    else if moverFrom > current then
-                        current + 1
-
-                    else
-                        current
-
-                ( False, False, True ) ->
-                    current - 1
+                    moverTo
 
                 ( False, False, False ) ->
-                    current + 1
+                    me
+
+                ( False, False, True ) ->
+                    let
+                        isPointingDown =
+                            moverFrom < moverTo
+                    in
+                    if isPointingDown then
+                        me - 1
+
+                    else
+                        me + 1
     in
     case ( maybeMoverPair, maybeMoveToPair ) of
         ( Just ( moverIndex, _ ), Just ( moveToIndex, _ ) ) ->
