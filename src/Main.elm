@@ -282,6 +282,7 @@ update msg model =
             )
 
         DnDUserDragOver _ ->
+            -- Do nothing. However needed to hook this events... :<
             ( model, Cmd.none )
 
         UpdateInterval unit input ->

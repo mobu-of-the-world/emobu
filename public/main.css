@@ -97,6 +97,7 @@
 }
 
 .users-panel ol > li:active {
+  /* Appling to drag overred elements will not work. So chrome basically shows "cursor: copy */
   cursor: grabbing;
 }
 
