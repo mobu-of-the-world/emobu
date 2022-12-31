@@ -1,11 +1,13 @@
 .html {
   font-family: Inconsolata, monospace;
   background-color: #6a8372;
+  width: 100%;
 }
 
 #page {
   display: grid;
   height: 100dvh;
+  width: 100%;
   font-family: Inconsolata, monospace;
   background-color: #6a8372;
   caret-color: transparent;
@@ -42,7 +44,7 @@
   background-color: #43676b;
   align-items: center;
   padding: 0 2ch;
-  width: 100vw;
+  width: 100%;
 }
 
 #page > .header .github-logo {
@@ -53,7 +55,7 @@
 #page > .footer {
   grid-area: foot;
   text-align: center;
-  width: 100vw;
+  width: 100%;
   font-size: x-small;
 }
 
@@ -130,8 +132,8 @@
 .timer-panel {
   grid-area: timer-panel;
   margin-top: 2ch;
-  margin-left: 2ch;
-  margin-right: 2ch;
+  padding-left: 2ch;
+  padding-right: 2ch;
 }
 
 .standardized-emoji {
@@ -145,8 +147,8 @@
 }
 
 .timer-panel .unit-label {
-  margin-left: 5px;
-  margin-right: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .newinterval-row {
@@ -194,12 +196,10 @@
 .timer-row {
   display: flex;
   font-size: x-large;
-  width: 34ch;
 }
 
 .timer-panel .interval-input {
   font-size: medium;
-  width: 26ch;
   margin-left: 3ch;
   top: 0.8ch;
   position: relative;
