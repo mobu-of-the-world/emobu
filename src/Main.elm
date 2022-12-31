@@ -1,6 +1,5 @@
-port module Main exposing (Event, Model, Msg(..), PersistedModel, User, defaultModel, main, modelDecoder, modelEncoder)
+port module Main exposing (Event, Model, Msg(..), PersistedModel, User, defaultModel, main, modelDecoder, modelEncoder, moveUser)
 
-import Array exposing (Array)
 import Browser
 import Browser.Dom as Dom
 import Duration
@@ -9,6 +8,7 @@ import Html.Attributes as Attr
 import Html.Events exposing (onCheck, onClick, onInput, onSubmit, preventDefaultOn)
 import Json.Decode
 import Json.Encode
+import List.Extra
 import MobSession
 import Random
 import Random.List
@@ -199,24 +199,73 @@ fallbackAvatarUrl =
 
 
 moveUser : User -> User -> List User -> List User
-moveUser mover newPos users =
+moveUser mover moveTo users =
     let
-        -- usersWithIndex =
-        --     users |> List.indexedMap Tuple.pair
-        -- newPosIndex =
-        --     usersWithIndex
-        --         |> List.filter (\( _, u ) -> u == newPos)
-        --         |> List.head
-        --         |> (case iu of
-        --                 Just Tuple ->
-        --                     Tuple.first
-        --                 Nothing ->
-        --                     0
-        --            )
-        userArray =
-            Array.fromList users
+        usersWithIndex =
+            users |> List.indexedMap Tuple.pair
+
+        maybeMoverPair =
+            usersWithIndex |> List.Extra.find (\( _, u ) -> u == mover)
+
+        maybeMoveToPair =
+            usersWithIndex |> List.Extra.find (\( _, u ) -> u == moveTo)
+
+        --   const newIndex = (index: number): number => {
+        --     if (index > to && index <= from) {
+        --       return index - 1;
+        --     } else if (index === to) {
+        --       return from;
+        --     } else if (index < to && index >= from) {
+        --       return index + 1;
+        --     }
+        --     return index;
+        --   };
+        -- newPosition : Int -> Int -> Int -> Int
+        -- newPosition moverFrom moverTo current =
+        --     if current == moverFrom then
+        --         moverTo
+        --     else if current > moverTo && current <= moverFrom then
+        --         current - 1
+        --     else if current == moverTo then
+        --         if moverFrom < current then
+        --             current - 1
+        --         else
+        --             current
+        --         -- Debug.log "branch #2" moverFrom
+        --     else if current < moverTo && current >= moverFrom then
+        --         current + 1
+        --     else
+        --         current
+        newPosition : Int -> Int -> Int -> Int
+        newPosition moverFrom moverTo current =
+            case ( current == moverFrom, current == moverTo, current > moverFrom && current < moverTo ) of
+                ( True, _, _ ) ->
+                    moverTo
+
+                ( False, True, _ ) ->
+                    if moverFrom < current then
+                        current - 1
+
+                    else if moverFrom > current then
+                        current + 1
+
+                    else
+                        current
+
+                ( False, False, True ) ->
+                    current - 1
+
+                ( False, False, False ) ->
+                    current + 1
     in
-    [ mover, newPos ] ++ users
+    case ( maybeMoverPair, maybeMoveToPair ) of
+        ( Just ( moverIndex, _ ), Just ( moveToIndex, _ ) ) ->
+            usersWithIndex
+                |> List.sortBy (\( current, _ ) -> newPosition moverIndex moveToIndex current)
+                |> List.map (\( _, user ) -> user)
+
+        _ ->
+            users
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -247,8 +296,20 @@ update msg model =
         DnDUserDragEnd user ->
             ( Debug.log (Debug.toString ( msg, user )) { model | draggedUser = Nothing }, Cmd.none )
 
-        DnDUserDrop newPos ->
-            ( Debug.log (Debug.toString ( msg, newPos )) { model | draggedUser = Nothing, users = moveUser (Maybe.withDefault newPos model.draggedUser) newPos model.users }, Cmd.none )
+        DnDUserDrop moveTo ->
+            ( Debug.log (Debug.toString ( msg, moveTo ))
+                { model
+                    | draggedUser = Nothing
+                    , users =
+                        case model.draggedUser of
+                            Just mover ->
+                                model.users |> moveUser mover moveTo
+
+                            Nothing ->
+                                model.users
+                }
+            , Cmd.none
+            )
 
         DnDUserDragOver user ->
             ( Debug.log (Debug.toString ( msg, user )) model, Cmd.none )
@@ -458,7 +519,6 @@ userPanel model =
                             ]
                             [ div
                                 [ Attr.class "list-item"
-                                , onDrop (DnDUserDrop user)
                                 ]
                                 [ img
                                     ([ Attr.class "user-image"
