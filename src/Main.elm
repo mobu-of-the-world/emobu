@@ -444,29 +444,33 @@ balloon ( label, pos ) =
 
 addUserInput : Model -> Html Msg
 addUserInput model =
-    div [ Attr.class "list-item" ]
-        [ li []
-            [ form [ onSubmit AddUser ]
-                [ input
-                    [ Attr.id "username-input"
-                    , Attr.value model.inputtedUsername
-                    , onInput InputUsername
-                    , Attr.placeholder "Username"
-                    , Attr.type_ "text"
-                    , Attr.autocomplete False
-                    ]
-                    []
-                , button
-                    ((if satisfiedMinMembers model then
+    li []
+        [ div [ Attr.class "list-container" ]
+            [ div [ Attr.class "list-item" ]
+                [ form [ Attr.id "add-user", onSubmit AddUser ]
+                    [ input
+                        [ Attr.id "username-input"
+                        , Attr.value model.inputtedUsername
+                        , onInput InputUsername
+                        , Attr.placeholder "GitHub username"
+                        , Attr.type_ "text"
+                        , Attr.autocomplete False
+                        , Attr.pattern "[a-z0-9-]{1,39}"
+                        , Attr.title "1 to 39 alnums and hyphens"
+                        ]
                         []
-
-                      else
-                        balloon ( "mob needs 2+ members!", "down" )
-                     )
-                        ++ [ Attr.class "button", Attr.disabled (not (model |> isAddableUser)) ]
-                    )
-                    [ emoji "➕" ]
+                    ]
                 ]
+            , button
+                ((if satisfiedMinMembers model then
+                    []
+
+                  else
+                    balloon ( "mob needs 2+ members!", "down" )
+                 )
+                    ++ [ Attr.class "button", Attr.disabled (not (model |> isAddableUser)), Attr.type_ "submit", Attr.form "add-user" ]
+                )
+                [ emoji "➕" ]
             ]
         ]
 
@@ -491,23 +495,26 @@ userPanel model =
                             , onDragEnd (DnDUserDragEnd user)
                             , onDragOver (DnDUserDragOver user)
                             ]
-                            [ div
-                                [ Attr.class "list-item" ]
-                                [ img
-                                    ([ Attr.class "user-image"
-                                     , Attr.src user.avatarUrl
-                                     , Attr.draggable "false"
-                                     ]
-                                        ++ (if user.avatarUrl == fallbackAvatarUrl then
-                                                []
+                            [ div [ Attr.class "list-container" ]
+                                [ div [ Attr.class "list-item" ]
+                                    [ img
+                                        ([ Attr.class "user-image"
+                                         , Attr.src user.avatarUrl
+                                         , Attr.draggable "false"
+                                         ]
+                                            ++ (if user.avatarUrl == fallbackAvatarUrl then
+                                                    []
 
-                                            else
-                                                [ onError (FallbackAvatar user.username) ]
-                                           )
-                                    )
-                                    []
-                                , text user.username
-                                , button [ onClick (UpdateUsers (model.users |> deleteUser user)), Attr.class "button" ] [ emoji "👋" ]
+                                                else
+                                                    [ onError (FallbackAvatar user.username) ]
+                                               )
+                                        )
+                                        []
+                                    , text user.username
+                                    ]
+                                , button
+                                    [ onClick (UpdateUsers (model.users |> deleteUser user)), Attr.class "button" ]
+                                    [ emoji "👋" ]
                                 ]
                             ]
                     )
@@ -633,12 +640,14 @@ timerPanel model =
             , label [ Attr.for "notification-toggle" ] []
             ]
         , br [] []
-        , div [ Attr.class "timer-row" ]
-            [ emoji "⏲️"
-            , space
-            , text (MobSession.readableElapsed (Duration.elapsedSecondsFromDurations model.durations))
+        , div [ Attr.class "timer-container" ]
+            [ div [ Attr.class "timer-row" ]
+                [ emoji "⏲️"
+                , space
+                , text (MobSession.readableElapsed (Duration.elapsedSecondsFromDurations model.durations))
+                ]
+            , newIntervalFields model
             ]
-        , newIntervalFields model
         ]
 
 
@@ -670,8 +679,7 @@ appFooter : Model -> Html msg
 appFooter model =
     footer [ Attr.class "footer" ]
         [ div [ Attr.class "footer-body" ]
-            [ text "rev - "
-            , Html.a
+            [ Html.a
                 [ Attr.class "revision-link"
                 , Attr.href ("https://github.com/mobu-of-the-world/emobu/tree/" ++ model.gitRef)
                 , Attr.draggable "false"

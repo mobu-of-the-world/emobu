@@ -1,16 +1,16 @@
 :root {
   --page-height: 100dvh;
   --content-height: 90dvh;
+  --non-content-max-height: calc((var(--page-height) - var(--content-height)));
   --header-height: minmax(
     30px,
-    calc((var(--page-height) - var(--content-height)) / 2)
+    calc(((var(--non-content-max-height) / 3) * 2))
   );
-  --footer-height: minmax(
-    24px,
-    calc((var(--page-height) - var(--content-height)) / 2)
-  );
+  --footer-height: minmax(20px, calc(((var(--non-content-max-height) / 3))));
   --brand-base-color: #6a8372;
   --brand-dark-color: #43676b;
+  --user-image-width: 32px;
+  --base-char-color: #181b39;
 }
 
 html {
@@ -37,20 +37,22 @@ a {
   font-family: Inconsolata, monospace;
   background-color: var(--brand-base-color);
   caret-color: transparent;
+  place-items: center;
+  color: #003847;
 }
 
 @media screen and (max-width: 799px) {
   #page {
     grid-template:
       'head' var(--header-height)
-      'timer-panel' min(calc((var(--content-height) / 3)))
+      'timer-panel' max(calc((var(--content-height) / 3)))
       'users-panel' min(calc((var(--content-height) / 3) * 2))
       'foot' var(--footer-height) / 1fr;
   }
 
-  .users-panel {
-    margin-top: 3ch;
-  }
+  /* .users-panel {
+    overflow: scroll;
+  } */
 }
 
 @media screen and (min-width: 800px) {
@@ -72,6 +74,7 @@ a {
   padding: 0 2ch;
   width: 100%;
   height: 100%;
+  color: black;
 }
 
 #page > .header .github-link {
@@ -89,13 +92,14 @@ a {
   grid-area: foot;
   text-align: center;
   width: 100%;
+  height: 100%;
   font-size: small;
 }
 
 .footer .footer-body {
   position: sticky;
   top: 100%;
-  padding-bottom: 0.6ch;
+  height: 100%;
 }
 
 #page input {
@@ -113,17 +117,32 @@ a {
   text-align: center;
 }
 
+.standardized-emoji {
+  font-family: 'Noto Color Emoji', sans-serif;
+}
+
+.button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
 .revision-link {
   text-decoration: none;
-  color: var(--brand-dark-color);
+  color: #003847;
 }
 
 .users-panel {
   grid-area: users-panel;
+  max-height: 100%;
+  color: var(--base-char-color);
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .users-panel ol {
   list-style-type: none;
+  margin-block-start: auto;
 }
 
 .users-panel ol > li {
@@ -136,26 +155,36 @@ a {
   cursor: grabbing;
 }
 
+.users-panel .list-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 .users-panel .list-item {
   display: inline-block;
   margin: 1ch 0;
   margin-left: 1ch;
   vertical-align: middle;
+  width: 100%;
 }
 
 .users-panel #username-input {
-  width: 18ch;
+  --indent-as-avatar: calc(var(--user-image-width) + 2ch);
+
+  margin-left: var(--indent-as-avatar);
+  width: calc(100% - var(--indent-as-avatar));
 }
 
 .users-panel ol > li .user-image {
   margin-right: 2ch;
-  width: 32px;
+  width: var(--user-image-width);
   border-radius: 50%;
   float: left;
 }
 
 .users-panel ol > li:nth-child(1) {
   list-style-type: '🚗';
+  font-size: larger;
 }
 
 .users-panel ol > li::before {
@@ -164,19 +193,28 @@ a {
 
 .timer-panel {
   grid-area: timer-panel;
-  margin-top: 2ch;
   padding-left: 2ch;
   padding-right: 2ch;
+  text-align: center;
+  color: var(--base-char-color);
 }
 
-.standardized-emoji {
-  font-family: 'Noto Color Emoji', sans-serif;
+.timer-container {
+  display: grid;
+  place-items: center;
+  width: 100%;
 }
 
-.button {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
+.timer-row {
+  display: flex;
+  font-size: xx-large;
+}
+
+.timer-panel .interval-input {
+  font-size: medium;
+  margin-left: 3ch;
+  top: 0.8ch;
+  position: relative;
 }
 
 .timer-panel .unit-label {
@@ -197,7 +235,6 @@ a {
 
 .feature-toggle {
   display: inline-block;
-  margin-top: 2ch;
 }
 
 .feature-toggle input[type='checkbox'] {
@@ -224,18 +261,6 @@ a {
 
 .notification-toggle input:checked + label::after {
   content: '📡';
-}
-
-.timer-row {
-  display: flex;
-  font-size: x-large;
-}
-
-.timer-panel .interval-input {
-  font-size: medium;
-  margin-left: 3ch;
-  top: 0.8ch;
-  position: relative;
 }
 
 .chars-space {
