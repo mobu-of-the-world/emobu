@@ -9,11 +9,13 @@
     24px,
     calc((var(--page-height) - var(--content-height)) / 2)
   );
+  --brand-base-color: #6a8372;
+  --brand-dark-color: #43676b;
 }
 
 html {
   font-family: Inconsolata, monospace;
-  background-color: #6a8372;
+  background-color: var(--brand-base-color);
   width: 100%;
   height: var(--page-height);
 }
@@ -33,7 +35,7 @@ a {
   height: 100%;
   width: 100%;
   font-family: Inconsolata, monospace;
-  background-color: #6a8372;
+  background-color: var(--brand-base-color);
   caret-color: transparent;
 }
 
@@ -65,7 +67,7 @@ a {
   display: flex;
   justify-content: space-between;
   font-size: 18px;
-  background-color: #43676b;
+  background-color: var(--brand-dark-color);
   align-items: center;
   padding: 0 2ch;
   width: 100%;
@@ -87,7 +89,7 @@ a {
   grid-area: foot;
   text-align: center;
   width: 100%;
-  font-size: x-small;
+  font-size: small;
 }
 
 .footer .footer-body {
@@ -113,7 +115,7 @@ a {
 
 .revision-link {
   text-decoration: none;
-  color: #724938;
+  color: var(--brand-dark-color);
 }
 
 .users-panel {
