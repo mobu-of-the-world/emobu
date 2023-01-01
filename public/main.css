@@ -1,12 +1,36 @@
-.html {
+:root {
+  --page-height: 100dvh;
+  --content-height: 90dvh;
+  --header-height: minmax(
+    30px,
+    calc((var(--page-height) - var(--content-height)) / 2)
+  );
+  --footer-height: minmax(
+    24px,
+    calc((var(--page-height) - var(--content-height)) / 2)
+  );
+}
+
+html {
   font-family: Inconsolata, monospace;
   background-color: #6a8372;
   width: 100%;
+  height: var(--page-height);
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+a {
+  /* Do not use max-height because of contained images will not fit with own max-* when parent uses max-* */
+  height: max(100%);
 }
 
 #page {
   display: grid;
-  height: 100dvh;
+  height: 100%;
   width: 100%;
   font-family: Inconsolata, monospace;
   background-color: #6a8372;
@@ -16,10 +40,10 @@
 @media screen and (max-width: 799px) {
   #page {
     grid-template:
-      'head' minmax(20px, 5dvh)
-      'timer-panel' min(30dvh)
-      'users-panel' min(60dvh)
-      'foot' minmax(20px, 5dvh) / 1fr;
+      'head' var(--header-height)
+      'timer-panel' min(calc((var(--content-height) / 3)))
+      'users-panel' min(calc((var(--content-height) / 3) * 2))
+      'foot' var(--footer-height) / 1fr;
   }
 
   .users-panel {
@@ -30,9 +54,9 @@
 @media screen and (min-width: 800px) {
   #page {
     grid-template:
-      'head head' minmax(20px, 5dvh)
-      'users-panel timer-panel' min(90dvh)
-      'foot foot' minmax(20px, 5dvh) / 1fr 1fr;
+      'head head' var(--header-height)
+      'users-panel timer-panel' var(--content-height)
+      'foot foot' var(--footer-height) / 1fr 1fr;
   }
 }
 
@@ -45,11 +69,18 @@
   align-items: center;
   padding: 0 2ch;
   width: 100%;
+  height: 100%;
+}
+
+#page > .header .github-link {
+  display: flex;
+  align-items: center;
 }
 
 #page > .header .github-logo {
-  height: 2ch;
-  max-height: 30px;
+  max-width: 100%;
+  max-height: 85%;
+  max-height: 24px;
 }
 
 #page > .footer {

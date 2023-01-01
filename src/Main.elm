@@ -651,8 +651,18 @@ appHeader : Html msg
 appHeader =
     header [ Attr.class "header" ]
         [ text "emobu"
-        , Html.a [ Attr.href "https://github.com/mobu-of-the-world/emobu/", Attr.draggable "false" ]
-            [ img [ Attr.class "github-logo", Attr.src "/images/github-mark.svg", Attr.draggable "false" ] [] ]
+        , Html.a
+            [ Attr.class "github-link"
+            , Attr.href "https://github.com/mobu-of-the-world/emobu/"
+            , Attr.draggable "false"
+            ]
+            [ img
+                [ Attr.class "github-logo"
+                , Attr.src "/images/github-mark.svg"
+                , Attr.draggable "false"
+                ]
+                []
+            ]
         ]
 
 
