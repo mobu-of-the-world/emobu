@@ -38,7 +38,7 @@ a {
   background-color: var(--brand-base-color);
   caret-color: transparent;
   place-items: center;
-  color: #003847;
+  color: var(--base-char-color);
 }
 
 @media screen and (max-width: 799px) {
@@ -49,10 +49,6 @@ a {
       'users-panel' min(calc((var(--content-height) / 3) * 2))
       'foot' var(--footer-height) / 1fr;
   }
-
-  /* .users-panel {
-    overflow: scroll;
-  } */
 }
 
 @media screen and (min-width: 800px) {
@@ -104,10 +100,12 @@ a {
 
 #page input {
   border: none;
-  border-radius: 1.2ch;
-  background-color: #d7c4bb;
   text-align: center;
   caret-color: green;
+}
+
+#page input::placeholder {
+  color: var(--brand-dark-color);
 }
 
 #page select {
@@ -134,8 +132,9 @@ a {
 
 .users-panel {
   grid-area: users-panel;
+  min-height: 200px;
+  min-width: 60%;
   max-height: 100%;
-  color: var(--base-char-color);
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -168,11 +167,14 @@ a {
   width: 100%;
 }
 
-.users-panel #username-input {
-  --indent-as-avatar: calc(var(--user-image-width) + 2ch);
-
-  margin-left: var(--indent-as-avatar);
-  width: calc(100% - var(--indent-as-avatar));
+#username-input {
+  background-color: transparent;
+  border-bottom: var(--brand-dark-color) 1px;
+  background-image: url('/images/github-mark.svg');
+  background-position: left top;
+  background-repeat: no-repeat;
+  background-size: 24px;
+  width: 100%;
 }
 
 .users-panel ol > li .user-image {
@@ -182,7 +184,7 @@ a {
   float: left;
 }
 
-.users-panel ol > li:nth-child(1) {
+.users-panel ol > li:nth-child(2) {
   list-style-type: '🚗';
   font-size: larger;
 }
@@ -196,7 +198,6 @@ a {
   padding-left: 2ch;
   padding-right: 2ch;
   text-align: center;
-  color: var(--base-char-color);
 }
 
 .timer-container {
@@ -213,8 +214,6 @@ a {
 .timer-panel .interval-input {
   font-size: medium;
   margin-left: 3ch;
-  top: 0.8ch;
-  position: relative;
 }
 
 .timer-panel .unit-label {

@@ -444,35 +444,33 @@ balloon ( label, pos ) =
 
 addUserInput : Model -> Html Msg
 addUserInput model =
-    li []
-        [ div [ Attr.class "list-container" ]
-            [ div [ Attr.class "list-item" ]
-                [ form [ Attr.id "add-user", onSubmit AddUser ]
-                    [ input
-                        [ Attr.id "username-input"
-                        , Attr.value model.inputtedUsername
-                        , onInput InputUsername
-                        , Attr.placeholder "GitHub username"
-                        , Attr.type_ "text"
-                        , Attr.autocomplete False
-                        , Attr.pattern "[a-z0-9-]{1,39}"
-                        , Attr.title "1 to 39 alnums and hyphens"
-                        ]
-                        []
-                    ]
-                ]
-            , button
-                ((if satisfiedMinMembers model then
-                    []
-
-                  else
-                    balloon ( "mob needs 2+ members!", "down" )
-                 )
-                    ++ [ Attr.class "button", Attr.disabled (not (model |> isAddableUser)), Attr.type_ "submit", Attr.form "add-user" ]
-                )
-                [ emoji "➕" ]
+    form [ Attr.id "add-user", onSubmit AddUser ]
+        [ input
+            [ Attr.id "username-input"
+            , Attr.value model.inputtedUsername
+            , onInput InputUsername
+            , Attr.placeholder "Username"
+            , Attr.type_ "text"
+            , Attr.autocomplete False
+            , Attr.pattern "[a-z0-9-]{1,39}"
+            , Attr.title "1 to 39 alnums and hyphens"
             ]
+            []
         ]
+
+
+addUserButton : Model -> Html Msg
+addUserButton model =
+    button
+        ((if satisfiedMinMembers model then
+            []
+
+          else
+            balloon ( "needs 2+ members!", "down-right" )
+         )
+            ++ [ Attr.class "button", Attr.disabled (not (model |> isAddableUser)), Attr.type_ "submit", Attr.form "add-user" ]
+        )
+        [ emoji "➕" ]
 
 
 deleteUser : User -> List User -> List User
@@ -484,42 +482,43 @@ userPanel : Model -> Html Msg
 userPanel model =
     div [ Attr.class "users-panel" ]
         [ ol []
-            ((model.users
-                |> List.map
-                    (\user ->
-                        li
-                            [ -- https://github.com/elm/html/blob/94c079007f8a7ed282d5b53f4a49101dd0b6cf99/src/Html/Attributes.elm#L262-L265
-                              Attr.draggable "true"
-                            , onDrop (DnDUserDrop user)
-                            , onDragStart (DndUserDragStart user)
-                            , onDragEnd (DnDUserDragEnd user)
-                            , onDragOver (DnDUserDragOver user)
-                            ]
-                            [ div [ Attr.class "list-container" ]
-                                [ div [ Attr.class "list-item" ]
-                                    [ img
-                                        ([ Attr.class "user-image"
-                                         , Attr.src user.avatarUrl
-                                         , Attr.draggable "false"
-                                         ]
-                                            ++ (if user.avatarUrl == fallbackAvatarUrl then
-                                                    []
-
-                                                else
-                                                    [ onError (FallbackAvatar user.username) ]
-                                               )
-                                        )
-                                        []
-                                    , text user.username
+            (div [ Attr.class "list-container" ]
+                [ div [ Attr.class "list-item" ] [ addUserInput model ], addUserButton model ]
+                :: (model.users
+                        |> List.map
+                            (\user ->
+                                li
+                                    [ -- https://github.com/elm/html/blob/94c079007f8a7ed282d5b53f4a49101dd0b6cf99/src/Html/Attributes.elm#L262-L265
+                                      Attr.draggable "true"
+                                    , onDrop (DnDUserDrop user)
+                                    , onDragStart (DndUserDragStart user)
+                                    , onDragEnd (DnDUserDragEnd user)
+                                    , onDragOver (DnDUserDragOver user)
                                     ]
-                                , button
-                                    [ onClick (UpdateUsers (model.users |> deleteUser user)), Attr.class "button" ]
-                                    [ emoji "👋" ]
-                                ]
-                            ]
-                    )
-             )
-                ++ [ addUserInput model ]
+                                    [ div [ Attr.class "list-container" ]
+                                        [ div [ Attr.class "list-item" ]
+                                            [ img
+                                                ([ Attr.class "user-image"
+                                                 , Attr.src user.avatarUrl
+                                                 , Attr.draggable "false"
+                                                 ]
+                                                    ++ (if user.avatarUrl == fallbackAvatarUrl then
+                                                            []
+
+                                                        else
+                                                            [ onError (FallbackAvatar user.username) ]
+                                                       )
+                                                )
+                                                []
+                                            , text user.username
+                                            ]
+                                        , button
+                                            [ onClick (UpdateUsers (model.users |> deleteUser user)), Attr.class "button" ]
+                                            [ emoji "👋" ]
+                                        ]
+                                    ]
+                            )
+                   )
             )
         ]
 
