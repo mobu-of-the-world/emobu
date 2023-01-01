@@ -16,6 +16,7 @@ name: Deploy to Firebase Hosting on merge
       - '.editorconfig'
       - '**.md'
       - '.vscode/**'
+      - 'docs/**'
       - 'dprint.json'
       - '.eslintrc.yml'
       - 'renovate.json'
