@@ -199,16 +199,16 @@ moveUser mover moveTo users =
                 isMover =
                     me == moverFrom
 
-                isPointOfArraival =
+                isPointOfArrival =
                     me == moverTo
 
                 isJumpedOver =
                     (moverFrom < me && me < moverTo) || (me < moverFrom && moverTo < me)
 
-                isRequiredToSlied =
-                    isPointOfArraival || isJumpedOver
+                isRequiredToSlide =
+                    isPointOfArrival || isJumpedOver
             in
-            case ( isStay, isMover, isRequiredToSlied ) of
+            case ( isStay, isMover, isRequiredToSlide ) of
                 ( True, _, _ ) ->
                     me
 
