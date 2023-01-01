@@ -6,6 +6,7 @@ import Duration
 import Html exposing (Attribute, Html, br, button, div, footer, form, header, img, input, label, li, ol, option, select, span, text)
 import Html.Attributes as Attr
 import Html.Events exposing (onCheck, onClick, onInput, onSubmit, preventDefaultOn)
+import Html.Events.Extra.Drag as Drag exposing (DropEffect(..))
 import Json.Decode
 import Json.Encode
 import List.Extra
@@ -82,10 +83,10 @@ type Msg
     | UpdateDurations Event Time.Posix
     | CheckMobSession
     | NoOp
-    | DndUserDragStart User
+    | DndUserDragStart User Drag.EffectAllowed
     | DnDUserDragEnd User
     | DnDUserDrop User
-    | DnDUserDragOver User
+    | DnDUserDragOver User Drag.DropEffect
 
 
 type alias User =
@@ -261,8 +262,8 @@ update msg model =
             , Task.attempt (\_ -> NoOp) (Dom.focus "username-input")
             )
 
-        DndUserDragStart user ->
-            ( { model | draggedUser = Just user }, Cmd.none )
+        DndUserDragStart user effectAllowed ->
+            ( { model | draggedUser = Just user }, dragstart (Drag.startPortData effectAllowed (userEncoder user)) )
 
         DnDUserDragEnd _ ->
             ( { model | draggedUser = Nothing }, Cmd.none )
@@ -281,9 +282,8 @@ update msg model =
             , Cmd.none
             )
 
-        DnDUserDragOver _ ->
-            -- Do nothing. However needed to hook this events... :<
-            ( model, Cmd.none )
+        DnDUserDragOver user dropEffect ->
+            ( model, dragover (Drag.overPortData dropEffect (userEncoder user)) )
 
         UpdateInterval unit input ->
             ( { model
@@ -410,6 +410,12 @@ port playSound : String -> Cmd msg
 port notify : String -> Cmd msg
 
 
+port dragstart : { effectAllowed : String, event : Json.Decode.Value } -> Cmd msg
+
+
+port dragover : { dropEffect : String, event : Json.Decode.Value } -> Cmd msg
+
+
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
 updateWithStorage msg oldModel =
     let
@@ -491,9 +497,9 @@ userPanel model =
                                     [ -- https://github.com/elm/html/blob/94c079007f8a7ed282d5b53f4a49101dd0b6cf99/src/Html/Attributes.elm#L262-L265
                                       Attr.draggable "true"
                                     , onDrop (DnDUserDrop user)
-                                    , onDragStart (DndUserDragStart user)
+                                    , onDragStart (DndUserDragStart user { move = True, copy = False, link = False })
                                     , onDragEnd (DnDUserDragEnd user)
-                                    , onDragOver (DnDUserDragOver user)
+                                    , onDragOver (DnDUserDragOver user MoveOnDrop)
                                     ]
                                     [ div [ Attr.class "list-container" ]
                                         [ div [ Attr.class "list-item" ]
