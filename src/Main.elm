@@ -452,7 +452,7 @@ addUserInput model =
             , Attr.placeholder "Username"
             , Attr.type_ "text"
             , Attr.autocomplete False
-            , Attr.pattern "[a-z0-9-]{1,39}"
+            , Attr.pattern "[a-zA-Z0-9-]{1,39}"
             , Attr.title "1 to 39 alnums and hyphens"
             ]
             []
