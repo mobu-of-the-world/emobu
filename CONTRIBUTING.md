@@ -4,12 +4,17 @@
 
 ### Setup
 
-Needs nodejs for first step.\
-Next step needs npm dependencies. It includes elm compiler.
+1. Install [Nix](https://nixos.org/) package manager
+2. Run `nix-shell` or `nix-shell --command 'zsh'`
+3. You can use development tools
 
-`npm install`
+```console
+$ npm install
+$ dprint check
+```
 
 If you use vscode, installing elm-test, elm-format and elm-review into global might make better experience.
+(Currently not installing them with Nix)
 
 ### `npm run dev`
 
