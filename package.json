@@ -28,7 +28,7 @@
     "elm-format": "^0.8.5",
     "elm-json": "^0.2.13",
     "elm-review": "^2.9.1",
-    "elm-test": "^0.19.1-revision11",
+    "elm-test": "^0.19.1-revision12",
     "eslint": "^8.34.0",
     "eslint-plugin-deprecation": "^1.3.3",
     "stylelint": "^15.1.0",
