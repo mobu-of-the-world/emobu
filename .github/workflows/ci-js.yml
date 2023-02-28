@@ -21,6 +21,7 @@ on:
       - '**/*.js'
 jobs:
   typecheck:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -33,6 +34,7 @@ jobs:
       - name: Type Check
         run: npm run typecheck
   eslint:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -45,6 +47,7 @@ jobs:
       - name: Lint
         run: npm run eslint
   stylelint:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
