@@ -24,7 +24,7 @@
   "devDependencies": {
     "@tsconfig/node18-strictest-esm": "^1.0.1",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
-    "@typescript-eslint/parser": "^5.55.0",
+    "@typescript-eslint/parser": "^5.56.0",
     "elm-format": "^0.8.6",
     "elm-json": "^0.2.13",
     "elm-review": "^2.9.1",
