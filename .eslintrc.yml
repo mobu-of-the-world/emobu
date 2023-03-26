@@ -2,8 +2,6 @@ extends:
   - plugin:@typescript-eslint/recommended
   - plugin:@typescript-eslint/recommended-requiring-type-checking
   - plugin:@typescript-eslint/strict
-plugins:
-  - deprecation
 parser: '@typescript-eslint/parser'
 env:
   browser: true
@@ -26,7 +24,6 @@ rules:
     - selector: TSEnumDeclaration
       message: >-
         Don't declare enums. ref: https://www.kabuku.co.jp/developers/good-bye-typescript-enum
-  deprecation/deprecation: error
 overrides:
   - files:
       - src/**/*d.ts
