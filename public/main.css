@@ -41,7 +41,7 @@ a {
   color: var(--base-char-color);
 }
 
-@media screen and (max-width: 799px) {
+@media screen and (width <= 799px) {
   #page {
     grid-template:
       'head' var(--header-height)
@@ -51,7 +51,7 @@ a {
   }
 }
 
-@media screen and (min-width: 800px) {
+@media screen and (width >= 800px) {
   #page {
     grid-template:
       'head head' var(--header-height)
