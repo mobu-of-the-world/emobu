@@ -23,7 +23,6 @@
   "author": "Kenichi Kamiya <kachick1@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@tsconfig/node18-strictest-esm": "^1.0.1",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
     "elm-format": "^0.8.7",
