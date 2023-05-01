@@ -34,7 +34,7 @@
     "stylelint-config-standard": "^33.0.0",
     "typescript": "^5.0.4",
     "vite": "^4.3.3",
-    "vite-plugin-elm": "^2.8.0-beta.5"
+    "vite-plugin-elm": "^2.8.0"
   },
   "dependencies": {
     "elm": "^0.19.1-5"
