@@ -3,9 +3,9 @@
     "elmtooling.elm-ls-vscode",
     "editorconfig.editorconfig",
     "streetsidesoftware.code-spell-checker",
-    "dbaeumer.vscode-eslint",
-    "dprint.dprint",
     "stylelint.vscode-stylelint",
-    "jnoortheen.nix-ide"
+    "jnoortheen.nix-ide",
+    "github.vscode-github-actions",
+    "denoland.vscode-deno"
   ]
 }

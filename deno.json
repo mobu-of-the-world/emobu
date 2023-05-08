@@ -1,0 +1,34 @@
+{
+  "tasks": {
+    "dev": "deno run -A --node-modules-dir npm:vite",
+    "build": "deno run -A  --node-modules-dir npm:vite build",
+    "preview": "deno run -A --node-modules-dir npm:vite preview",
+    "serve": "deno run --allow-net --allow-read https://deno.land/std@0.186.0/http/file_server.ts dist/"
+  },
+  "imports": {
+    "vite": "npm:vite@^4.3.5",
+    "vite-plugin-elm": "npm:vite-plugin-elm@^2.8.0"
+  },
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns",
+      "deno.unstable"
+    ],
+    "types": ["vite/client"]
+  },
+  "fmt": {
+    "exclude": [".git/", ".node_modules/", "dist/", ".vite"],
+    "lineWidth": 120,
+    "singleQuote": true,
+    "proseWrap": "preserve"
+  },
+  "lint": {
+    "exclude": [".git/", ".node_modules/", "dist/", ".vite"],
+    "rules": {
+      "tags": ["recommended"]
+    }
+  }
+}

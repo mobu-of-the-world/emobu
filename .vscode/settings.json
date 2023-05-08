@@ -1,17 +1,19 @@
 {
-  "editor.defaultFormatter": "dprint.dprint",
+  "editor.defaultFormatter": "denoland.vscode-deno",
   "editor.formatOnSave": true,
+  "deno.enable": true,
   "cSpell.words": [
-    "dprint",
     "emobu",
     "firebaserc",
     "jorelali",
     "mobu",
-    "nodenv",
     "rscss"
   ],
   "[elm]": {
     "editor.defaultFormatter": "elmTooling.elm-ls-vscode"
   },
-  "elmLS.elmReviewDiagnostics": "error"
+  "elmLS.elmReviewDiagnostics": "error",
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide"
+  }
 }

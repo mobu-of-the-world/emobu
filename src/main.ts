@@ -1,3 +1,5 @@
+/// <reference lib="dom"/>
+
 import { Elm } from './Main.elm';
 
 declare const APP_COMMIT_REF: string;
