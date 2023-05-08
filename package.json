@@ -29,7 +29,7 @@
     "elm-json": "^0.2.13",
     "elm-review": "^2.10.2",
     "elm-test": "^0.19.1-revision12",
-    "eslint": "^8.39.0",
+    "eslint": "^8.40.0",
     "stylelint": "^15.6.1",
     "stylelint-config-standard": "^33.0.0",
     "typescript": "^5.0.4",
