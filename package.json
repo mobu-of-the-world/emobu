@@ -24,7 +24,7 @@
   "license": "MIT",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.59.5",
-    "@typescript-eslint/parser": "^5.59.5",
+    "@typescript-eslint/parser": "^5.59.6",
     "elm-format": "^0.8.7",
     "elm-json": "^0.2.13",
     "elm-review": "^2.10.2",
