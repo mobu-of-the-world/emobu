@@ -31,7 +31,7 @@
     "elm-test": "^0.19.1-revision12",
     "eslint": "^8.44.0",
     "stylelint": "^15.10.0",
-    "stylelint-config-standard": "^33.0.0",
+    "stylelint-config-standard": "^34.0.0",
     "typescript": "^5.1.6",
     "vite": "^4.3.9",
     "vite-plugin-elm": "^2.8.0"
