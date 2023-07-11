@@ -1,0 +1,26 @@
+{
+  "tasks": {
+    "dev": "deno run --watch main.ts"
+  },
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns",
+      "deno.unstable"
+    ]
+  },
+  "fmt": {
+    "exclude": [".git/", ".node_modules/", "dist/", ".vite"],
+    "lineWidth": 120,
+    "singleQuote": true,
+    "proseWrap": "preserve"
+  },
+  "lint": {
+    "exclude": [".git/", ".node_modules/", "dist/", ".vite"],
+    "rules": {
+      "tags": ["recommended"]
+    }
+  }
+}

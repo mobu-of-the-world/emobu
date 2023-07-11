@@ -13,5 +13,6 @@
   "[elm]": {
     "editor.defaultFormatter": "elmTooling.elm-ls-vscode"
   },
-  "elmLS.elmReviewDiagnostics": "error"
+  "elmLS.elmReviewDiagnostics": "error",
+  "deno.enable": true
 }

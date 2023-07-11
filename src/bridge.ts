@@ -1,4 +1,6 @@
-import { Elm } from './Main.elm';
+// @deno-types="./main.d.ts"
+import { Elm } from '../public/main.js';
+import { assertIsDefined } from './typeguards.ts';
 
 declare const APP_COMMIT_REF: string;
 
@@ -6,21 +8,20 @@ const isSupportedNotification = 'Notification' in window;
 
 const storedData = localStorage.getItem('mobu-model');
 const flags = {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   persisted: storedData ? JSON.parse(storedData) : {},
   gitRef: APP_COMMIT_REF,
 };
 const mobuNode = document.getElementById('mobu');
-if (!mobuNode) {
-  throw Error('Not found node');
-}
+assertIsDefined(mobuNode);
+
 const app = Elm.Main.init({
   node: mobuNode,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   flags,
 });
 
-app.ports.setStorage.subscribe((state: object) => {
+// test
+
+app.ports.setStorage.subscribe((state: Record<string, unknown>) => {
   localStorage.setItem('mobu-model', JSON.stringify(state));
 });
 
