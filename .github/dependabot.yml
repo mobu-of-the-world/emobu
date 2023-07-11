@@ -12,7 +12,10 @@ updates:
     directory: '/'
     schedule:
       interval: 'daily'
-    ignore:
-      # https://github.com/hmsk/vite-plugin-elm/issues/386#issuecomment-1356815310
-      - dependency-name: 'vite'
-        update-types: ['version-update:semver-major']
+    groups:
+      eslint-dependencies:
+        patterns:
+          - '*eslint*'
+      stylelint-dependencies:
+        patterns:
+          - '*stylelint*'
