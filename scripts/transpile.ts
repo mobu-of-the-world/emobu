@@ -14,4 +14,21 @@ const result = await transpile(url);
 
 const code = result.get(url.href);
 assertIsDefined(code);
-console.log(code);
+const decoder = new TextDecoder();
+const gitCommandResult = (new Deno.Command('git', { args: ['rev-parse', '--short', 'HEAD'] })).outputSync();
+const gitRef = gitCommandResult.success ? decoder.decode(gitCommandResult.stdout) : '???????-dev';
+const shortRef = gitRef.slice(
+  0,
+  7,
+);
+
+const embedded = code.replace(
+  "const APP_COMMIT_REF = 'THIS_LINE_WILL_BE_REPLACED_AFTER_TRANSPILE';",
+  `const APP_COMMIT_REF = '${shortRef}';`,
+);
+
+if (code === embedded) {
+  throw new Error('handmade template did not work, please check and update');
+}
+
+console.log(embedded);

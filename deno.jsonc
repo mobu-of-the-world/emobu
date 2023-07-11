@@ -1,6 +1,10 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts"
+    "make-elm": "rm public/elm.js; deno run --allow-write --allow-env --allow-read --allow-run scripts/compile.ts > src/elm.js",
+    "watch-elm": "watchexec -e elm deno task make-elm",
+    "make-bridge": "rm public/bridge.js; deno run --allow-run --allow-read --allow-env --allow-net scripts/transpile.ts --entrypoint=../src/bridge.ts > public/bridge.js",
+    "watch-bridge": "watchexec -e ts deno task make-bridge",
+    "serve": "deno run --allow-net --allow-read https://deno.land/std@0.193.0/http/file_server.ts public"
   },
   "compilerOptions": {
     "lib": [
@@ -12,13 +16,13 @@
     ]
   },
   "fmt": {
-    "exclude": [".git/", ".node_modules/", "dist/", ".vite"],
+    "exclude": [".git/", ".node_modules/", "dist/", "**/*.js"],
     "lineWidth": 120,
     "singleQuote": true,
     "proseWrap": "preserve"
   },
   "lint": {
-    "exclude": [".git/", ".node_modules/", "dist/", ".vite"],
+    "exclude": [".git/", ".node_modules/", "dist/", "**/*.js"],
     "rules": {
       "tags": ["recommended"]
     }
