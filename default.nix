@@ -4,7 +4,7 @@ pkgs.mkShell {
   buildInputs = [
     pkgs.nil
     pkgs.nixpkgs-fmt
-    pkgs.nodejs-19_x
+    pkgs.nodejs_20
     pkgs.dprint
   ];
 }
