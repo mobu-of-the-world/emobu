@@ -14,7 +14,7 @@
 }
 
 html {
-  font-family: Inconsolata, monospace;
+  font-family: Caveat, cursive;
   background-color: var(--brand-base-color);
   width: 100%;
   height: var(--page-height);
@@ -34,7 +34,6 @@ a {
   display: grid;
   height: 100%;
   width: 100%;
-  font-family: Inconsolata, monospace;
   background-color: var(--brand-base-color);
   caret-color: transparent;
   place-items: center;
