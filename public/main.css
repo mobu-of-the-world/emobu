@@ -14,7 +14,7 @@
 }
 
 html {
-  font-family: 'Roboto Mono', monospace;
+  font-family: Caveat, cursive;
   background-color: var(--brand-base-color);
   width: 100%;
   height: var(--page-height);
