@@ -6,5 +6,6 @@ pkgs.mkShell {
     pkgs.nixpkgs-fmt
     pkgs.nodejs-19_x
     pkgs.dprint
+    pkgs.watchexec
   ];
 }

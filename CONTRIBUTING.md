@@ -16,23 +16,13 @@ $ dprint check
 If you use vscode, installing elm-test, elm-format and elm-review into global might make better experience.
 (Currently not installing them with Nix)
 
-### `npm run dev`
+### Like a hot reload
 
-Runs the app in the development mode.
-Open [http://localhost:5173/](http://localhost:5173/) to view it in your browser.
+Open 3 tabs/windows in your terminal
 
-The page will reload when you make changes.
-
-NOTE: This project is developped by elm, however this hot reloading uses vite for now.
-
-### `npm run check`
-
-Run linters, formatters, and tests. You can dig further detail in [task scripts](package.json).\
-Especially recommend to visit the section about [elm-test](https://package.elm-lang.org/packages/elm-explorations/test/latest) for the test runner.
-
-### `npm run build`
-
-Builds the app for production to the `dist` folder.
+1. `deno task watch-elm`
+1. `deno task watch-bridge`
+1. `deno task serve`
 
 ## CSS naming convention
 
