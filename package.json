@@ -18,7 +18,8 @@
     "eslint:fix": "eslint --fix \"src/**/*.{js,ts,tsx}\"",
     "stylelint:check": "npx stylelint '{src,public}/**/*.css'",
     "stylelint:fix": "npx stylelint '{src,public}/**/*.css' --fix",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "deps": "nix --version && dprint --version && node --version && npm --version && elm --version"
   },
   "author": "Kenichi Kamiya <kachick1@gmail.com>",
   "license": "MIT",
