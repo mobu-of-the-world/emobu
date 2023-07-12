@@ -37,9 +37,6 @@ jobs:
         run: echo VITE_COMMIT_REF=${{ github.event.pull_request.head.sha }} > .env
       - name: Build
         run: npm run build
-      - name: Wait other jobs
-        uses: kachick/wait-other-jobs@v1
-        timeout-minutes: 15
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
