@@ -2,6 +2,14 @@ import { Elm } from './Main.elm';
 
 declare const APP_COMMIT_REF: string;
 
+// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions
+function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
+  if (val === undefined || val === null) {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    throw new Error(`Expected 'val' to be defined, but received ${val}`);
+  }
+}
+
 const isSupportedNotification = 'Notification' in window;
 
 const storedData = localStorage.getItem('mobu-model');
@@ -48,4 +56,18 @@ app.ports.notify.subscribe((message: string) => {
       });
       break;
   }
+});
+
+app.ports.dragstart.subscribe((data) => {
+  const { effectAllowed, event: { dataTransfer } } = data;
+  debugger;
+  assertIsDefined(dataTransfer);
+  dataTransfer.setData('text/plain', ''); // needed
+  dataTransfer.effectAllowed = effectAllowed;
+});
+
+app.ports.dragover.subscribe((data) => {
+  const { dropEffect, event: { dataTransfer } } = data;
+  assertIsDefined(dataTransfer);
+  dataTransfer.dropEffect = dropEffect;
 });
