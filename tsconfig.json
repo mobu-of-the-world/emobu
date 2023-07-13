@@ -1,9 +1,8 @@
 {
-  // TODO: Use tsconfig/base after all tools support tsconfig.extends array
-  "extends": "./tsconfig.base.json",
+  "extends": ["@tsconfig/strictest/tsconfig", "@tsconfig/node20/tsconfig"],
   "compilerOptions": {
-    "lib": ["ESNext", "DOM"],
+    "lib": ["dom", "dom.iterable"],
     "noEmit": true
   },
-  "include": ["./src", "*.config*.ts"]
+  "include": ["./src/*.ts", "*.config*.ts"]
 }

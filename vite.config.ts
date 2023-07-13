@@ -1,5 +1,5 @@
 import { defineConfig, loadEnv } from 'vite';
-import elmPlugin from 'vite-plugin-elm';
+import { plugin } from 'vite-plugin-elm';
 import { execSync } from 'child_process';
 
 export default defineConfig(({ mode }) => {
@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
   );
 
   return {
-    plugins: [elmPlugin()],
+    plugins: [plugin()],
     define: {
       APP_COMMIT_REF: JSON.stringify(shortRef),
     },
