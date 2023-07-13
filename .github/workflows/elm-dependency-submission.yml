@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/elm-dependency-submission.yml'
+      - 'elm.json'
+      - 'elm-tooling.json'
 
 # The API requires write permission on the repository to submit dependencies
 permissions:
