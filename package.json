@@ -11,7 +11,7 @@
     "serve": "serve dist -l 8938 -n",
     "test": "elm-test",
     "lint": "elm-review && npm run eslint && npm run stylelint:check",
-    "check": "npm run format:check && npm run typecheck && npm test && npm run lint",
+    "check": "typos && npm run format:check && npm run typecheck && npm test && npm run lint",
     "preview": "vite preview",
     "format:check": "dprint check && npx elm-format --validate src",
     "format:fix": "dprint fmt && npx elm-format src",
@@ -20,7 +20,7 @@
     "stylelint:check": "npx stylelint '{src,public}/**/*.css'",
     "stylelint:fix": "npx stylelint '{src,public}/**/*.css' --fix",
     "typecheck": "tsc",
-    "deps": "nix --version && dprint --version && node --version && npm --version && elm --version"
+    "deps": "nix --version && dprint --version && typos --version && node --version && npm --version && elm --version"
   },
   "author": "Kenichi Kamiya <kachick1@gmail.com>",
   "license": "MIT",
