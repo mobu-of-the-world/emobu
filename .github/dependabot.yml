@@ -19,3 +19,6 @@ updates:
       stylelint-dependencies:
         patterns:
           - '*stylelint*'
+      tsconfig-dependencies:
+        patterns:
+          - '@tsconfig/*'
