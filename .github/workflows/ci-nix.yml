@@ -31,7 +31,8 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@v2
       - name: Print nixpkgs version
         run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
-      - run: nix-shell --run 'echo This step should be done before any other "nix-shell" steps because of measuring Nix build time'
-      - run: nix-shell --run 'npm install'
-      - run: nix-shell --run 'npm run deps'
-      - run: nix-shell --run 'npm run check'
+      - run: nix flake check
+      - run: nix develop --command echo 'This step should be done before any other "nix develop" steps because of measuring Nix build time'
+      - run: nix develop --command npm install
+      - run: nix develop --command npm run deps
+      - run: nix develop --command npm run check
