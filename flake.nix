@@ -17,6 +17,7 @@
               nixpkgs-fmt
               dprint
               nodejs_20
+              typos
             ];
           };
       });

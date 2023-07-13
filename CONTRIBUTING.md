@@ -23,7 +23,7 @@ Open [http://localhost:5173/](http://localhost:5173/) to view it in your browser
 
 The page will reload when you make changes.
 
-NOTE: This project is developped by elm, however this hot reloading uses vite for now.
+NOTE: This project is developed by elm, however this hot reloading uses vite for now.
 
 ### `npm run check`
 

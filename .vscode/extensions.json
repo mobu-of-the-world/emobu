@@ -2,7 +2,7 @@
   "recommendations": [
     "elmtooling.elm-ls-vscode",
     "editorconfig.editorconfig",
-    "streetsidesoftware.code-spell-checker",
+    "tekumara.typos-vscode",
     "dbaeumer.vscode-eslint",
     "dprint.dprint",
     "stylelint.vscode-stylelint",

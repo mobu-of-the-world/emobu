@@ -24,7 +24,7 @@ elapsedSecondsFromDurations durations =
 updateLatest : Posix -> List Duration -> List Duration
 updateLatest moment durations =
     let
-        ( ( begin, _ ), befores ) =
+        ( ( begin, _ ), olders ) =
             case durations of
                 latest :: rest ->
                     ( latest, rest )
@@ -32,4 +32,4 @@ updateLatest moment durations =
                 [] ->
                     ( ( moment, moment ), [] )
     in
-    ( begin, moment ) :: befores
+    ( begin, moment ) :: olders
