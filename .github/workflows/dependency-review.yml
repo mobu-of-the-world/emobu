@@ -7,6 +7,8 @@ on:
       - 'elm-tooling.json' # I don' have confident this is needless or not
       - 'package.json'
       - 'package-lock.json'
+      - '*.nix'
+      - 'flake.lock'
 
 permissions:
   contents: read
