@@ -8,8 +8,7 @@ env:
   node: true
   es2022: true
 parserOptions:
-  sourceType: module
-  project: ./tsconfig.json
+  project: true
 rules:
   no-mixed-operators: error
   no-unused-vars: 'off'
