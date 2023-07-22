@@ -1,0 +1,16 @@
+name: Debug GitHub Actions
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  debug:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          echo '${{ github.event.pull_request.head.repo.full_name }}'
+          echo '${{ github.repository }}'
