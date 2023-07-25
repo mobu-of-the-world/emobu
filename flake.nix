@@ -18,7 +18,16 @@
               dprint
               nodejs_20
               typos
+
+              # https://github.com/NixOS/nixpkgs/issues/215450#issuecomment-1526251592
+              playwright
+              playwright-driver.browsers
             ];
+
+            shellHook = ''
+              export PLAYWRIGHT_BROWSERS_PATH=${playwright-driver.browsers}
+              export PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true
+            '';
           };
       });
 }
