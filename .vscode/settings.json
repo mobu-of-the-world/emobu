@@ -4,5 +4,17 @@
   "[elm]": {
     "editor.defaultFormatter": "elmTooling.elm-ls-vscode"
   },
-  "elmLS.elmReviewDiagnostics": "error"
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide"
+  },
+  "elmLS.elmReviewDiagnostics": "error",
+  "nix.enableLanguageServer": true,
+  "nix.serverPath": "nil",
+  "nix.serverSettings": {
+    "nil": {
+      "formatting": {
+        "command": ["nixpkgs-fmt"]
+      }
+    }
+  }
 }
