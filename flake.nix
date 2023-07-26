@@ -17,8 +17,10 @@
               nixpkgs-fmt
               dprint
               nodejs_20
+              deno
               typos
             ];
           };
-      });
+      }
+    );
 }

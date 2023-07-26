@@ -18,7 +18,6 @@ name: Deploy to Firebase Hosting on merge
       - '.vscode/**'
       - 'docs/**'
       - 'dprint.json'
-      - '.eslintrc.yml'
       - 'renovate.json'
 jobs:
   build_and_deploy:

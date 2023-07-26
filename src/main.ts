@@ -6,7 +6,6 @@ const isSupportedNotification = 'Notification' in window;
 
 const storedData = localStorage.getItem('mobu-model');
 const flags = {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   persisted: storedData ? JSON.parse(storedData) : {},
   gitRef: APP_COMMIT_REF,
 };
@@ -16,7 +15,6 @@ if (!mobuNode) {
 }
 const app = Elm.Main.init({
   node: mobuNode,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   flags,
 });
 

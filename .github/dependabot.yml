@@ -15,9 +15,6 @@ updates:
     schedule:
       interval: 'daily'
     groups:
-      eslint-dependencies:
-        patterns:
-          - '*eslint*'
       stylelint-dependencies:
         patterns:
           - '*stylelint*'
