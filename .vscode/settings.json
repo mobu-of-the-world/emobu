@@ -16,5 +16,6 @@
         "command": ["nixpkgs-fmt"]
       }
     }
-  }
+  },
+  "deno.enable": false
 }
