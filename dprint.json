@@ -12,7 +12,6 @@
   "prettier": {
     "singleQuote": true
   },
-  "includes": ["**/*.{ts,tsx,js,jsx,cjs,mjs,json,jsonc,md,html,css,yml}"],
   "excludes": ["**/node_modules", "**/*-lock.json", "lib/**", "dist/**", "elm-stuff", "review", "elm.json"],
   "plugins": [
     "https://plugins.dprint.dev/typescript-0.85.1.wasm",
