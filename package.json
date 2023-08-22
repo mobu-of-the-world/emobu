@@ -23,7 +23,7 @@
   "author": "Kenichi Kamiya <kachick1@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@tsconfig/node20": "^20.1.1",
+    "@tsconfig/node20": "^20.1.2",
     "@tsconfig/strictest": "^2.0.1",
     "elm-format": "^0.8.7",
     "elm-json": "^0.2.13",
