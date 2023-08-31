@@ -41,7 +41,7 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           # Keep same version as used in *.nix
-          deno-version: '1.35.2'
+          deno-version: '1.36.0'
       - run: deno lint
   stylelint:
     timeout-minutes: 15
