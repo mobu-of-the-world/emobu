@@ -48,7 +48,7 @@ jobs:
       - name: Count added commits
         id: count-commits
         run: |
-          count="$(git rev-list --count main..)"
+          count="$(git rev-list --count main.."${PR_BRANCH}")"
           echo "count=${count}" | tee -a "$GITHUB_OUTPUT"
       - run: git push origin "${PR_BRANCH}"
         if: (github.event_name != 'pull_request') && (steps.count-commits.outputs.count > 0)
