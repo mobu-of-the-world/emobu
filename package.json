@@ -27,7 +27,7 @@
     "@tsconfig/strictest": "^2.0.2",
     "elm-format": "^0.8.7",
     "elm-json": "^0.2.13",
-    "elm-review": "^2.10.2",
+    "elm-review": "^2.10.3",
     "elm-test": "^0.19.1-revision12",
     "stylelint": "^15.10.3",
     "stylelint-config-recommended": "^13.0.0",
