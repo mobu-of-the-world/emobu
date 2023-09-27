@@ -6,14 +6,12 @@ on:
       - '.github/workflows/ci-nix.yml'
       - '*.nix'
       - 'flake.lock'
-      - '.node-version'
       - 'package.json'
   pull_request:
     paths:
       - '.github/workflows/ci-nix.yml'
       - '*.nix'
       - 'flake.lock'
-      - '.node-version'
       - 'package.json'
   schedule:
     # Every 10:42 JST
