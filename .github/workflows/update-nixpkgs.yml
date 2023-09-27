@@ -30,6 +30,9 @@ jobs:
           private_key: ${{ secrets.DEPENDENCY_APP_PRIVATE_KEY }}
       - uses: actions/checkout@v4
         with:
+          # Needed to get commit counts
+          # https://stackoverflow.com/a/65056108
+          fetch-depth: 0
           # Needed to specify token for checkout phase, only in pushing phase is too late
           # https://github.com/orgs/community/discussions/27072#discussioncomment-3254515
           token: ${{ steps.publish-token.outputs.token }}
@@ -48,7 +51,7 @@ jobs:
       - name: Count added commits
         id: count-commits
         run: |
-          count="$(git rev-list --count main.."${PR_BRANCH}")"
+          count="$(git rev-list --count main..)"
           echo "count=${count}" | tee -a "$GITHUB_OUTPUT"
       - run: git push origin "${PR_BRANCH}"
         if: (github.event_name != 'pull_request') && (steps.count-commits.outputs.count > 0)
