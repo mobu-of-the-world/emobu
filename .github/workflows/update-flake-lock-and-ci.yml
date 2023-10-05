@@ -1,0 +1,20 @@
+name: Update flake.lock and CI dependencies
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/update-flake-lock-and-ci.yml'
+  schedule:
+    # Every Monday 10:17 JST
+    # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
+    - cron: '17 1 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-nixpkgs:
+    uses: kachick/anylang-template/.github/workflows/reusable-update-nixpkgs-and-versions-in-ci.yml@b267dd151327488f5cf15d9f2b273f4ece1da401
+    if: (github.event.sender.login == 'kachick') || (github.event_name != 'pull_request')
+    with:
+      dry-run: ${{ github.event_name == 'pull_request' }}
+    secrets:
+      APP_ID: ${{ secrets.DEPENDENCY_APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.DEPENDENCY_APP_PRIVATE_KEY }}
