@@ -20,6 +20,6 @@ jobs:
       - name: 'Checkout Repository'
         uses: actions/checkout@v4
       - name: Run snapshot action
-        uses: kachick/elm-dependency-submission@v1
+        uses: kachick/elm-dependency-submission@v2
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
