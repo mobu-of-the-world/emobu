@@ -29,6 +29,7 @@
     "elm-json": "^0.2.13",
     "elm-review": "^2.10.3",
     "elm-test": "^0.19.1-revision12",
+    "elm-watch": "^1.1.2",
     "stylelint": "^15.11.0",
     "stylelint-config-recommended": "^13.0.0",
     "typescript": "^5.3.2"
