@@ -4,7 +4,7 @@
     "include": ["**/*.ts"],
     "exclude": ["elm-stuff/", "node_modules/"],
     "rules": {
-      "tags": ["recommended"]
-    }
-  }
+      "tags": ["recommended"],
+    },
+  },
 }
