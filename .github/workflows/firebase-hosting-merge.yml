@@ -15,7 +15,6 @@ name: Deploy to Firebase Hosting on merge
       - '*.html'
       - 'package*.json'
       - 'tsconfig.json'
-      - 'vite.config.*'
 jobs:
   build_and_deploy:
     timeout-minutes: 30
