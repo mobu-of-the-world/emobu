@@ -18,7 +18,7 @@
     "stylelint:check": "npx stylelint '{src,public}/**/*.css'",
     "stylelint:fix": "npx stylelint '{src,public}/**/*.css' --fix",
     "typecheck": "tsc",
-    "deps": "nix --version && dprint --version && typos --version && node --version && npm --version && deno --version && elm --version"
+    "deps": "nix --version && dprint --version && typos --version && node --version && npm --version && deno --version && elm --version && elm-json --version"
   },
   "author": "Kenichi Kamiya <kachick1@gmail.com>",
   "license": "MIT",
