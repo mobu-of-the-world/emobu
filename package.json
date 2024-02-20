@@ -26,7 +26,6 @@
     "@tsconfig/node20": "^20.1.2",
     "@tsconfig/strictest": "^2.0.3",
     "elm-format": "^0.8.7",
-    "elm-json": "^0.2.13",
     "elm-review": "^2.10.3",
     "elm-test": "^0.19.1-revision12",
     "stylelint": "^16.2.1",
