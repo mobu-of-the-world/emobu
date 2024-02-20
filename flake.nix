@@ -25,6 +25,7 @@
               nixpkgs-fmt
               dprint
               nodejs_20
+              elmPackages.elm-json
               deno
               typos
             ];
