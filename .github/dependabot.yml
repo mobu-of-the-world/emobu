@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     ignore:
       - dependency-name: 'crate-ci/typos'
     groups:
@@ -13,11 +13,11 @@ updates:
   - package-ecosystem: 'elm'
     directory: '/'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     groups:
       stylelint-dependencies:
         patterns:
