@@ -1,4 +1,4 @@
-name: Update flake.lock and CI dependencies
+name: 🤖🆙❄️
 on:
   pull_request:
     paths:
@@ -14,6 +14,7 @@ jobs:
     uses: kachick/selfup/.github/workflows/reusable-bump-flake-lock-and-selfup.yml@action-v1
     with:
       dry-run: ${{ github.event_name == 'pull_request' }}
+      pr-title: 'Bump flake.lock and related dependencies'
     secrets:
       APP_ID: ${{ secrets.DEPENDENCY_APP_ID }}
       APP_PRIVATE_KEY: ${{ secrets.DEPENDENCY_APP_PRIVATE_KEY }}
