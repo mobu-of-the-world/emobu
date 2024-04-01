@@ -23,8 +23,8 @@
   "author": "Kenichi Kamiya <kachick1@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@tsconfig/node20": "^20.1.2",
-    "@tsconfig/strictest": "^2.0.3",
+    "@tsconfig/node20": "^20.1.4",
+    "@tsconfig/strictest": "^2.0.5",
     "elm-format": "^0.8.7",
     "elm-review": "^2.10.3",
     "elm-test": "^0.19.1-revision12",
