@@ -30,6 +30,27 @@
               typos
             ];
           };
+
+        apps = {
+          bump-nix-dependencies = {
+            type = "app";
+            program = with pkgs; lib.getExe (writeShellApplication {
+              name = "bump-nix-dependencies.bash";
+              runtimeInputs = [ nix git nodejs_20 sd ];
+              # Why --really-refresh?: https://stackoverflow.com/q/34807971
+              text = ''
+                set -x
+
+                node --version | sd '^v?' "" > .node-version && git add .node-version
+                git update-index -q --really-refresh
+                git diff-index --quiet HEAD || git commit -m 'Sync .node-version with nixpkgs' .node-version
+              '';
+              meta = {
+                description = "Bump dependency versions except managed by node package manager";
+              };
+            });
+          };
+        };
       }
     );
 }

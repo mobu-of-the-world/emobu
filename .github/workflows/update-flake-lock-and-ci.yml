@@ -15,6 +15,8 @@ jobs:
     with:
       dry-run: ${{ github.event_name == 'pull_request' }}
       pr-title: 'Bump flake.lock and related dependencies'
+      optional-run: |
+        nix run .#bump-nix-dependencies
     secrets:
       APP_ID: ${{ secrets.DEPENDENCY_APP_ID }}
       APP_PRIVATE_KEY: ${{ secrets.DEPENDENCY_APP_PRIVATE_KEY }}
