@@ -1,12 +1,9 @@
 :root {
   --page-height: 100dvh;
   --content-height: 90dvh;
-  --non-content-max-height: calc((var(--page-height) - var(--content-height)));
-  --header-height: minmax(
-    30px,
-    calc(((var(--non-content-max-height) / 3) * 2))
-  );
-  --footer-height: minmax(20px, calc(((var(--non-content-max-height) / 3))));
+  --non-content-max-height: calc(var(--page-height) - var(--content-height));
+  --header-height: minmax(30px, calc(var(--non-content-max-height) / 3 * 2));
+  --footer-height: minmax(20px, calc(var(--non-content-max-height) / 3));
   --brand-base-color: #6a8372;
   --brand-dark-color: #43676b;
   --user-image-width: 32px;
@@ -44,8 +41,8 @@ a {
   #page {
     grid-template:
       'head' var(--header-height)
-      'timer-panel' max(calc((var(--content-height) / 3)))
-      'users-panel' min(calc((var(--content-height) / 3) * 2))
+      'timer-panel' max(calc(var(--content-height) / 3))
+      'users-panel' min(calc(var(--content-height) / 3 * 2))
       'foot' var(--footer-height) / 1fr;
   }
 }
