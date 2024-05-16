@@ -18,7 +18,7 @@
   "plugins": [
     "https://plugins.dprint.dev/typescript-0.89.3.wasm",
     "https://plugins.dprint.dev/json-0.19.2.wasm",
-    "https://plugins.dprint.dev/markdown-0.16.4.wasm",
+    "https://plugins.dprint.dev/markdown-0.17.0.wasm",
     "https://plugins.dprint.dev/g-plane/malva-v0.3.1.wasm",
     "https://plugins.dprint.dev/g-plane/markup_fmt-v0.8.0.wasm"
   ]
