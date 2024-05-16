@@ -24,6 +24,7 @@
               nil
               nixpkgs-fmt
               dprint
+              yamlfmt
               nodejs_20
               elmPackages.elm-json
               deno
