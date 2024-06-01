@@ -28,7 +28,7 @@
     "elm-format": "^0.8.7",
     "elm-review": "^2.11.1",
     "elm-test": "^0.19.1-revision12",
-    "stylelint": "^16.4.0",
+    "stylelint": "^16.6.1",
     "stylelint-config-recommended": "^14.0.0",
     "typescript": "^5.4.5",
     "vite": "^5.2.10",
