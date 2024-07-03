@@ -16,7 +16,7 @@ elapsedSecondsFromDurations : List Duration -> Int
 elapsedSecondsFromDurations durations =
     (durations
         |> List.map toMillis
-        |> List.foldl (+) 0
+        |> List.sum
     )
         // 1000
 

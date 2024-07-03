@@ -475,7 +475,7 @@ addUserButton model =
 
 deleteUser : User -> List User -> List User
 deleteUser leaver users =
-    users |> List.filter (\user -> not (user.username == leaver.username))
+    users |> List.filter (\user -> user.username /= leaver.username)
 
 
 userPanel : Model -> Html Msg
@@ -720,7 +720,7 @@ onDrop msg =
 
 onDragOver : msg -> Attribute msg
 onDragOver msg =
-    preventDefaultOn "dragover" <| Json.Decode.map (\x -> ( x, True )) <| Json.Decode.succeed msg
+    preventDefaultOn "dragover" <| Json.Decode.succeed ((\x -> ( x, True )) <| msg)
 
 
 getGithubAvatarUrl : String -> String
