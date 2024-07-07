@@ -4,7 +4,6 @@
     "editorconfig.editorconfig",
     "tekumara.typos-vscode",
     "dprint.dprint",
-    "kachick.vscode-yamlfmt",
     "stylelint.vscode-stylelint",
     "jnoortheen.nix-ide"
   ]
