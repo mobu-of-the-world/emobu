@@ -14,5 +14,6 @@
     {
       "extends": ["packages:linters", "schedule:weekly"]
     }
-  ]
+  ],
+  "schedule": ["on Tuesday"]
 }
