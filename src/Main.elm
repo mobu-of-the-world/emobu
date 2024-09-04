@@ -482,6 +482,7 @@ userPanel : Model -> Html Msg
 userPanel model =
     div [ Attr.class "users-panel" ]
         [ ol []
+            -- FIXME: Fix broken HTML structure. Do not include non li in ol. ~ GH-577
             (div [ Attr.class "list-container" ]
                 [ div [ Attr.class "list-item" ] [ addUserInput model ], addUserButton model ]
                 :: (model.users
