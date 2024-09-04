@@ -537,35 +537,32 @@ newIntervalFields model =
     div [ Attr.class "interval-input" ]
         [ text "/"
         , space
-        , label [ Attr.for "duration-hours-select" ]
-            [ select
-                [ Attr.id "duration-hours-select"
-                , Attr.class "value-select"
-                , onInput (UpdateInterval MobSession.Hour)
-                , Attr.disabled model.mobbing
-                ]
-                (hoursOptions |> optionsFormatter)
+        , select
+            [ Attr.id "duration-hours-select"
+            , Attr.class "value-select"
+            , onInput (UpdateInterval MobSession.Hour)
+            , Attr.disabled model.mobbing
             ]
+            (hoursOptions |> optionsFormatter)
+        , label [ Attr.for "duration-hours-select" ] []
         , text ":"
-        , label [ Attr.for "duration-minutes-select" ]
-            [ select
-                [ Attr.id "duration-minutes-select"
-                , Attr.class "value-select"
-                , onInput (UpdateInterval MobSession.Min)
-                , Attr.disabled model.mobbing
-                ]
-                (minutesOptions |> optionsFormatter)
+        , select
+            [ Attr.id "duration-minutes-select"
+            , Attr.class "value-select"
+            , onInput (UpdateInterval MobSession.Min)
+            , Attr.disabled model.mobbing
             ]
+            (minutesOptions |> optionsFormatter)
+        , label [ Attr.for "duration-minutes-select" ] []
         , text ":"
-        , label [ Attr.for "duration-seconds-select" ]
-            [ select
-                [ Attr.id "duration-seconds-select"
-                , Attr.class "value-select"
-                , onInput (UpdateInterval MobSession.Sec)
-                , Attr.disabled model.mobbing
-                ]
-                (secondsOptions |> optionsFormatter)
+        , select
+            [ Attr.id "duration-seconds-select"
+            , Attr.class "value-select"
+            , onInput (UpdateInterval MobSession.Sec)
+            , Attr.disabled model.mobbing
             ]
+            (secondsOptions |> optionsFormatter)
+        , label [ Attr.for "duration-seconds-select" ] []
         ]
 
 
