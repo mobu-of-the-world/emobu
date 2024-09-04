@@ -668,6 +668,8 @@ appHeader =
                 [ Attr.class "github-logo"
                 , Attr.src "/images/github-mark.svg"
                 , Attr.draggable "false"
+                , Attr.height 24
+                , Attr.width 24
                 ]
                 []
             ]
