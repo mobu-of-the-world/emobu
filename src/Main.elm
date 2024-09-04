@@ -537,9 +537,9 @@ newIntervalFields model =
     div [ Attr.class "interval-input" ]
         [ text "/"
         , space
-        , label [ Attr.for "duration-hour-select" ]
+        , label [ Attr.for "duration-hours-select" ]
             [ select
-                [ Attr.id "duration-hour-select"
+                [ Attr.id "duration-hours-select"
                 , Attr.class "value-select"
                 , onInput (UpdateInterval MobSession.Hour)
                 , Attr.disabled model.mobbing
