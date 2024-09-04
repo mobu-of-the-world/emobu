@@ -536,26 +536,35 @@ newIntervalFields model =
     div [ Attr.class "interval-input" ]
         [ text "/"
         , space
-        , select
-            [ Attr.class "value-select"
-            , onInput (UpdateInterval MobSession.Hour)
-            , Attr.disabled model.mobbing
+        , label [ Attr.for "duration-hour-select" ]
+            [ select
+                [ Attr.id "duration-hour-select"
+                , Attr.class "value-select"
+                , onInput (UpdateInterval MobSession.Hour)
+                , Attr.disabled model.mobbing
+                ]
+                (hoursOptions |> optionsFormatter)
             ]
-            (hoursOptions |> optionsFormatter)
         , text ":"
-        , select
-            [ Attr.class "value-select"
-            , onInput (UpdateInterval MobSession.Min)
-            , Attr.disabled model.mobbing
+        , label [ Attr.for "duration-minutes-select" ]
+            [ select
+                [ Attr.id "duration-minutes-select"
+                , Attr.class "value-select"
+                , onInput (UpdateInterval MobSession.Min)
+                , Attr.disabled model.mobbing
+                ]
+                (minutesOptions |> optionsFormatter)
             ]
-            (minutesOptions |> optionsFormatter)
         , text ":"
-        , select
-            [ Attr.class "value-select"
-            , onInput (UpdateInterval MobSession.Sec)
-            , Attr.disabled model.mobbing
+        , label [ Attr.for "duration-seconds-select" ]
+            [ select
+                [ Attr.id "duration-seconds-select"
+                , Attr.class "value-select"
+                , onInput (UpdateInterval MobSession.Sec)
+                , Attr.disabled model.mobbing
+                ]
+                (secondsOptions |> optionsFormatter)
             ]
-            (secondsOptions |> optionsFormatter)
         ]
 
 
@@ -667,6 +676,7 @@ appHeader =
             [ img
                 [ Attr.class "github-logo"
                 , Attr.src "/images/github-mark.svg"
+                , Attr.alt "Logo of GitHub"
                 , Attr.draggable "false"
                 , Attr.height 24
                 , Attr.width 24
