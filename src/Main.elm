@@ -482,6 +482,7 @@ userPanel : Model -> Html Msg
 userPanel model =
     div [ Attr.class "users-panel" ]
         [ ol []
+            -- FIXME: Fix broken HTML structure. Do not include non li in ol. ~ GH-577
             (div [ Attr.class "list-container" ]
                 [ div [ Attr.class "list-item" ] [ addUserInput model ], addUserButton model ]
                 :: (model.users
@@ -537,25 +538,31 @@ newIntervalFields model =
         [ text "/"
         , space
         , select
-            [ Attr.class "value-select"
+            [ Attr.id "duration-hours-select"
+            , Attr.class "value-select"
             , onInput (UpdateInterval MobSession.Hour)
             , Attr.disabled model.mobbing
             ]
             (hoursOptions |> optionsFormatter)
+        , label [ Attr.for "duration-hours-select" ] []
         , text ":"
         , select
-            [ Attr.class "value-select"
+            [ Attr.id "duration-minutes-select"
+            , Attr.class "value-select"
             , onInput (UpdateInterval MobSession.Min)
             , Attr.disabled model.mobbing
             ]
             (minutesOptions |> optionsFormatter)
+        , label [ Attr.for "duration-minutes-select" ] []
         , text ":"
         , select
-            [ Attr.class "value-select"
+            [ Attr.id "duration-seconds-select"
+            , Attr.class "value-select"
             , onInput (UpdateInterval MobSession.Sec)
             , Attr.disabled model.mobbing
             ]
             (secondsOptions |> optionsFormatter)
+        , label [ Attr.for "duration-seconds-select" ] []
         ]
 
 
@@ -667,6 +674,7 @@ appHeader =
             [ img
                 [ Attr.class "github-logo"
                 , Attr.src "/images/github-mark.svg"
+                , Attr.alt "Logo of GitHub"
                 , Attr.draggable "false"
                 , Attr.height 24
                 , Attr.width 24
