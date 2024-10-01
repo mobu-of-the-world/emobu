@@ -30,7 +30,7 @@
     "elm-test": "^0.19.1-revision12",
     "stylelint": "^16.9.0",
     "stylelint-config-recommended": "^14.0.1",
-    "typescript": "^5.5.4",
+    "typescript": "^5.6.2",
     "vite": "^5.4.8",
     "vite-plugin-elm": "^v3.0.1"
   },
