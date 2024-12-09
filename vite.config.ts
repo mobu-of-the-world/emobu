@@ -1,9 +1,10 @@
 import { defineConfig, loadEnv } from 'vite';
 import { plugin } from 'vite-plugin-elm';
 import { execSync } from 'child_process';
+import { cwd } from 'node:process';
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd());
+  const env = loadEnv(mode, cwd());
   const gitRef = env['VITE_COMMIT_REF'] ?? execSync('git rev-parse --short HEAD').toString().trim();
   const shortRef = gitRef.slice(
     0,
